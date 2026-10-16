@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learn the stock market from beginner basics to advanced investing and trading. Explore charts, SIP, technical analysis, fundamental analysis, intraday, swing trading and F&O.">
+  <meta name="theme-color" content="#0b1220">
+  <title>MarketPath — Learn the Stock Market</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="MarketPath home"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="mainNav" class="main-nav" aria-label="Main navigation">
+      <a href="#courses" data-i18n="navLearn">Learn</a>
+      <a href="#chart" data-i18n="navChart">Chart Lab</a>
+      <a href="#tools" data-i18n="navTools">Calculators</a>
+      <a href="pages/glossary.html" data-i18n="navGlossary">Glossary</a>
+      <a href="#about" data-i18n="navAbout">About</a>
+    </nav>
+    <label class="language-picker"><span class="sr-only">Choose language</span>
+      <select id="languageSelect" aria-label="Choose language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </label>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="live-dot"></span><span data-i18n="heroEyebrow">YOUR STOCK MARKET LEARNING PATH</span></div>
+          <h1 data-i18n="heroTitle">Understand the market.<br><span class="gradient-text">Build your own edge.</span></h1>
+          <p class="hero-subtitle" data-i18n="heroSubtitle">A structured, practical guide from your first investment to advanced market concepts — in plain language.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#courses" data-i18n="startLearning">Start learning <span>↗</span></a>
+            <a class="btn btn-secondary" href="#chart" data-i18n="exploreChart">Explore chart lab</a>
+          </div>
+          <div class="hero-proof"><div class="avatar-stack"><span>₹</span><span>↗</span><span>∿</span></div><span data-i18n="heroFoot">Learn at your pace · Beginner to advanced</span></div>
+        </div>
+        <div class="hero-visual" aria-label="Illustrative market chart">
+          <div class="chart-card">
+            <div class="chart-top"><div><span class="muted-label" data-i18n="marketIllustration">MARKET SNAPSHOT · ILLUSTRATION</span><h3>NIFTY 50 <span class="pill">DEMO</span></h3></div><span class="chart-change">↗ +1.28%</span></div>
+            <div class="chart-price">24,850.40 <span>+314.25</span></div>
+            <svg class="hero-chart" viewBox="0 0 520 210" role="img" aria-label="Illustrative upward stock price line">
+              <defs><linearGradient id="fillChart" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#39d9a7" stop-opacity=".25"/><stop offset="1" stop-color="#39d9a7" stop-opacity="0"/></linearGradient></defs>
+              <g class="grid-lines"><path d="M0 35H520 M0 80H520 M0 125H520 M0 170H520"/></g>
+              <path class="chart-fill" d="M0 160 L25 145 L48 155 L70 116 L93 130 L116 102 L140 118 L163 92 L188 106 L210 75 L235 90 L260 58 L282 82 L306 65 L330 78 L352 44 L375 56 L398 33 L420 49 L444 25 L466 43 L490 20 L520 29 L520 210 L0 210Z"/>
+              <path class="chart-line" d="M0 160 L25 145 L48 155 L70 116 L93 130 L116 102 L140 118 L163 92 L188 106 L210 75 L235 90 L260 58 L282 82 L306 65 L330 78 L352 44 L375 56 L398 33 L420 49 L444 25 L466 43 L490 20 L520 29"/>
+              <circle cx="520" cy="29" r="5" class="chart-point"/>
+            </svg>
+            <div class="chart-labels"><span>09:30</span><span>11:00</span><span>12:30</span><span>14:00</span><span>15:30</span></div>
+            <p class="demo-note" data-i18n="demoNote">Illustrative data only — not live market prices.</p>
+          </div>
+          <div class="floating-note note-one"><span class="note-icon green">↗</span><div><strong>Risk first</strong><small>Protect your capital</small></div></div>
+          <div class="floating-note note-two"><span class="note-icon purple">◎</span><div><strong>Learn by doing</strong><small>Practice the concepts</small></div></div>
+        </div>
+      </div>
+      <div class="hero-bottom"><span><b>01</b> <span data-i18n="heroBottom1">Learn the language</span></span><span><b>02</b> <span data-i18n="heroBottom2">Understand the numbers</span></span><span><b>03</b> <span data-i18n="heroBottom3">Manage risk thoughtfully</span></span></div>
+    </section>
+
+    <div class="ad-wrap" aria-label="Advertisement">
+      <div class="ad-label">ADVERTISEMENT</div>
+      <div class="ad-placeholder" data-ad-unit><span class="ad-symbol">▧</span><span data-i18n="adPlaceholder">Ad space · Google AdSense can be enabled after approval</span></div>
+    </div>
+
+    <section class="section" id="courses">
+      <div class="section-heading">
+        <div><div class="eyebrow">THE LEARNING LIBRARY</div><h2 data-i18n="coursesTitle">Choose your learning path</h2><p data-i18n="coursesSubtitle">Move in order, or jump straight to the topic you need.</p></div>
+        <div class="search-box"><span>⌕</span><input id="courseSearch" type="search" placeholder="Search topics..." data-i18n-placeholder="searchPlaceholder" aria-label="Search learning topics"></div>
+      </div>
+      <div class="level-tabs" role="tablist" aria-label="Filter courses">
+        <button class="level-tab active" data-level="all" data-i18n="allLevels">All levels</button>
+        <button class="level-tab" data-level="Beginner" data-i18n="beginner">Beginner</button>
+        <button class="level-tab" data-level="Intermediate" data-i18n="intermediate">Intermediate</button>
+        <button class="level-tab" data-level="Advanced" data-i18n="advanced">Advanced</button>
+      </div>
+      <div id="courseGrid" class="course-grid"></div>
+      <p id="noResults" class="no-results" hidden>No topics match your search. Try another keyword.</p>
+    </section>
+
+    <section class="section chart-section" id="chart">
+      <div class="section-heading"><div><div class="eyebrow">PRACTICE CORNER</div><h2 data-i18n="chartTitle">Explore a sample chart</h2><p data-i18n="chartSubtitle">Learn how price, trend and moving averages work. This is simulated data, not a live feed.</p></div><span class="pill pill-outline">SIMULATED DATA</span></div>
+      <div class="chart-lab">
+        <div class="chart-lab-head"><div><span class="muted-label">DEMO ASSET</span><h3>MARKETPATH / SAMPLE</h3></div><div class="chart-controls"><label><span data-i18n="period">Period</span><select id="periodSelect"><option value="30">30 sessions</option><option value="60">60 sessions</option><option value="90">90 sessions</option></select></label><label class="check-control"><input type="checkbox" id="maToggle" checked><span data-i18n="showMA">Show 10-session average</span></label></div></div>
+        <div class="chart-stats"><div><small data-i18n="samplePrice">Sample price</small><strong id="samplePrice">₹ 1,248.50</strong></div><div><small data-i18n="sampleChange">Period change</small><strong id="sampleChange" class="positive">+8.42%</strong></div><div><small data-i18n="trend">Trend (sample)</small><strong id="sampleTrend">Uptrend ↗</strong></div></div>
+        <div class="interactive-chart"><svg id="practiceChart" viewBox="0 0 900 300" role="img" aria-label="Interactive simulated stock chart"></svg></div>
+        <div class="chart-legend"><span><i class="legend-line price-line"></i><span data-i18n="priceLine">Sample price</span></span><span id="maLegend"><i class="legend-line ma-line"></i><span data-i18n="movingAverage">10-session moving average</span></span></div>
+        <p class="demo-note" data-i18n="chartDisclaimer">Educational simulation only. Not investment advice or a recommendation to buy or sell.</p>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="section-heading"><div><div class="eyebrow">LEARN WITH NUMBERS</div><h2 data-i18n="toolsTitle">Simple investing calculators</h2><p data-i18n="toolsSubtitle">Explore how contributions and compounding can affect a hypothetical outcome.</p></div></div>
+      <div class="calculator-grid">
+        <div class="calculator-card">
+          <div class="calc-title"><span class="calc-icon">₹</span><div><h3 data-i18n="sipCalc">SIP calculator</h3><p data-i18n="sipCalcDesc">Estimate a monthly investment's future value.</p></div></div>
+          <div class="field-row"><label for="monthlyInvestment" data-i18n="monthlyInvestment">Monthly investment (₹)</label><input id="monthlyInvestment" type="number" min="100" max="10000000" value="5000"></div>
+          <div class="field-row"><label for="annualReturn" data-i18n="annualReturn">Assumed annual return (%)</label><input id="annualReturn" type="number" min="0" max="30" step=".5" value="10"></div>
+          <div class="field-row"><label for="years" data-i18n="investmentYears">Duration (years)</label><input id="years" type="number" min="1" max="50" value="10"></div>
+          <button id="calculateSip" class="btn btn-primary full-btn" data-i18n="calculate">Calculate estimate</button>
+          <div class="calc-result"><small data-i18n="estimatedValue">Estimated future value</small><strong id="sipResult">₹ 10,24,000</strong><div id="sipBreakdown" class="result-detail">Invested: ₹6,00,000 · Estimated growth: ₹4,24,000</div></div>
+          <p class="fine-print" data-i18n="calcDisclaimer">Illustrative only. Returns are not guaranteed; actual market outcomes may be lower or negative. Taxes, fees and inflation are excluded.</p>
+        </div>
+        <div class="calculator-card risk-card">
+          <div class="calc-title"><span class="calc-icon purple-bg">⌁</span><div><h3 data-i18n="riskCalc">Position-size helper</h3><p data-i18n="riskCalcDesc">Learn how planned risk relates to a trade's stop distance.</p></div></div>
+          <div class="field-row"><label for="capital" data-i18n="tradingCapital">Trading capital (₹)</label><input id="capital" type="number" min="1" value="100000"></div>
+          <div class="field-row"><label for="riskPercent" data-i18n="riskPerTrade">Planned risk per trade (%)</label><input id="riskPercent" type="number" min=".1" max="5" step=".1" value="1"></div>
+          <div class="field-row"><label for="entryPrice" data-i18n="entryPrice">Entry price (₹)</label><input id="entryPrice" type="number" min=".01" value="250"></div>
+          <div class="field-row"><label for="stopPrice" data-i18n="stopPrice">Stop price (₹)</label><input id="stopPrice" type="number" min="0" value="240"></div>
+          <button id="calculateRisk" class="btn btn-secondary full-btn" data-i18n="calculatePosition">Calculate example size</button>
+          <div class="calc-result"><small data-i18n="maxPlannedLoss">Maximum planned loss</small><strong id="riskResult">₹ 1,000</strong><div id="riskBreakdown" class="result-detail">Example quantity: 100 units (before costs and slippage).</div></div>
+          <p class="fine-print" data-i18n="riskDisclaimer">A stop order may not execute at the stop price. Gaps, slippage and leverage can increase losses.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section roadmap-section">
+      <div class="section-heading"><div><div class="eyebrow">YOUR NEXT STEP</div><h2 data-i18n="roadmapTitle">A smarter way to learn</h2><p data-i18n="roadmapSubtitle">Build understanding before risking real money.</p></div></div>
+      <div class="roadmap">
+        <div class="roadmap-item"><span class="roadmap-number">01</span><div><h3 data-i18n="roadmap1Title">Learn the foundations</h3><p data-i18n="roadmap1Text">Understand shares, exchanges, order types, risk, and how the market works.</p></div></div>
+        <div class="roadmap-item"><span class="roadmap-number">02</span><div><h3 data-i18n="roadmap2Title">Practice without pressure</h3><p data-i18n="roadmap2Text">Read charts, keep a journal, and paper-trade strategies before using real money.</p></div></div>
+        <div class="roadmap-item"><span class="roadmap-number">03</span><div><h3 data-i18n="roadmap3Title">Create your own process</h3><p data-i18n="roadmap3Text">Define your time horizon, position size, exit rules and review routine.</p></div></div>
+      </div>
+    </section>
+
+    <section class="section glossary-section" id="glossary">
+      <div class="section-heading"><div><div class="eyebrow">QUICK REFERENCE</div><h2 data-i18n="glossaryTitle">Market glossary</h2><p data-i18n="glossarySubtitle">A few essential terms to get you started.</p></div></div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+      <p class="res-more"><a href="pages/glossary.html" data-i18n="glossaryMore">Open the full glossary (70+ terms) →</a></p>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="about-panel"><div><div class="eyebrow">OUR PRINCIPLE</div><h2 data-i18n="aboutTitle">Education before speculation.</h2><p data-i18n="aboutText">MarketPath is a learning resource designed to explain market concepts clearly. It does not provide personalized financial advice, guaranteed returns, buy/sell calls, or live market data.</p></div><div class="about-badge"><span>✦</span><strong data-i18n="aboutBadge">Learn. Practice. Review.</strong><small data-i18n="aboutBadgeSmall">Your process matters.</small></div></div>
+      <div class="disclaimer"><strong data-i18n="importantNotice">Important notice</strong><p data-i18n="importantText">Stocks, mutual funds and derivatives carry risk, including loss of capital. Futures and options can create substantial losses and are not suitable for everyone. Educational examples are simplified and may exclude charges, taxes, liquidity and slippage. Consult a qualified professional for advice tailored to your situation.</p></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="brand footer-brand" href="#"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a><p data-i18n="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="#about" data-i18n="disclaimerLink">Disclaimer</a><a href="pages/privacy.html" data-i18n="privacyLink">Privacy policy</a><a href="pages/contact.html" data-i18n="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPath. Educational content only.</small></footer>
+  <script src="js/lessons.js"></script>
+  <script src="js/lessons-modules.js"></script>
+  <script src="js/lessons-foundations.js"></script>
+  <script src="js/module-extras.js"></script>
+  <script src="js/lessons-tax.js"></script>
+  <script src="js/lessons-finance.js"></script>
+<script src="js/ads.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

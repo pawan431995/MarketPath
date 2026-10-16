@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Stock market glossary: searchable definitions of shares, orders, fundamentals, technical terms, derivatives, mutual funds and Indian market terms, in English and Hindi.">
+  <meta name="theme-color" content="#0b1220">
+  <title>Glossary — MarketPath</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="MarketPath home"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="mainNav" class="main-nav" aria-label="Main navigation">
+      <a href="../index.html#courses" data-ui="navLearn">Learn</a>
+      <a href="calculators.html" data-ui="navTools">Calculators</a>
+      <a href="glossary.html" aria-current="page" data-ui="navGlossary">Glossary</a>
+    </nav>
+    <label class="language-picker"><span class="sr-only">Choose language</span>
+      <select id="languageSelect" aria-label="Choose language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </label>
+  </header>
+
+  <main id="main" class="lesson-wrap pattern-page">
+    <div class="eyebrow" data-ui="eyebrow">GLOSSARY</div>
+    <h1 class="lesson-title" data-ui="title">Stock market glossary</h1>
+    <p class="lesson-summary" data-ui="intro">Plain-language definitions of the terms you will meet in markets, research and trading. Search by word, or filter by topic.</p>
+
+    <div class="gl-controls">
+      <div class="search-box"><span>⌕</span><input id="glSearch" type="search" data-ui-placeholder="searchPlaceholder" placeholder="Search terms..." aria-label="Search glossary"></div>
+      <div class="pattern-filters" role="group" aria-label="Filter by topic" id="glFilters"></div>
+    </div>
+    <p id="glCount" class="gl-count"></p>
+    <div id="glList" class="gl-list"></div>
+    <p id="glNone" class="no-results" hidden data-ui="none">No terms match your search.</p>
+
+    <p class="fine-print lesson-disclaimer" data-ui="disclaimer">Definitions are for education. They are not investment advice. Check official sources such as SEBI and NSE for current rules.</p>
+  </main>
+
+  <footer class="site-footer"><a class="brand footer-brand" href="../index.html"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a><p data-ui="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="../index.html#about" data-ui="disclaimerLink">Disclaimer</a><a href="privacy.html" data-ui="privacyLink">Privacy policy</a><a href="contact.html" data-ui="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPath. Educational content only.</small></footer>
+  <script src="../js/shared.js"></script>
+  <script src="../js/ads.js"></script>
+  <script src="../js/glossary-data.js"></script>
+  <script src="../js/glossary-finance.js"></script>
+  <script src="../js/glossary-page.js"></script>
+</body>
+</html>
