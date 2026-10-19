@@ -149,8 +149,8 @@
   daily: {}, range: null, pendingRange: null // daily candles per symbol; the date-range button in use and one still to apply
  };
  const WATCHLISTS = 5, WATCH_MAX = 50;
- const SCREENS = ["watchlist", "dashboard", "chart", "replay", "orders", "holdings", "positions", "funds", "portfolio", "history", "journal"];
- const OWN_PANES = { chart: "ptChartPane", replay: "ptReplayPane", journal: "ptJournalPane" }; // sections with their own pane
+ const SCREENS = ["watchlist", "dashboard", "chart", "screener", "strategy", "replay", "orders", "holdings", "positions", "funds", "portfolio", "history", "journal"];
+ const OWN_PANES = { chart: "ptChartPane", screener: "ptScreenerPane", strategy: "ptStrategyPane", replay: "ptReplayPane", journal: "ptJournalPane" }; // sections with their own pane
 
  // ---------- Persistence (per-viewer; storage can be blocked, so every access is wrapped) ----------
  const store = (function load() {
@@ -1067,8 +1067,10 @@
   Object.entries(OWN_PANES).forEach(([view, id]) => { $(id).hidden = name !== view; });
   $("ppAccount").hidden = name === "watchlist" || !!OWN_PANES[name];
   if (name === "replay") replay.show(); else replay.hide();
+  if (name === "screener") screener.show();
+  if (name === "strategy") backtest.show();
   if (name === "journal") journal.show($("ptJournalPane"));
-  document.querySelectorAll("#ptNav [data-view]").forEach(b => {
+  document.querySelectorAll("#paperApp .pt-navtab").forEach(b => {
    const on = b.dataset.view === name;
    b.setAttribute("aria-selected", String(on));
    b.tabIndex = on ? 0 : -1;
@@ -1080,7 +1082,7 @@
  }
  function renderNav() {
   const counts = Object.assign(accountView.counts(), { journal: journal ? journal.pendingCount() : 0 });
-  document.querySelectorAll("#ptNav [data-view]").forEach(b => {
+  document.querySelectorAll("#paperApp .pt-navtab").forEach(b => {
    const n = counts[b.dataset.view];
    let tag = b.querySelector("small");
    if (!n) { if (tag) tag.remove(); return; }
@@ -1348,15 +1350,18 @@
   if (state.feed === "finnhub" && readKey()) watchlist().forEach(sym => { if (!state.prices[sym]) quoteFinnhub(sym); });
   scheduleRender();
  });
- $("ptNav").addEventListener("click", e => {
-  const b = e.target.closest("[data-view]");
-  if (b) setScreen(b.dataset.view);
- });
- $("ptNav").addEventListener("keydown", e => {
-  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-  const tabs = [...document.querySelectorAll("#ptNav [data-view]")].filter(b => b.offsetParent !== null);
-  const i = tabs.findIndex(b => b.dataset.view === state.screen), next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
-  if (next) { setScreen(next.dataset.view); next.focus(); }
+ // Two tab bars: account sections in the top bar, tools (chart, screener, strategy, replay, journal) above the work area.
+ ["ptNav", "ptToolNav"].forEach(id => {
+  $(id).addEventListener("click", e => {
+   const b = e.target.closest("[data-view]");
+   if (b) setScreen(b.dataset.view);
+  });
+  $(id).addEventListener("keydown", e => {
+   if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+   const tabs = [...$(id).querySelectorAll("[data-view]")].filter(b => b.offsetParent !== null);
+   const i = tabs.indexOf(document.activeElement), next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+   if (next) { setScreen(next.dataset.view); next.focus(); }
+  });
  });
  document.querySelector(".pt-trade-btns").addEventListener("click", e => {
   const b = e.target.closest("[data-trade]");
@@ -1520,6 +1525,35 @@
   covered: () => (window.MP_QUOTES ? Promise.resolve(Object.keys(MP_QUOTES.q).filter(s => MP_QUOTES.q[s][3] === 1).sort())
    : fetch(window.MPChrome ? MPChrome.url("data/universe.json") : "data/universe.json").then(r => r.json()).then(l => l.slice().sort()).catch(() => []))
  });
+ // Screener and strategy backtester. Both use real NSE daily data, so opening a stock on the chart from them
+ // switches to the real-price feed.
+ function chartReal(sym) {
+  if (state.feed !== "nse") { selectFeed("nse"); toast("Switched to real NSE prices to match the screener and backtest data.", "ok"); }
+  selectSymbol(sym);
+  setScreen("chart");
+  $("paperApp").scrollIntoView({ behavior: "smooth", block: "start" });
+ }
+ const coveredList = () => (window.MP_QUOTES ? Promise.resolve(Object.keys(MP_QUOTES.q).filter(s => MP_QUOTES.q[s][3] === 1).sort())
+  : fetch(window.MPChrome ? MPChrome.url("data/universe.json") : "data/universe.json").then(r => r.json()).then(l => l.slice().sort()).catch(() => []));
+ async function loadBars(sym) {
+  if (!(window.MP_DAILY || {})[sym]) await loadScript(dataUrl(`data/daily/${dataFile(sym)}.js`)).catch(() => { throw new Error("no daily data"); });
+  const d = window.MP_DAILY[sym];
+  return d.t.map((day, i) => ({ time: day * 86400 - 19800, open: d.o[i], high: d.h[i], low: d.l[i], close: d.c[i], volume: d.v[i] }));
+ }
+ const backtest = PaperBacktest.create({
+  esc, money, signed, fmt, toast, names: NSE_NAME, infoButton: PaperCosts.infoButton, loadBars, covered: coveredList,
+  plan: () => store.prefs.plan, slippageOn: () => !!store.prefs.slippage,
+  // The real-price feed's five watchlists (the screener and backtests use real NSE data).
+  watchlist: () => (store.watchlists.nse && Array.isArray(store.watchlists.nse.lists) ? store.watchlists.nse.lists.flat() : watchlist()),
+  screenerList: () => screener.results(), onChart: chartReal,
+  defaultSymbol: () => (state.feed === "nse" && state.symbol ? state.symbol : "RELIANCE")
+ });
+ const screener = PaperScreener.create({
+  esc, fmt, toast, names: NSE_NAME, infoButton: PaperCosts.infoButton, loadScript, dataUrl, onChart: chartReal,
+  inWatch: sym => watchlist().includes(sym),
+  onWatch: sym => { toggleWatch(sym); toast(watchlist().includes(sym) ? `Added ${sym} to Watchlist ${watchStore().active + 1}.` : `Removed ${sym} from the watchlist.`, "ok"); },
+  onBacktest: target => { backtest.testOn(target); setScreen("strategy"); $("paperApp").scrollIntoView({ behavior: "smooth", block: "start" }); }
+ });
  syncChartControls();
  // The index strip in the terminal bar uses the same data file as the site's index ribbon.
  document.addEventListener("mp-indices", scheduleRender);
@@ -1527,6 +1561,17 @@
  let firstScreen = "chart";
  try { firstScreen = localStorage.getItem("mp-paper-tab") || "chart"; } catch (e) { /* storage unavailable */ }
  if (firstScreen === "watchlist" && !window.matchMedia("(max-width: 900px)").matches) firstScreen = "chart";
+ // Links such as index.html#screener (from the site menu) open the terminal on that tool.
+ const HASH_SCREENS = { "#screener": "screener", "#strategy": "strategy", "#replay": "replay", "#journal": "journal" };
+ if (HASH_SCREENS[location.hash]) firstScreen = HASH_SCREENS[location.hash];
  setScreen(SCREENS.includes(firstScreen) ? firstScreen : "chart");
  selectFeed(FEEDS[store.prefs.feed] ? store.prefs.feed : "nse");
+ function openFromHash() {
+  const view = HASH_SCREENS[location.hash];
+  if (!view && location.hash !== "#paper") return;
+  if (view) setScreen(view);
+  requestAnimationFrame(() => $("paper").scrollIntoView({ block: "start" }));
+ }
+ window.addEventListener("hashchange", openFromHash);
+ if (HASH_SCREENS[location.hash]) openFromHash();
 })();

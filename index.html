@@ -99,18 +99,15 @@
       <div class="pt" id="paperApp" data-view="chart">
         <header class="pt-top">
           <div class="pt-indices" id="ptIndices" aria-label="Market indices"></div>
-          <nav class="pt-nav" id="ptNav" role="tablist" aria-label="Terminal sections">
-            <button type="button" role="tab" data-view="watchlist" class="pt-mobile-only">Watchlist</button>
-            <button type="button" role="tab" data-view="dashboard">Dashboard</button>
-            <button type="button" role="tab" data-view="chart">Chart</button>
-            <button type="button" role="tab" data-view="replay">Replay</button>
-            <button type="button" role="tab" data-view="orders">Orders</button>
-            <button type="button" role="tab" data-view="holdings">Holdings</button>
-            <button type="button" role="tab" data-view="positions">Positions</button>
-            <button type="button" role="tab" data-view="funds">Funds</button>
-            <button type="button" role="tab" data-view="portfolio">Portfolio</button>
-            <button type="button" role="tab" data-view="history">History</button>
-            <button type="button" role="tab" data-view="journal">Journal</button>
+          <nav class="pt-nav" id="ptNav" role="tablist" aria-label="Account sections">
+            <button type="button" role="tab" class="pt-navtab pt-mobile-only" data-view="watchlist">Watchlist</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="dashboard">Dashboard</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="orders">Orders</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="holdings">Holdings</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="positions">Positions</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="funds">Funds</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="portfolio">Portfolio</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="history">Trade history</button>
           </nav>
           <div class="pt-tools">
             <button type="button" class="pp-btn pt-icon" id="ppSideToggle" aria-pressed="false" title="Hide the watchlist">⇤</button>
@@ -135,6 +132,13 @@
             <div class="pt-watch-tabs" id="ptWatchTabs" role="tablist" aria-label="Watchlists"></div>
           </aside>
           <div class="pt-work">
+            <nav class="pt-toolnav" id="ptToolNav" role="tablist" aria-label="Tools">
+              <button type="button" role="tab" class="pt-navtab" data-view="chart"><span aria-hidden="true">📈</span> Chart</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="screener"><span aria-hidden="true">🔎</span> Screener</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="strategy"><span aria-hidden="true">🧪</span> Strategy &amp; backtest</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="replay"><span aria-hidden="true">⏪</span> Bar replay</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="journal"><span aria-hidden="true">📓</span> Journal</button>
+            </nav>
             <div class="pt-pane pt-chart-pane" id="ptChartPane">
               <div class="pp-quote-row">
                 <div class="pp-sym"><h3 id="ppSymTitle">—</h3><small id="ppSymName"></small></div>
@@ -169,6 +173,8 @@
               <div class="pp-ranges" id="ppRanges" role="group" aria-label="Date range"></div>
               <p class="demo-note" id="ppNote"></p>
             </div>
+            <div class="pt-pane pt-screener-pane" id="ptScreenerPane" hidden></div>
+            <div class="pt-pane pt-strategy-pane" id="ptStrategyPane" hidden></div>
             <div class="pt-pane pt-replay-pane" id="ptReplayPane" hidden tabindex="-1"></div>
             <div class="pt-pane pt-journal-pane" id="ptJournalPane" hidden></div>
             <div class="pt-pane pt-account-pane" id="ppAccount" hidden>

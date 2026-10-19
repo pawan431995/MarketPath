@@ -261,12 +261,13 @@ body.ss-open{overflow:hidden}
 .ss-suggest button{background:#142238;border:1px solid #31435b;border-radius:999px;color:#e7edf5;padding:5px 11px;font-size:12px;cursor:pointer}
 .ss-suggest button:hover{border-color:#2e796b}
 .ss-foot{margin:0;padding:9px 16px;border-top:1px solid #26384e;font-size:11px;color:#7f94ad}
-@media(max-width:900px){.hdr-search-label,.hdr-search kbd{display:none}}
+@media(max-width:1240px){.hdr-search-label,.hdr-search kbd{display:none}}
+@media(min-width:1241px) and (max-width:1400px){.main-nav{gap:20px}}
 @media(max-width:680px){.hdr-search{order:1;margin-left:auto}.theme-toggle{margin-left:0}.ss-overlay{padding-top:12px}.ss-dialog{max-height:88vh}.ss-foot{display:none}
  .site-header{gap:8px;padding:0 12px}.hdr-search,.theme-toggle{padding:6px 8px}.language-picker select{max-width:88px;padding:7px 6px;font-size:13px}}
-/* Tablets and phones: collapse the nav into the ☰ menu. The header must not clip (styles.css set overflow:hidden
-   at this width, which hid the opened menu below the header on every page). */
-@media(max-width:900px){
+/* Narrower screens: collapse the seven-link nav into the ☰ menu before it would wrap. The header must not clip
+   (styles.css set overflow:hidden at 900px, which hid the opened menu below the header on every page). */
+@media(max-width:1240px){
  .site-header{overflow:visible}
  .menu-toggle{display:block;order:2;margin-left:0}
  .language-picker{order:3}
@@ -895,3 +896,72 @@ html[data-theme="light"] .pt-stars label:has(~ label input:checked),html[data-th
 html[data-theme="light"] .pt-replay-setup legend{color:#0f1b2d}
 html[data-theme="light"] .pt-journal-head :is(strong,small){color:#ffffff}
 html[data-theme="light"] .pt-replay-prog{color:#4a5b70}
+
+/* ---------- Terminal tool bar: Chart, Screener, Strategy, Replay, Journal ---------- */
+.pt-toolnav{display:flex;gap:4px;margin:-14px -16px 14px;padding:8px 12px;border-bottom:1px solid var(--pt-line);overflow-x:auto;scrollbar-width:none;background:var(--pt-head)}
+.pt-toolnav::-webkit-scrollbar{display:none}
+.pt-toolnav button{flex:none;display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid transparent;border-radius:8px;color:#9aadc2;font-weight:600;font-size:13px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.pt-toolnav button:hover{color:#e7edf5;background:var(--pt-hover)}
+.pt-toolnav button[aria-selected="true"]{color:#ff9b6a;background:#2a2333;border-color:#5a3a33}
+.pt-toolnav button small{display:inline-block;min-width:18px;padding:1px 6px;border-radius:999px;background:#2a2333;color:#ffb48f;font-size:10.5px;text-align:center}
+.pt-toolnav button:focus-visible{outline:2px solid #48e0b0;outline-offset:1px}
+.pt-nav button{padding:0 12px}
+@media(max-width:680px){.pt-toolnav{margin:-12px -12px 12px;padding:6px 8px}}
+
+/* ---------- Screener ---------- */
+.sc-presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sc-builder h4 small{font-family:'DM Sans',sans-serif;font-weight:500}
+.sc-saved{display:flex;gap:6px;align-items:center}
+.sc-saved select,.sc-filter select,.sc-filter input,.sb-rule select,.sb-rule input,.sb-mode{background:#0c1625;border:1px solid #304158;border-radius:6px;color:#fff;padding:7px 8px;font-size:13px;outline-color:#48e0b0;min-width:0}
+.sc-filter{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid #1b2a40}
+.sc-filter input{width:90px}
+.sc-filter small,.sc-filter span{font-size:12px;color:#8fa2b8}
+.sc-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin-top:12px}
+.sc-row .pt-field{min-width:180px}
+.sc-count{font-size:14px}
+.sc-table{max-height:640px}
+.sc-trend{white-space:nowrap}
+.sc-trend i{display:inline-block;font-style:normal;font-size:9.5px;font-weight:700;padding:1px 4px;margin-right:2px;border-radius:3px;background:#1c2b42;color:#5d7088}
+.sc-trend i.on{background:#193c3b;color:#7df1c7}
+.sc-more{margin-top:10px}
+.sb-sort{background:none;border:0;padding:0;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;cursor:pointer}
+.sb-sort:hover{color:#e7edf5}
+.sb-sort:focus-visible{outline:2px solid #48e0b0;outline-offset:2px}
+
+/* ---------- Strategy builder and backtest ---------- */
+.sb-form{display:grid;gap:0}
+.sb-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px}
+.sb-actions{display:flex;flex-wrap:wrap;gap:6px}
+.sb-rules{display:grid;gap:6px;margin-bottom:10px}
+.sb-rule{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px;border:1px solid #26384e;border-radius:8px;background:#0c1625}
+.sb-op{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center}
+.sb-op input{width:70px}
+.sb-mode{font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:600;margin-left:6px}
+.sb-risk{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}
+.sb-summary p{margin:0;font-size:14px;line-height:1.6;color:#ffd7a8}
+.sb-run{padding:12px 30px;font-size:15px;justify-self:start;margin-bottom:16px}
+.sb-run:disabled{opacity:.6;cursor:wait}
+.sb-results{display:grid;gap:0}
+.sb-chart{width:100%}
+.sb-legend{display:flex;gap:16px;align-items:center;font-size:12px;color:#9aadc2;margin:6px 0 0}
+.sb-legend i{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:-10px}
+.sb-verdict{margin-top:10px}
+.sb-click{cursor:pointer}
+.sb-click:hover td{background:#132034}
+.sb-click:focus-visible{outline:2px solid #48e0b0;outline-offset:-2px}
+.sb-detail{border-top:1px dashed #2b3d54;padding-top:14px;margin-top:6px}
+.sb-detail .ppa-title small{font-size:12px}
+@media(max-width:680px){.sb-op input{width:60px}.sb-rule select{max-width:100%}}
+
+/* Light theme */
+html[data-theme="light"] .pt-toolnav button{color:#4a5b70}
+html[data-theme="light"] .pt-toolnav button[aria-selected="true"]{color:#c2410c;background:#ffedd5;border-color:#fdba74}
+html[data-theme="light"] .pt-toolnav button small{background:#ffedd5;color:#9a3412}
+html[data-theme="light"] :is(.sc-saved select,.sc-filter select,.sc-filter input,.sb-rule select,.sb-rule input,.sb-mode){background:#ffffff;border-color:#c5d0de;color:#13233a}
+html[data-theme="light"] .sb-rule{background:#f8fafc;border-color:#d5dde8}
+html[data-theme="light"] .sc-filter{border-color:#edf1f6}
+html[data-theme="light"] .sc-trend i{background:#eef2f8;color:#8a99ad}
+html[data-theme="light"] .sc-trend i.on{background:#d9f5ec;color:#0b6b50}
+html[data-theme="light"] .sb-summary p{color:#8a4a10}
+html[data-theme="light"] .sb-click:hover td{background:#f4f7fb}
+html[data-theme="light"] .sb-detail{border-color:#d5dde8}

@@ -7,7 +7,7 @@
  const SCRIPTS = [
   "https://unpkg.com/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js",
   "js/paper-symbols.js", "js/paper-charges.js", "js/paper-indicators.js", "js/paper-drawings.js",
-  "js/paper-costs.js", "js/paper-journal.js", "js/paper-replay.js", "js/paper-account.js", "js/paper-trading.js"
+  "js/paper-costs.js", "js/paper-journal.js", "js/paper-replay.js", "js/paper-strategy.js", "js/paper-backtest.js", "js/paper-screener.js", "js/paper-account.js", "js/paper-trading.js"
  ];
  let started = false;
  function load() {
@@ -24,7 +24,9 @@
    document.body.appendChild(s);
   });
  }
- const onHash = () => { if (location.hash === "#paper") load(); };
+ // #paper opens the terminal; #screener, #strategy, #replay and #journal open it on that tool (site menu links).
+ const HASHES = ["#paper", "#screener", "#strategy", "#replay", "#journal"];
+ const onHash = () => { if (HASHES.includes(location.hash)) load(); };
  const observer = "IntersectionObserver" in window
   ? new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) load(); }, { rootMargin: "800px 0px" })
   : null;

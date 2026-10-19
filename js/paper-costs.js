@@ -134,6 +134,27 @@ const PaperCosts = (function () {
     "Replay uses its own virtual ₹10 lakh and does not touch your paper account."
    ])
   }),
+  screener: () => ({
+   title: "How the screener works",
+   html: `${li([
+    "<b>Stocks</b>: the NIFTY 500 (NSE's list of the 500 largest listed companies, with each one's industry).",
+    "<b>Data</b>: real daily candles (open, high, low, close, volume) for about 2 years from Yahoo Finance, refreshed every 12 hours, with the latest delayed price as today's close. The badge shows the date of the latest candle.",
+    "<b>Returns</b> count trading days: 1 week = 5, 1 month = 21, 3 months = 63, 6 months = 126, 1 year = 250.",
+    "<b>Indicators</b> use the same maths as the chart: SMA, RSI 14, MACD 12/26/9, ADX 14, ATR 14, Bollinger Bands 20/2, Supertrend 10/3, Stochastic 14/3/3. Crossovers count trading days since the cross.",
+    "<b>Volume vs average</b> compares the latest full day's volume with the 20 days before it. <b>Volatility</b> is the standard deviation of daily returns over 3 months, scaled to a year.",
+    "Only technical (price and volume) measures are available. Fundamentals such as P/E or market value are not in this data."
+   ])}<p>A screen finds candidates to study, not stocks to buy. Always check the chart and the business before acting.</p>`
+  }),
+  backtest: () => ({
+   title: "How backtesting works, and its limits",
+   html: `${li([
+    "The strategy is applied to real daily candles one day at a time. Rules are checked at each day's close, and orders fill at the <b>next day's open</b>, so the test never uses a price it could not have known.",
+    "Stop-loss, trailing stop and target are checked within each day using its high and low. A gap past a level fills at the open; if the stop and the target are both inside one day, the stop is assumed first.",
+    "Every trade pays delivery charges (brokerage plan, STT, exchange, SEBI, stamp duty, DP charge, GST) and, if switched on, estimated slippage. Long trades only, one position at a time, no leverage. Position size is a share of the current equity, so gains and losses compound.",
+    "<b>CAGR</b> = (final ÷ starting equity)<sup>365 ÷ days</sup> − 1. <b>Sharpe ratio</b> = average daily return ÷ its standard deviation × √252 (no risk-free rate subtracted). <b>Time in the market</b> = share of days holding a position.",
+    "<b>Earlier vs later period</b>: the same rules are scored separately on the first 70% and the last 30% of the test. Rules tuned until they look good on the past often fail on the later part: that is overfitting."
+   ])}<p><b>Limits</b>: about 2 years of data is a short test. The NIFTY 500 list is today's list, so companies that fell out of the index are missing (survivorship bias), which flatters results. Dividends are not included. Past results never guarantee future returns.</p>`
+  }),
   storage: () => ({
    title: "Where your journal is stored",
    html: li([

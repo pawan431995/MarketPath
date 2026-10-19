@@ -10,7 +10,7 @@
 
  const T = {
   en: {
-   learn: "Learn", paper: "Paper trading", calcs: "Calculators", glossary: "Glossary", about: "About", search: "Search", menu: "Open navigation",
+   learn: "Learn", paper: "Paper trading", screener: "Screener", strategy: "Strategy", calcs: "Calculators", glossary: "Glossary", about: "About", search: "Search", menu: "Open navigation",
    tagline: "Learn the market, one concept at a time. Lessons, practice and tools for beginners and experienced investors, in English and Hindi.",
    colStart: "Start learning", colTrade: "Trading & analysis", colTools: "Tools", colSite: "MarketPath",
    disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top",
@@ -20,10 +20,10 @@
     "sip-mutual-funds": "SIP & mutual funds", "tax-basics": "Tax basics", "technical-analysis": "Technical analysis",
     "candlestick-patterns": "Candlestick & chart patterns", "fundamental-analysis": "Fundamental analysis", "futures-options": "Futures & options", "risk-management": "Risk management"
    },
-   tools: { sip: "SIP calculator", "income-tax": "Income tax: new vs old", emi: "Loan EMI calculator" }
+   tools: { sip: "SIP calculator", "income-tax": "Income tax: new vs old", emi: "Loan EMI calculator", screener: "Stock screener", strategy: "Strategy backtesting", replay: "Bar replay" }
   },
   hi: {
-   learn: "सीखें", paper: "पेपर ट्रेडिंग", calcs: "कैलकुलेटर", glossary: "शब्दावली", about: "हमारे बारे में", search: "खोजें", menu: "नेविगेशन खोलें",
+   learn: "सीखें", paper: "पेपर ट्रेडिंग", screener: "स्क्रीनर", strategy: "स्ट्रैटेजी", calcs: "कैलकुलेटर", glossary: "शब्दावली", about: "हमारे बारे में", search: "खोजें", menu: "नेविगेशन खोलें",
    tagline: "एक-एक अवधारणा करके बाज़ार सीखें। शुरुआती और अनुभवी निवेशकों के लिए पाठ, अभ्यास और टूल, हिंदी और अंग्रेज़ी में।",
    colStart: "सीखना शुरू करें", colTrade: "ट्रेडिंग और विश्लेषण", colTools: "टूल", colSite: "MarketPath",
    disclaimer: "अस्वीकरण", privacy: "गोपनीयता नीति", contact: "संपर्क", top: "ऊपर जाएँ",
@@ -33,7 +33,7 @@
     "sip-mutual-funds": "SIP और म्यूचुअल फंड", "tax-basics": "टैक्स की मूल बातें", "technical-analysis": "टेक्निकल एनालिसिस",
     "candlestick-patterns": "कैंडलस्टिक और चार्ट पैटर्न", "fundamental-analysis": "फंडामेंटल एनालिसिस", "futures-options": "फ्यूचर्स और ऑप्शंस", "risk-management": "जोखिम प्रबंधन"
    },
-   tools: { sip: "SIP कैलकुलेटर", "income-tax": "इनकम टैक्स: नई बनाम पुरानी", emi: "लोन EMI कैलकुलेटर" }
+   tools: { sip: "SIP कैलकुलेटर", "income-tax": "इनकम टैक्स: नई बनाम पुरानी", emi: "लोन EMI कैलकुलेटर", screener: "स्टॉक स्क्रीनर", strategy: "स्ट्रैटेजी बैकटेस्टिंग", replay: "बार रीप्ले" }
   }
  };
  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -44,7 +44,7 @@
   if (!nav) return;
   const t = T[lang()];
   const items = [
-   ["learn", url("index.html#courses")], ["paper", url("index.html#paper")], ["calcs", url("pages/calculators.html")],
+   ["learn", url("index.html#courses")], ["paper", url("index.html#paper")], ["screener", url("index.html#screener")], ["strategy", url("index.html#strategy")], ["calcs", url("pages/calculators.html")],
    ["glossary", url("pages/glossary.html")], ["about", url("index.html#about")]
   ];
   nav.innerHTML = items.map(([k, href]) => {
@@ -91,7 +91,7 @@
     </div>
     <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTrade)}"><h2>${esc(t.colTrade)}</h2>${["technical-analysis", "candlestick-patterns", "fundamental-analysis", "futures-options", "risk-management"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
-    <nav class="ft-col" aria-label="${esc(t.colTools)}"><h2>${esc(t.colTools)}</h2>${link(url("index.html#paper"), t.paper)}${link(url("pages/calculators.html"), t.calcs)}${link(url("pages/calculators.html#sip"), t.tools.sip)}${link(url("pages/calculators.html#income-tax"), t.tools["income-tax"])}${link(url("pages/glossary.html"), t.glossary)}</nav>
+    <nav class="ft-col" aria-label="${esc(t.colTools)}"><h2>${esc(t.colTools)}</h2>${link(url("index.html#paper"), t.paper)}${link(url("index.html#screener"), t.tools.screener)}${link(url("index.html#strategy"), t.tools.strategy)}${link(url("index.html#replay"), t.tools.replay)}${link(url("pages/calculators.html"), t.calcs)}${link(url("pages/calculators.html#sip"), t.tools.sip)}${link(url("pages/calculators.html#income-tax"), t.tools["income-tax"])}${link(url("pages/glossary.html"), t.glossary)}</nav>
     <nav class="ft-col" aria-label="${esc(t.colSite)}"><h2>${esc(t.colSite)}</h2>${link(url("index.html#about"), t.about)}${link(url("index.html#about"), t.disclaimer)}${link(url("pages/privacy.html"), t.privacy)}${link(url("pages/contact.html"), t.contact)}</nav>
    </div>
    <div class="ft-bottom"><small>© <span id="year">${new Date().getFullYear()}</span> ${esc(t.rights)}</small></div>`;

@@ -4,6 +4,8 @@
 //   data/daily/<SYM>.js      2 years of daily candles with volume for NIFTY 500 stocks (refreshed every 12 hours)
 //   data/eod.json            daily closes for the other stocks (refreshed once a day, reused between runs)
 //   data/universe.json       the NIFTY 500 symbol list (fallback if NSE's list cannot be downloaded)
+//   data/sectors.json        the industry of each NIFTY 500 stock (for the screener's sector filter)
+//   data/screener.js         screener metrics for NIFTY 500 stocks (tools/build-screener.js)
 // Run by .github/workflows/update-indices.yml every 5 minutes in market hours, or by hand:
 //   node tools/fetch-quotes.js            (add --daily or --eod to force those once-a-day parts)
 // Source: Yahoo Finance (NSE prices, delayed). For education only; not an official or real-time feed.
@@ -47,9 +49,15 @@ async function coreUniverse() {
  try {
   const csv = await getText("https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv");
   const lines = csv.trim().split(/\r?\n/);
-  const col = lines[0].split(",").findIndex(h => h.trim().toLowerCase() === "symbol");
+  const head = lines[0].split(",").map(h => h.trim().toLowerCase());
+  const col = head.indexOf("symbol"), ind = head.indexOf("industry");
   const syms = lines.slice(1).map(l => l.split(",")[col]).filter(s => /^[A-Z0-9&_.-]+$/.test(s || ""));
-  if (syms.length > 400) { fs.writeFileSync(cache, JSON.stringify(syms) + "\n"); return syms; }
+  if (syms.length > 400) {
+   fs.writeFileSync(cache, JSON.stringify(syms) + "\n");
+   // Industry of each stock, for the screener's sector filter (NSE's file has no quoted commas).
+   if (ind >= 0) fs.writeFileSync(path.join(DATA, "sectors.json"), JSON.stringify(Object.fromEntries(lines.slice(1).map(l => l.split(",")).filter(c => c[col] && c[ind]).map(c => [c[col].trim(), c[ind].trim()]))) + "\n");
+   return syms;
+  }
   throw new Error(`only ${syms.length} symbols`);
  } catch (e) {
   console.warn(`NIFTY 500 list download failed (${e.message}); using the saved list.`);
@@ -170,6 +178,9 @@ async function main() {
 
  // 4. Daily candles for the longer chart timeframes (after the quotes, so a slow fetch never delays prices).
  await fetchDaily(core);
+
+ // 5. Screener metrics from the daily candles and the latest prices (tools/build-screener.js).
+ try { require("./build-screener.js").build(quotes); } catch (e) { console.warn(`Screener build failed: ${e.message}`); }
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
