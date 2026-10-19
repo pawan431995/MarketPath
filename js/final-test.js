@@ -113,23 +113,23 @@
   const u = t(), hist = load(KEY_HISTORY, []), total = BANK.modules.reduce((s, m) => s + BANK.en[m.slug].length, 0);
   const pending = attempt && !attempt.done && Date.now() < attempt.end;
   if (attempt && !attempt.done && !pending) { finish(true); return; }
-  app.innerHTML = `<section class="ft-hero"><div class="eyebrow">${u.eyebrow}</div><h1 class="lesson-title">${u.title}</h1><p class="lesson-summary">${u.intro}</p></section>
-   ${msg ? `<p class="ft-banner">${esc(msg)}</p>` : ""}
-   ${pending ? `<section class="ft-card ft-resume"><p>${u.inProgress(attempt.ans.filter(x => x !== null).length, attempt.size, fmtTime(attempt.end - Date.now()))}</p><div class="ft-actions"><button type="button" class="btn btn-primary" data-act="resume">${u.resume}</button><button type="button" class="btn btn-secondary" data-act="discard">${u.discard}</button></div></section>` : ""}
-   <div class="ft-intro-grid">
-    <section class="ft-card">
+  app.innerHTML = `<section class="xt-hero"><div class="eyebrow">${u.eyebrow}</div><h1 class="lesson-title">${u.title}</h1><p class="lesson-summary">${u.intro}</p></section>
+   ${msg ? `<p class="xt-banner">${esc(msg)}</p>` : ""}
+   ${pending ? `<section class="xt-card xt-resume"><p>${u.inProgress(attempt.ans.filter(x => x !== null).length, attempt.size, fmtTime(attempt.end - Date.now()))}</p><div class="xt-actions"><button type="button" class="btn btn-primary" data-act="resume">${u.resume}</button><button type="button" class="btn btn-secondary" data-act="discard">${u.discard}</button></div></section>` : ""}
+   <div class="xt-intro-grid">
+    <section class="xt-card">
      <form data-start>
-      <fieldset class="ft-choice"><legend>${u.size}</legend>${SIZES.map((n, i) => `<label><input type="radio" name="size" value="${n}"${i === 1 ? " checked" : ""}><span><b>${n}</b>${u.minutes(n).split(" · ")[1]}</span></label>`).join("")}</fieldset>
-      <fieldset class="ft-choice ft-choice-sm"><legend>${u.lang}</legend><label><input type="radio" name="tlang" value="en"${lang === "en" ? " checked" : ""}><span>English</span></label><label><input type="radio" name="tlang" value="hi"${lang === "hi" ? " checked" : ""}><span>हिन्दी</span></label></fieldset>
-      <ul class="ft-rules">${u.rules.map(r => `<li>${esc(r.replace("{m}", BANK.modules.length))}</li>`).join("")}</ul>
-      <button type="submit" class="btn btn-primary ft-big" ${pending ? "disabled" : ""}>${u.start} →</button>
+      <fieldset class="xt-choice"><legend>${u.size}</legend>${SIZES.map((n, i) => `<label><input type="radio" name="size" value="${n}"${i === 1 ? " checked" : ""}><span><b>${n}</b>${u.minutes(n).split(" · ")[1]}</span></label>`).join("")}</fieldset>
+      <fieldset class="xt-choice xt-choice-sm"><legend>${u.lang}</legend><label><input type="radio" name="tlang" value="en"${lang === "en" ? " checked" : ""}><span>English</span></label><label><input type="radio" name="tlang" value="hi"${lang === "hi" ? " checked" : ""}><span>हिन्दी</span></label></fieldset>
+      <ul class="xt-rules">${u.rules.map(r => `<li>${esc(r.replace("{m}", BANK.modules.length))}</li>`).join("")}</ul>
+      <button type="submit" class="btn btn-primary xt-big" ${pending ? "disabled" : ""}>${u.start} →</button>
      </form>
     </section>
-    <aside class="ft-card"><h2 class="ft-h">${u.coverage} <small>${BANK.modules.length} · ${total}</small></h2>
-     <ul class="ft-modules">${BANK.modules.map(m => `<li><span>${esc(m[lang] || m.en)}</span><small>${BANK.en[m.slug].length}</small></li>`).join("")}</ul>
+    <aside class="xt-card"><h2 class="xt-h">${u.coverage} <small>${BANK.modules.length} · ${total}</small></h2>
+     <ul class="xt-modules">${BANK.modules.map(m => `<li><span>${esc(m[lang] || m.en)}</span><small>${BANK.en[m.slug].length}</small></li>`).join("")}</ul>
     </aside>
    </div>
-   <section class="ft-card"><h2 class="ft-h">${u.history}</h2>${hist.length ? `<div class="ft-table-wrap"><table class="ft-table"><tbody>${hist.slice().reverse().map((h, i) => `<tr><td>${new Date(h.date).toLocaleString(lang === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</td><td class="num">${h.correct} / ${h.size}</td><td class="num"><b>${h.pct.toFixed(1)}%</b></td><td><span class="ft-badge ${h.passed ? "ok" : "no"}">${h.passed ? u.pass : u.fail}</span></td><td class="num">${h.passed ? `<button type="button" class="btn btn-secondary ft-sm" data-cert="${hist.length - 1 - i}">${u.viewCert}</button>` : ""}</td></tr>`).join("")}</tbody></table></div>` : `<p class="ft-muted">${u.noHistory}</p>`}</section>`;
+   <section class="xt-card"><h2 class="xt-h">${u.history}</h2>${hist.length ? `<div class="xt-table-wrap"><table class="xt-table"><tbody>${hist.slice().reverse().map((h, i) => `<tr><td>${new Date(h.date).toLocaleString(lang === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</td><td class="num">${h.correct} / ${h.size}</td><td class="num"><b>${h.pct.toFixed(1)}%</b></td><td><span class="xt-badge ${h.passed ? "ok" : "no"}">${h.passed ? u.pass : u.fail}</span></td><td class="num">${h.passed ? `<button type="button" class="btn btn-secondary xt-sm" data-cert="${hist.length - 1 - i}">${u.viewCert}</button>` : ""}</td></tr>`).join("")}</tbody></table></div>` : `<p class="xt-muted">${u.noHistory}</p>`}</section>`;
   app.querySelector("[data-start]").addEventListener("submit", e => {
    e.preventDefault();
    const f = e.target;
@@ -158,48 +158,48 @@
   const u = t(), a = attempt, k = a.cur, q = qOf(a, k);
   a.seen[k] = true;
   const answered = a.ans.filter(x => x !== null).length, marked = a.marked.filter(Boolean).length;
-  app.innerHTML = `<div class="ft-bar" role="region" aria-label="${esc(u.title)}">
-    <div class="ft-bar-l"><strong>${u.q(k + 1, a.size)}</strong><span>${answered} ${u.answered} · ${marked} ${u.markedN}</span></div>
-    <div class="ft-timer" aria-label="${u.timeLeft}"><span>${u.timeLeft}</span><b id="ftTimer">${fmtTime(a.end - Date.now())}</b></div>
+  app.innerHTML = `<div class="xt-bar" role="region" aria-label="${esc(u.title)}">
+    <div class="xt-bar-l"><strong>${u.q(k + 1, a.size)}</strong><span>${answered} ${u.answered} · ${marked} ${u.markedN}</span></div>
+    <div class="xt-timer" aria-label="${u.timeLeft}"><span>${u.timeLeft}</span><b id="ftTimer">${fmtTime(a.end - Date.now())}</b></div>
     <button type="button" class="btn btn-primary" data-act="submit">${u.submit}</button>
    </div>
-   <div class="ft-progress" aria-hidden="true"><i style="width:${((answered / a.size) * 100).toFixed(1)}%"></i></div>
+   <div class="xt-progress" aria-hidden="true"><i style="width:${((answered / a.size) * 100).toFixed(1)}%"></i></div>
    <p id="ftLive" class="sr-only" aria-live="assertive"></p>
-   <div class="ft-test">
-    <section class="ft-card ft-q">
-     <p class="ft-mod">${u.module}: ${esc(modTitle(q.slug))}</p>
-     <fieldset><legend class="ft-qtext" ${a.lang === "hi" ? 'lang="hi"' : 'lang="en"'}>${esc(q.text)}</legend>
-      <div class="ft-opts" ${a.lang === "hi" ? 'lang="hi"' : 'lang="en"'}>${q.options.map((o, i) => `<label class="ft-opt${a.ans[k] === i ? " sel" : ""}"><input type="radio" name="opt" value="${i}"${a.ans[k] === i ? " checked" : ""}><span class="ft-letter">${LETTERS[i]}</span><span>${esc(o)}</span></label>`).join("")}</div>
+   <div class="xt-test">
+    <section class="xt-card xt-q">
+     <p class="xt-mod">${u.module}: ${esc(modTitle(q.slug))}</p>
+     <fieldset><legend class="xt-qtext" ${a.lang === "hi" ? 'lang="hi"' : 'lang="en"'}>${esc(q.text)}</legend>
+      <div class="xt-opts" ${a.lang === "hi" ? 'lang="hi"' : 'lang="en"'}>${q.options.map((o, i) => `<label class="xt-opt${a.ans[k] === i ? " sel" : ""}"><input type="radio" name="opt" value="${i}"${a.ans[k] === i ? " checked" : ""}><span class="xt-letter">${LETTERS[i]}</span><span>${esc(o)}</span></label>`).join("")}</div>
      </fieldset>
-     <div class="ft-nav">
+     <div class="xt-nav">
       <button type="button" class="btn btn-secondary" data-act="prev" ${k === 0 ? "disabled" : ""}>${u.prev}</button>
       <button type="button" class="btn btn-secondary" data-act="clear" ${a.ans[k] === null ? "disabled" : ""}>${u.clear}</button>
-      <button type="button" class="btn btn-secondary ft-markbtn${a.marked[k] ? " on" : ""}" data-act="mark" aria-pressed="${a.marked[k]}">${a.marked[k] ? u.marked : u.mark}</button>
+      <button type="button" class="btn btn-secondary xt-markbtn${a.marked[k] ? " on" : ""}" data-act="mark" aria-pressed="${a.marked[k]}">${a.marked[k] ? u.marked : u.mark}</button>
       <button type="button" class="btn btn-primary" data-act="next" ${k === a.size - 1 ? "disabled" : ""}>${u.next}</button>
      </div>
-     <p class="ft-keys">1–${q.options.length}: ${lang === "hi" ? "विकल्प चुनें" : "choose"} · ← →: ${lang === "hi" ? "पिछला/अगला" : "previous/next"} · M: ${lang === "hi" ? "मार्क" : "mark"}</p>
+     <p class="xt-keys">1–${q.options.length}: ${lang === "hi" ? "विकल्प चुनें" : "choose"} · ← →: ${lang === "hi" ? "पिछला/अगला" : "previous/next"} · M: ${lang === "hi" ? "मार्क" : "mark"}</p>
     </section>
-    <aside class="ft-card ft-palette"><h2 class="ft-h">${u.palette}</h2>
-     <div class="ft-grid">${a.qs.map((_, i) => { const st = a.marked[i] ? "mark" : a.ans[i] !== null ? "ans" : a.seen[i] ? "seen" : "new"; return `<button type="button" class="ft-cell ${st}${i === k ? " cur" : ""}" data-go="${i}" aria-label="${u.q(i + 1, a.size)}, ${u.legend.find(l => l[0] === st)[1]}"${i === k ? ' aria-current="true"' : ""}>${i + 1}</button>`; }).join("")}</div>
-     <ul class="ft-legend">${u.legend.map(([c, l]) => `<li><i class="ft-cell ${c}"></i>${l}</li>`).join("")}</ul>
+    <aside class="xt-card xt-palette"><h2 class="xt-h">${u.palette}</h2>
+     <div class="xt-grid">${a.qs.map((_, i) => { const st = a.marked[i] ? "mark" : a.ans[i] !== null ? "ans" : a.seen[i] ? "seen" : "new"; return `<button type="button" class="xt-cell ${st}${i === k ? " cur" : ""}" data-go="${i}" aria-label="${u.q(i + 1, a.size)}, ${u.legend.find(l => l[0] === st)[1]}"${i === k ? ' aria-current="true"' : ""}>${i + 1}</button>`; }).join("")}</div>
+     <ul class="xt-legend">${u.legend.map(([c, l]) => `<li><i class="xt-cell ${c}"></i>${l}</li>`).join("")}</ul>
     </aside>
    </div>`;
   save();
   startTimer();
  }
- function go(k) { attempt.cur = Math.max(0, Math.min(attempt.size - 1, k)); renderQuestion(); const q = app.querySelector(".ft-q"); if (q && q.getBoundingClientRect().top < 0) q.scrollIntoView({ block: "start" }); }
+ function go(k) { attempt.cur = Math.max(0, Math.min(attempt.size - 1, k)); renderQuestion(); const q = app.querySelector(".xt-q"); if (q && q.getBoundingClientRect().top < 0) q.scrollIntoView({ block: "start" }); }
  function choose(i) {
   attempt.ans[attempt.cur] = i;
   save();
   renderQuestion();
-  const r = app.querySelector(`.ft-opt input[value="${i}"]`);
+  const r = app.querySelector(`.xt-opt input[value="${i}"]`);
   if (r) r.focus();
  }
  function confirmSubmit() {
   const u = t(), a = attempt, n = a.ans.filter(x => x !== null).length;
   const box = document.createElement("div");
-  box.className = "ft-modal";
-  box.innerHTML = `<div class="ft-dialog" role="dialog" aria-modal="true" aria-labelledby="ftConfTitle"><h2 id="ftConfTitle">${u.confirmTitle}</h2><p>${u.confirmText(n, a.size, a.size - n, a.marked.filter(Boolean).length)}</p><div class="ft-actions"><button type="button" class="btn btn-secondary" data-c="back">${u.back}</button><button type="button" class="btn btn-primary" data-c="ok">${u.confirm}</button></div></div>`;
+  box.className = "xt-modal";
+  box.innerHTML = `<div class="xt-dialog" role="dialog" aria-modal="true" aria-labelledby="ftConfTitle"><h2 id="ftConfTitle">${u.confirmTitle}</h2><p>${u.confirmText(n, a.size, a.size - n, a.marked.filter(Boolean).length)}</p><div class="xt-actions"><button type="button" class="btn btn-secondary" data-c="back">${u.back}</button><button type="button" class="btn btn-primary" data-c="ok">${u.confirm}</button></div></div>`;
   document.body.appendChild(box);
   const close = () => { box.remove(); app.querySelector('[data-act="submit"]').focus(); };
   box.addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (e.target === box || (b && b.dataset.c === "back")) close(); else if (b) { box.remove(); finish(false); } });
@@ -235,16 +235,16 @@
  function renderResult(a, s, timeUp, histIndex) {
   const u = t(), passed = s.pct >= PASS, need = Math.max(0, Math.ceil((PASS / 100) * a.size) - s.correct);
   const rows = Object.entries(s.per).map(([slug, [c, n]]) => ({ slug, c, n, p: (c / n) * 100 })).sort((x, y) => x.p - y.p);
-  app.innerHTML = `${timeUp ? `<p class="ft-banner">${u.timeUp}</p>` : ""}
-   <section class="ft-card ft-result ${passed ? "ok" : "no"}">
-    <div class="ft-ring" style="--p:${s.pct.toFixed(1)}"><b>${s.pct.toFixed(1)}%</b><small>${u.score}</small></div>
-    <div><span class="ft-badge ${passed ? "ok" : "no"}">${passed ? u.passed : u.failed}</span><h1 class="ft-result-h">${passed ? u.passMsg : u.resultTitle}</h1>${passed ? "" : `<p>${u.failMsg(need)}</p>`}
-     <dl class="ft-stats"><div><dt>${u.correct}</dt><dd>${s.correct} / ${a.size}</dd></div><div><dt>${u.wrong}</dt><dd>${s.wrong}</dd></div><div><dt>${u.skipped}</dt><dd>${s.skipped}</dd></div><div><dt>${u.time}</dt><dd>${fmtTime(a.finishedAt - a.start)}</dd></div></dl>
-     <div class="ft-actions">${passed ? `<button type="button" class="btn btn-primary" data-cert="${histIndex}">🎓 ${u.getCert}</button>` : ""}<button type="button" class="btn btn-secondary" data-act="home">${u.retake}</button></div>
+  app.innerHTML = `${timeUp ? `<p class="xt-banner">${u.timeUp}</p>` : ""}
+   <section class="xt-card xt-result ${passed ? "ok" : "no"}">
+    <div class="xt-ring" style="--p:${s.pct.toFixed(1)}"><b>${s.pct.toFixed(1)}%</b><small>${u.score}</small></div>
+    <div><span class="xt-badge ${passed ? "ok" : "no"}">${passed ? u.passed : u.failed}</span><h1 class="xt-result-h">${passed ? u.passMsg : u.resultTitle}</h1>${passed ? "" : `<p>${u.failMsg(need)}</p>`}
+     <dl class="xt-stats"><div><dt>${u.correct}</dt><dd>${s.correct} / ${a.size}</dd></div><div><dt>${u.wrong}</dt><dd>${s.wrong}</dd></div><div><dt>${u.skipped}</dt><dd>${s.skipped}</dd></div><div><dt>${u.time}</dt><dd>${fmtTime(a.finishedAt - a.start)}</dd></div></dl>
+     <div class="xt-actions">${passed ? `<button type="button" class="btn btn-primary" data-cert="${histIndex}">🎓 ${u.getCert}</button>` : ""}<button type="button" class="btn btn-secondary" data-act="home">${u.retake}</button></div>
     </div>
    </section>
-   <section class="ft-card"><h2 class="ft-h">${u.byModule}</h2><div class="ft-table-wrap"><table class="ft-table"><tbody>${rows.map(r => `<tr class="${r.p < PASS ? "weak" : ""}"><td>${esc(modTitle(r.slug))}</td><td class="num">${r.c} / ${r.n}</td><td class="ft-barcell"><span class="ft-mbar"><i style="width:${r.p.toFixed(0)}%"></i></span>${r.p.toFixed(0)}%</td><td class="num">${r.p < PASS ? `<a href="lesson.html?topic=${encodeURIComponent(r.slug)}">${u.revise} →</a>` : "✓"}</td></tr>`).join("")}</tbody></table></div></section>
-   <section class="ft-card"><h2 class="ft-h">${u.review}</h2><div class="ft-filters" role="group">${u.filters.map(([id, l]) => `<button type="button" class="ft-chip${reviewFilter === id ? " on" : ""}" data-rf="${id}" aria-pressed="${reviewFilter === id}">${l}</button>`).join("")}</div><ol class="ft-review" data-review></ol></section>`;
+   <section class="xt-card"><h2 class="xt-h">${u.byModule}</h2><div class="xt-table-wrap"><table class="xt-table"><tbody>${rows.map(r => `<tr class="${r.p < PASS ? "weak" : ""}"><td>${esc(modTitle(r.slug))}</td><td class="num">${r.c} / ${r.n}</td><td class="xt-barcell"><span class="xt-mbar"><i style="width:${r.p.toFixed(0)}%"></i></span>${r.p.toFixed(0)}%</td><td class="num">${r.p < PASS ? `<a href="lesson.html?topic=${encodeURIComponent(r.slug)}">${u.revise} →</a>` : "✓"}</td></tr>`).join("")}</tbody></table></div></section>
+   <section class="xt-card"><h2 class="xt-h">${u.review}</h2><div class="xt-filters" role="group">${u.filters.map(([id, l]) => `<button type="button" class="xt-chip${reviewFilter === id ? " on" : ""}" data-rf="${id}" aria-pressed="${reviewFilter === id}">${l}</button>`).join("")}</div><ol class="xt-review" data-review></ol></section>`;
   app._result = { a, s, histIndex };
   renderReview();
   window.scrollTo({ top: 0 });
@@ -255,11 +255,11 @@
    const q = qOf(a, k), mine = a.ans[k], ok = mine === q.correct;
    const show = reviewFilter === "all" || (reviewFilter === "wrong" && mine !== null && !ok) || (reviewFilter === "skipped" && mine === null) || (reviewFilter === "marked" && a.marked[k]);
    if (!show) return "";
-   return `<li value="${k + 1}" class="${ok ? "ok" : "no"}" lang="${a.lang}"><p class="ft-rq">${esc(q.text)} <small>${esc(modTitle(q.slug))}</small></p>
-    <p><span class="ft-tag ${ok ? "ok" : "no"}">${u.yours}</span> ${mine === null ? `<i>${u.none}</i>` : `${LETTERS[mine]}. ${esc(q.options[mine])}`}</p>
-    ${ok ? "" : `<p><span class="ft-tag ok">${u.right}</span> ${LETTERS[q.correct]}. ${esc(q.options[q.correct])}</p>`}
-    ${q.why ? `<p class="ft-why"><b>${u.why}:</b> ${esc(q.why)}</p>` : ""}</li>`;
-  }).join("") || `<p class="ft-muted">—</p>`;
+   return `<li value="${k + 1}" class="${ok ? "ok" : "no"}" lang="${a.lang}"><p class="xt-rq">${esc(q.text)} <small>${esc(modTitle(q.slug))}</small></p>
+    <p><span class="xt-tag ${ok ? "ok" : "no"}">${u.yours}</span> ${mine === null ? `<i>${u.none}</i>` : `${LETTERS[mine]}. ${esc(q.options[mine])}`}</p>
+    ${ok ? "" : `<p><span class="xt-tag ok">${u.right}</span> ${LETTERS[q.correct]}. ${esc(q.options[q.correct])}</p>`}
+    ${q.why ? `<p class="xt-why"><b>${u.why}:</b> ${esc(q.why)}</p>` : ""}</li>`;
+  }).join("") || `<p class="xt-muted">—</p>`;
  }
 
  // ---------- Certificate ----------
@@ -275,10 +275,10 @@
   const u = t(), h = load(KEY_HISTORY, [])[histIndex];
   if (!h || !h.passed) { renderIntro(); return; }
   const saved = load("mp-test-name", "");
-  app.innerHTML = `<section class="ft-hero"><div class="eyebrow">🎓 ${u.certTitle}</div><h1 class="lesson-title">${u.certTitle}</h1><p class="lesson-summary">${u.certIntro}</p></section>
-   <section class="ft-card"><form class="ft-certform" data-certform novalidate><label class="ft-field"><span>${u.name}</span><input name="name" maxlength="60" autocomplete="name" value="${esc(h.name || saved)}" required></label><button type="submit" class="btn btn-primary">${u.make}</button><p class="ft-err" data-err aria-live="polite"></p></form></section>
-   <section class="ft-card ft-certbox" data-certbox hidden><canvas width="1600" height="1131" class="ft-canvas" role="img" aria-label="${esc(u.certTitle)}"></canvas>
-    <div class="ft-actions"><button type="button" class="btn btn-primary" data-act="png">⤓ ${u.download}</button><button type="button" class="btn btn-secondary" data-act="print">🖨 ${u.print}</button><button type="button" class="btn btn-secondary" data-act="copy">🔗 ${u.copy}</button><button type="button" class="btn btn-secondary" data-act="home">${u.home}</button></div></section>`;
+  app.innerHTML = `<section class="xt-hero"><div class="eyebrow">🎓 ${u.certTitle}</div><h1 class="lesson-title">${u.certTitle}</h1><p class="lesson-summary">${u.certIntro}</p></section>
+   <section class="xt-card"><form class="xt-certform" data-certform novalidate><label class="xt-field"><span>${u.name}</span><input name="name" maxlength="60" autocomplete="name" value="${esc(h.name || saved)}" required></label><button type="submit" class="btn btn-primary">${u.make}</button><p class="xt-err" data-err aria-live="polite"></p></form></section>
+   <section class="xt-card xt-certbox" data-certbox hidden><canvas width="1600" height="1131" class="xt-canvas" role="img" aria-label="${esc(u.certTitle)}"></canvas>
+    <div class="xt-actions"><button type="button" class="btn btn-primary" data-act="png">⤓ ${u.download}</button><button type="button" class="btn btn-secondary" data-act="print">🖨 ${u.print}</button><button type="button" class="btn btn-secondary" data-act="copy">🔗 ${u.copy}</button><button type="button" class="btn btn-secondary" data-act="home">${u.home}</button></div></section>`;
   app._cert = { histIndex };
   if (h.name) make(h.name);
  }
@@ -342,8 +342,8 @@
   const u = t();
   let c = null;
   try { c = JSON.parse(unb64(code)); if (!(c && typeof c.n === "string" && c.d > 0 && c.c >= 0 && c.t > 0 && c.c <= c.t && (c.c / c.t) * 100 >= PASS && c.id === certId(c))) c = null; } catch (e) { c = null; }
-  app.innerHTML = `<section class="ft-hero"><div class="eyebrow">🎓</div><h1 class="lesson-title">${u.verifyTitle}</h1></section>
-   <section class="ft-card ft-verify ${c ? "ok" : "no"}">${c ? `<p class="ft-badge ok">✓ ${u.verifyOk}</p><dl class="ft-stats"><div><dt>${u.name}</dt><dd>${esc(c.n)}</dd></div><div><dt>${u.score}</dt><dd>${((c.c / c.t) * 100).toFixed(1)}% (${c.c} / ${c.t})</dd></div><div><dt>Date</dt><dd>${new Date(c.d).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</dd></div><div><dt>ID</dt><dd>${certId(c)}</dd></div></dl>` : `<p class="ft-badge no">✕ ${u.verifyBad}</p>`}<p class="ft-muted">${u.verifyNote}</p><a class="btn btn-secondary" href="test.html">${u.home}</a></section>`;
+  app.innerHTML = `<section class="xt-hero"><div class="eyebrow">🎓</div><h1 class="lesson-title">${u.verifyTitle}</h1></section>
+   <section class="xt-card xt-verify ${c ? "ok" : "no"}">${c ? `<p class="xt-badge ok">✓ ${u.verifyOk}</p><dl class="xt-stats"><div><dt>${u.name}</dt><dd>${esc(c.n)}</dd></div><div><dt>${u.score}</dt><dd>${((c.c / c.t) * 100).toFixed(1)}% (${c.c} / ${c.t})</dd></div><div><dt>Date</dt><dd>${new Date(c.d).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</dd></div><div><dt>ID</dt><dd>${certId(c)}</dd></div></dl>` : `<p class="xt-badge no">✕ ${u.verifyBad}</p>`}<p class="xt-muted">${u.verifyNote}</p><a class="btn btn-secondary" href="test.html">${u.home}</a></section>`;
  }
 
  // ---------- Events ----------
@@ -375,7 +375,7 @@
    w.document.close();
   }
   else if (act === "copy") {
-   const link = verifyUrl(app._cert.data), done = () => { const el = app.querySelector("[data-err]"); el.textContent = t().copied; el.className = "ft-err ok"; };
+   const link = verifyUrl(app._cert.data), done = () => { const el = app.querySelector("[data-err]"); el.textContent = t().copied; el.className = "xt-err ok"; };
    if (navigator.clipboard) navigator.clipboard.writeText(link).then(done, () => prompt(t().copy, link)); else prompt(t().copy, link);
   }
  });
@@ -385,12 +385,12 @@
   e.preventDefault();
   const name = e.target.name.value.trim().replace(/\s+/g, " ");
   const err = app.querySelector("[data-err]");
-  if (name.length < 2 || name.length > 60) { err.textContent = t().nameErr; err.className = "ft-err"; return; }
+  if (name.length < 2 || name.length > 60) { err.textContent = t().nameErr; err.className = "xt-err"; return; }
   err.textContent = "";
   make(name);
  });
  document.addEventListener("keydown", e => {
-  if (!attempt || attempt.done || !app.querySelector(".ft-q") || document.querySelector(".ft-modal") || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!attempt || attempt.done || !app.querySelector(".xt-q") || document.querySelector(".xt-modal") || e.ctrlKey || e.metaKey || e.altKey) return;
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && e.target.type !== "radio") return;
   const n = qOf(attempt, attempt.cur).options.length;
   if (/^[1-9]$/.test(e.key) && Number(e.key) <= n) { e.preventDefault(); choose(Number(e.key) - 1); }
@@ -398,7 +398,7 @@
   else if (e.key === "ArrowLeft" && e.target.type !== "radio") { e.preventDefault(); go(attempt.cur - 1); }
   else if (e.key.toLowerCase() === "m") { attempt.marked[attempt.cur] = !attempt.marked[attempt.cur]; save(); renderQuestion(); }
  });
- window.addEventListener("beforeunload", e => { if (attempt && !attempt.done && app.querySelector(".ft-q")) { save(); e.preventDefault(); e.returnValue = t().leave; } });
+ window.addEventListener("beforeunload", e => { if (attempt && !attempt.done && app.querySelector(".xt-q")) { save(); e.preventDefault(); e.returnValue = t().leave; } });
 
  // ---------- Start ----------
  function applyLang() {
@@ -420,10 +420,10 @@
   const sel = document.getElementById("languageSelect");
   sel.value = lang;
   // The page language changes the buttons and labels; a test in progress keeps the language it started in.
-  sel.addEventListener("change", e => { lang = e.target.value; MP.setLang(lang); applyLang(); app.dataset.started = attempt && !attempt.done && app.querySelector(".ft-q") ? "1" : ""; route(); });
+  sel.addEventListener("change", e => { lang = e.target.value; MP.setLang(lang); applyLang(); app.dataset.started = attempt && !attempt.done && app.querySelector(".xt-q") ? "1" : ""; route(); });
   MP.setupMenu();
   applyLang();
-  if (!BANK) { app.innerHTML = `<p class="ft-banner">The question bank could not be loaded. Reload the page.</p>`; return; }
+  if (!BANK) { app.innerHTML = `<p class="xt-banner">The question bank could not be loaded. Reload the page.</p>`; return; }
   route();
  });
 })();
