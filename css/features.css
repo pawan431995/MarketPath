@@ -990,3 +990,16 @@ html[data-theme="light"] .brand-on-dark{display:none}
 @media(max-width:1180px){.site-header .brand-full{height:46px}}
 @media(max-width:680px){.site-header .brand-full{height:38px}}
 @media(max-width:400px){.site-header .brand-full{height:31px}}
+
+/* Light theme: expandable questions in lessons (FAQ) and sidebar boxes had light text from the dark theme */
+html[data-theme="light"] :is(.practice summary,.side-box summary){color:#0f1b2d}
+html[data-theme="light"] :is(.practice summary,.side-box summary)::marker{color:#0b7d5e}
+html[data-theme="light"] .side-box summary::-webkit-details-marker{color:#0b7d5e}
+/* Light theme: text that kept its dark-theme colour and was too faint on white (found by a contrast audit) */
+html[data-theme="light"] .term-list dd{color:#33445a}
+html[data-theme="light"] :is(.lesson-nav a small,.about-badge small,.xt-h small,.xt-choice span){color:#5a6b80}
+html[data-theme="light"] .ppa-panel h4{color:#0f1b2d}
+/* Gains and losses: the dark theme's bright green and pink are too light on white. */
+html[data-theme="light"] .pp-up{color:#0b7d5e}
+html[data-theme="light"] .pp-down{color:#b3262f}
+html[data-theme="light"] :is(.chart-change,.chart-price span){color:#0b7d5e}
