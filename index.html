@@ -178,10 +178,6 @@
             <button class="btn btn-primary full-btn" type="submit" id="ppSubmit">Buy</button>
             <p class="pp-msg" id="ppMsg" aria-live="polite"></p>
           </form>
-          <details class="pp-box" open><summary>Positions</summary><div id="ppPositions" class="pp-list"></div></details>
-          <details class="pp-box" open><summary>Open limit orders</summary><div id="ppPending" class="pp-list"></div></details>
-          <details class="pp-box"><summary>P&amp;L, charges and tax</summary><div id="ppPnlBox"></div></details>
-          <details class="pp-box"><summary>Recent orders</summary><div id="ppOrders" class="pp-list"></div></details>
           <details class="pp-box" id="ppSettingsBox">
             <summary>Charges and tax settings</summary>
             <div class="pp-row"><label for="ppPlan">Brokerage plan</label><select id="ppPlan"></select></div>
@@ -192,6 +188,10 @@
           <p class="fine-print">Virtual money only. Market orders fill at the displayed price with no slippage. No leverage, short selling or automatic intraday square-off is simulated. Tax is an estimate that treats all charges as deductible. Nothing here is investment or tax advice.</p>
         </aside>
       </div>
+      <section class="pp-account" id="ppAccount" aria-label="Your paper trading account">
+        <div class="ppa-tabs" role="tablist" aria-label="Account views"></div>
+        <div class="ppa-body" id="ppa-body" role="tabpanel" tabindex="0"></div>
+      </section>
     </section>
 
     <section class="section" id="tools">
@@ -258,21 +258,11 @@
   <script src="js/site-search.js"></script>
   <script src="js/index-ribbon.js"></script>
   <script src="js/progress.js"></script>
-  <script src="js/lessons.js"></script>
-  <script src="js/lessons-modules.js"></script>
-  <script src="js/lessons-foundations.js"></script>
-  <script src="js/module-extras.js"></script>
-  <script src="js/lessons-tax.js"></script>
-  <script src="js/lessons-finance.js"></script>
-  <script src="js/lessons-market-rules.js"></script>
-<script src="js/ads.js"></script>
+  <script src="js/lesson-catalog.js"></script>
+  <script src="js/ads.js"></script>
   <script src="js/shared.js"></script>
-  <script src="https://unpkg.com/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="js/paper-symbols.js"></script>
-  <script src="js/paper-charges.js"></script>
-  <script src="js/paper-indicators.js"></script>
-  <script src="js/paper-drawings.js"></script>
-  <script src="js/paper-trading.js"></script>
+  <!-- Paper trading code loads when its section comes into view (js/paper-loader.js). -->
+  <script src="js/paper-loader.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

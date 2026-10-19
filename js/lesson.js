@@ -177,11 +177,11 @@ function resolveTools(list) {
 }
 function toolCard(id) {
  const p = PATTERNS.find(x => x.id === id);
- if (p) return `<article class="pattern-card tool-card"><figure class="pattern-img"><img src="../images/patterns/${p.file}" alt="${esc(pick(p.name))} — ${lang === "hi" ? "पैटर्न आरेख" : "pattern diagram"}" loading="lazy"></figure>
+ if (p) return `<article class="pattern-card tool-card"><figure class="pattern-img"><img src="../images/patterns/${p.file}" alt="${esc(pick(p.name))} — ${lang === "hi" ? "पैटर्न आरेख" : "pattern diagram"}" loading="lazy" decoding="async"></figure>
   <div class="pattern-head"><h3>${esc(pick(p.name))}</h3><div class="pattern-tags"><span class="level-badge">${esc(UI[lang].kind[p.kind])}</span><span class="bias-badge bias-${p.bias}">${esc(UI[lang].bias[p.bias])}</span></div></div>
   <dl class="pattern-info"><dt>${esc(UI[lang].tWhat)}</dt><dd>${esc(pick(p.what))}</dd><dt>${esc(UI[lang].tWhere)}</dt><dd>${esc(pick(p.where))}</dd><dt>${esc(UI[lang].tConfirm)}</dt><dd>${esc(pick(p.confirm))}</dd><dt>${esc(UI[lang].tMistake)}</dt><dd>${esc(pick(p.mistake))}</dd></dl></article>`;
  const x = INDICATORS.find(i => i.id === id);
- if (x) return `<article class="pattern-card tool-card"><figure class="pattern-img"><img src="../images/indicators/${x.file}" alt="${esc(pick(x.name))} — ${lang === "hi" ? "चार्ट" : "chart"}" loading="lazy"></figure>
+ if (x) return `<article class="pattern-card tool-card"><figure class="pattern-img"><img src="../images/indicators/${x.file}" alt="${esc(pick(x.name))} — ${lang === "hi" ? "चार्ट" : "chart"}" loading="lazy" decoding="async"></figure>
   <div class="pattern-head"><h3>${esc(pick(x.name))}</h3><div class="pattern-tags"><span class="level-badge">${esc(UI[lang].cat[x.category])}</span></div></div>
   <dl class="pattern-info"><dt>${esc(UI[lang].tWhat)}</dt><dd>${esc(pick(x.what))}</dd><dt>${esc(UI[lang].tSettings)}</dt><dd>${esc(pick(x.settings))}</dd><dt>${esc(UI[lang].tWhen)}</dt><dd>${esc(pick(x.when))}</dd><dt>${esc(UI[lang].tHow)}</dt><dd>${esc(pick(x.how))}</dd><dt>${esc(UI[lang].tMistake)}</dt><dd>${esc(pick(x.mistake))}</dd><dt>${esc(UI[lang].tPairs)}</dt><dd>${esc(pick(x.pairs))}</dd></dl></article>`;
  return "";
@@ -294,14 +294,14 @@ function renderDone() {
 // Illustration for a strategy section: { file, en:{alt,cap}, hi:{alt,cap} } under images/strategies/.
 function sectionFigure(im) {
  const t = im[lang] || im.en;
- return `<figure class="chart-fig"><img src="../images/strategies/${im.file}" alt="${esc(t.alt)}" loading="lazy"><figcaption>${esc(t.cap)}</figcaption></figure>`;
+ return `<figure class="chart-fig"><img src="../images/strategies/${im.file}" alt="${esc(t.alt)}" loading="lazy" decoding="async"><figcaption>${esc(t.cap)}</figcaption></figure>`;
 }
 function chartBlock(s) {
  const items = LESSON_CHARTS[s];
  if (!items) return "";
  const figs = items.map(c => {
   const t = c[lang] || c.en;
-  return `<figure class="chart-fig"><img src="../images/charts/${c.file}" alt="${esc(t.alt)}" loading="lazy"><figcaption>${esc(t.cap)}</figcaption></figure>`;
+  return `<figure class="chart-fig"><img src="../images/charts/${c.file}" alt="${esc(t.alt)}" loading="lazy" decoding="async"><figcaption>${esc(t.cap)}</figcaption></figure>`;
  }).join("");
  return `<section class="lesson-block"><h2>${esc(UI[lang].charts)}</h2>${figs}</section>`;
 }

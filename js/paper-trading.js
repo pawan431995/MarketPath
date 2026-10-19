@@ -3,7 +3,8 @@
 // "sim" simulates any NSE-listed stock in the browser (a random walk around a per-symbol base price), for practice
 // at any hour; "finnhub" polls Finnhub's free quote and symbol-search APIs with the visitor's own API key.
 // Each feed keeps its own account, watchlist and drawings, because the feeds price in different currencies.
-// Needs shared.js (MP.esc), paper-symbols.js, paper-charges.js, paper-indicators.js and paper-drawings.js.
+// Needs shared.js (MP.esc), paper-symbols.js, paper-charges.js, paper-indicators.js, paper-drawings.js and
+// paper-account.js (the Portfolio, Holdings, Positions and Orders views).
 // Lightweight Charts is optional: prices, orders and P&L still work if it fails to load.
 (function () {
  const STORE_KEY = "mp-paper-v2";
@@ -25,7 +26,7 @@
  const FEEDS = {
   nse: {
    label: "NSE real prices (delayed)", currency: "₹", locale: "en-IN", start: 1000000, charges: "india", interval: 300000, minMove: 0.05,
-   badge: "REAL PRICES · DELAYED",
+   badge: "REAL PRICES · DELAYED", squareOff: "3:20 pm",
    note: "Loading real NSE prices…",
    watchlist: ["RELIANCE", "TCS", "HDFCBANK", "INFY", "ICICIBANK", "SBIN", "ITC", "BHARTIARTL"]
   },
@@ -137,6 +138,7 @@
   if (!(price > 0)) return "No price yet for this symbol. Wait a moment and try again.";
   if (!Number.isInteger(order.qty) || order.qty <= 0) return "Enter a whole-number quantity above zero.";
   if (order.type === "limit" && !(order.limit > 0)) return "Enter a limit price above zero.";
+  if (order.product === "intraday" && !order.tag && pastSquareOff()) return "New intraday orders are not allowed after 3:20 pm. Use the Delivery product, or trade intraday tomorrow.";
   const ref = order.type === "limit" ? order.limit : price;
   if (order.side === "buy") {
    const need = order.qty * ref + charges("buy", order.product, order.qty, ref).total;
@@ -150,6 +152,7 @@
    side: order.side, sym: order.sym, product: order.product, qty: order.qty, type: order.type,
    limit: order.type === "limit" ? order.limit : null, status: "open", price: null
   };
+  if (order.tag) rec.tag = order.tag;
   if (order.type === "market") fill(a, rec, price);
   else a.pending.push(rec);
   save();
@@ -191,7 +194,7 @@
   rec.chargesTotal = c.total;
   rec.time = Date.now();
   a.orders.unshift(rec);
-  a.orders = a.orders.slice(0, 50);
+  a.orders = a.orders.slice(0, 200);
  }
 
  // ---------- Price data ----------
@@ -791,7 +794,7 @@
   $("ppSymTitle").textContent = sym || "";
   $("ppSymName").textContent = nameOf(sym);
   $("ppPrice").textContent = p ? money(p) : state.noQuote.has(sym) ? "no quote" : "—";
-  $("ppChange").innerHTML = ch ? `<span class="${ch.abs >= 0 ? "pp-up" : "pp-down"}">${signed(ch.abs)} (${ch.pct >= 0 ? "+" : ""}${ch.pct.toFixed(2)}%)</span> ${state.feed === "sim" ? "24h" : "today"}` : "";
+  setHTML($("ppChange"), ch ? `<span class="${ch.abs >= 0 ? "pp-up" : "pp-down"}">${signed(ch.abs)} (${ch.pct >= 0 ? "+" : ""}${ch.pct.toFixed(2)}%)</span> ${state.feed === "sim" ? "24h" : "today"}` : "");
   const inWl = watchlist().includes(sym);
   $("ppStar").textContent = inWl ? "★ In watchlist" : "☆ Add to watchlist";
   $("ppStar").setAttribute("aria-pressed", String(inWl));
@@ -799,51 +802,60 @@
 
  function renderWatchlist() {
   const wl = watchlist();
-  $("ppWatch").innerHTML = wl.length ? wl.map(sym => {
+  setHTML($("ppWatch"), wl.length ? wl.map(sym => {
    const p = state.prices[sym];
    return `<tr data-sym="${esc(sym)}" class="${sym === state.symbol ? "sel" : ""}"><td><strong>${esc(sym)}</strong><small>${esc(nameOf(sym))}</small></td><td class="num">${p ? money(p) : state.noQuote.has(sym) ? "no quote" : "—"}</td><td class="num">${changeHtml(change(sym))}</td><td class="num"><button type="button" class="pp-x" data-remove="${esc(sym)}" aria-label="Remove ${esc(sym)} from watchlist" title="Remove">✕</button></td></tr>`;
-  }).join("") : `<tr><td colspan="4" class="pp-empty">Your watchlist is empty. Search for a stock and press ☆ to add it.</td></tr>`;
+  }).join("") : `<tr><td colspan="4" class="pp-empty">Your watchlist is empty. Search for a stock and press ☆ to add it.</td></tr>`);
  }
 
- function renderPositions(a) {
-  const rows = Object.entries(a.positions).map(([key, p]) => {
-   const qty = posQty(p), price = state.prices[p.sym] || posAvg(p);
-   const pl = qty * price - posCost(p);
-   return `<div class="pp-row-item"><div><strong>${esc(p.sym)}</strong> <span class="pp-tag">${p.product === "intraday" ? "INTRADAY" : "DELIVERY"}</span><small>${qty} @ ${money(posAvg(p))} · LTP ${money(price)}</small></div><div class="pp-right"><span class="${pl >= 0 ? "pp-up" : "pp-down"}">${signed(pl)}</span><button type="button" class="pp-mini" data-exit="${esc(key)}">Exit</button></div></div>`;
+ // Writes only when the markup changed, so a price tick does not rebuild unchanged parts of the page.
+ function setHTML(el, html) { if (el._html !== html) { el.innerHTML = html; el._html = html; } }
+
+ // ---------- Account actions (used by the account views) ----------
+ function exitPosition(key) {
+  const a = account(), p = a.positions[key];
+  if (!p) return;
+  const qty = freeToSell(a, p.sym, p.product);
+  const err = qty > 0 ? placeOrder({ side: "sell", sym: p.sym, product: p.product, qty, type: "market" }) : "This position is already covered by open sell orders.";
+  setMsg(err || `Exited ${qty} ${p.sym} at ${money(state.prices[p.sym])}${practiceNote()}.`, err ? "error" : "ok");
+ }
+ function cancelOrder(id) {
+  const a = account(), o = a.pending.find(x => x.id === id);
+  if (!o) return;
+  a.pending = a.pending.filter(x => x.id !== id);
+  a.orders.unshift(Object.assign({}, o, { status: "cancelled", time: Date.now() }));
+  a.orders = a.orders.slice(0, 200);
+  save();
+  scheduleRender();
+ }
+ // Minutes since midnight in IST, and whether a time falls on today's IST date.
+ function istMinutes() {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date()).map(x => [x.type, x.value]));
+  return Number(p.hour) * 60 + Number(p.minute);
+ }
+ const istDay = ms => new Date(ms).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+ const isToday = ms => istDay(ms) === istDay(Date.now());
+ const pastSquareOff = () => state.feed === "nse" && marketOpenNow() && istMinutes() >= 920; // 3:20 pm
+ // Squares off open intraday positions after 3:20 pm and cancels intraday limit orders, as brokers do.
+ function autoSquareOff() {
+  if (!pastSquareOff()) return;
+  const a = account();
+  let done = 0;
+  a.pending.filter(o => o.product === "intraday").forEach(o => cancelOrder(o.id));
+  Object.values(a.positions).filter(p => p.product === "intraday").forEach(p => {
+   const qty = freeToSell(a, p.sym, p.product);
+   if (qty > 0 && !placeOrder({ side: "sell", sym: p.sym, product: "intraday", qty, type: "market", tag: "Auto square-off" })) done++;
   });
-  $("ppPositions").innerHTML = rows.length ? rows.join("") : `<p class="pp-empty">No open positions yet.</p>`;
+  if (done) setMsg(`3:20 pm: ${done} intraday position${done > 1 ? "s were" : " was"} squared off automatically.`, "ok");
  }
-
- function renderPending(a) {
-  const rows = a.pending.map(o => `<div class="pp-row-item"><div><strong>${o.side === "buy" ? "Buy" : "Sell"} ${o.qty} ${esc(o.sym)}</strong> <span class="pp-tag">${o.product === "intraday" ? "INTRADAY" : "DELIVERY"}</span><small>${o.type === "amo" ? "After-market order · fills at the next session's first price" : `Limit ${money(o.limit)} · waiting for price`}</small></div><button type="button" class="pp-cancel" data-cancel="${esc(o.id)}">Cancel</button></div>`);
-  $("ppPending").innerHTML = rows.length ? rows.join("") : `<p class="pp-empty">No open limit orders.</p>`;
- }
-
- function renderOrders(a) {
-  const rows = a.orders.slice(0, 10).map(o => {
-   const gain = o.side === "sell" && typeof o.gain === "number" ? ` · P&L <span class="${o.gain >= 0 ? "pp-up" : "pp-down"}">${signed(o.gain)}</span>` : "";
-   return `<div class="pp-row-item"><div><strong>${o.side === "buy" ? "Buy" : "Sell"} ${o.qty} ${esc(o.sym)}</strong> <span class="pp-tag">${o.product === "intraday" ? "INTRADAY" : "DELIVERY"}</span><small>${o.type === "limit" ? "Limit" : "Market"} at ${money(o.price)} · charges ${money(o.chargesTotal || 0)}${gain}</small></div><span class="pp-time">${new Date(o.time).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}</span></div>`;
-  });
-  $("ppOrders").innerHTML = rows.length ? rows.join("") : `<p class="pp-empty">No orders yet.</p>`;
- }
-
- function renderPnl(a) {
-  const unreal = Object.values(a.positions).reduce((s, p) => s + posQty(p) * (state.prices[p.sym] || posAvg(p)) - posCost(p), 0);
-  const realized = a.realized.stcg + a.realized.ltcg + a.realized.intraday;
-  const tax = taxEstimate(a);
-  const total = a.cash + holdingsValue(a);
-  const net = total - cfg().start - tax.total;
-  const row = (label, value, cls, sub) => `<tr class="${sub ? "pp-sub" : ""}"><th>${label}</th><td class="${cls || ""}">${value}</td></tr>`;
-  const pl = n => (n >= 0 ? "pp-up" : "pp-down");
-  const india = cfg().charges === "india";
-  $("ppPnlBox").innerHTML = `<table class="pp-pnl">
-   ${row("Realized P&amp;L (after charges)", signed(realized), pl(realized))}
-   ${india ? row("Short-term capital gain", signed(a.realized.stcg), "", true) + row("Long-term capital gain", signed(a.realized.ltcg), "", true) + row("Intraday (speculative) income", signed(a.realized.intraday), "", true) : ""}
-   ${row("Unrealized P&amp;L (open positions)", signed(unreal), pl(unreal))}
-   ${row("Charges paid", money(a.charges))}
-   ${india ? row("Estimated tax on realized gains", money(tax.total)) + row(`STCG @ ${PaperCharges.tax.stcg * 100}%`, money(tax.stcgTax), "", true) + row(`LTCG @ ${PaperCharges.tax.ltcg * 100}% above ₹1.25 lakh`, money(tax.ltcgTax), "", true) + row(`Intraday @ ${Number(store.prefs.slab) || 0}% slab`, money(tax.intradayTax), "", true) + row("Health &amp; education cess 4%", money(tax.cess), "", true) : ""}
-   ${row(india ? "Net P&amp;L after charges and tax" : "Net P&amp;L", signed(net), pl(net) + " pp-strong")}
-  </table>${india ? "" : `<p class="pp-empty">Charges and tax are modelled for the simulated Indian market only.</p>`}`;
+ function downloadCsv(name, rows) {
+  const cell = v => `"${String(v).replace(/"/g, '""')}"`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + rows.map(r => r.map(cell).join(",")).join("\r\n")], { type: "text/csv;charset=utf-8" }));
+  a.download = `${name}-${istDay(Date.now())}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
  }
 
  function currentTicket() {
@@ -862,11 +874,11 @@
   $("ppSubmit").textContent = `${t.side === "buy" ? "Buy" : "Sell"} ${state.symbol || ""}`;
   $("ppSubmit").classList.toggle("pp-sell-btn", t.side === "sell");
   const ref = t.type === "limit" ? t.limit : price;
-  if (!(ref > 0) || !(t.qty > 0)) { $("ppEstimate").textContent = "Enter a quantity and price to see the estimate."; $("ppChargeList").innerHTML = ""; return; }
+  if (!(ref > 0) || !(t.qty > 0)) { $("ppEstimate").textContent = "Enter a quantity and price to see the estimate."; setHTML($("ppChargeList"), ""); return; }
   const value = t.qty * ref, c = charges(t.side, t.product, t.qty, ref);
   $("ppEstimate").textContent = `Value ${money(value)} · charges ${money(c.total)} · ${t.side === "buy" ? `needs ${money(value + c.total)}` : `you receive ${money(value - c.total)}`} · available ${money(available(a))}`;
   const line = (label, v) => (v ? `<tr><th>${label}</th><td>${money(v)}</td></tr>` : "");
-  $("ppChargeList").innerHTML = `<table class="pp-pnl">${line("Brokerage", c.brokerage)}${line("STT", c.stt)}${line("Exchange transaction charge", c.exchange)}${line("SEBI fee", c.sebi)}${line("Stamp duty", c.stamp)}${line("DP charge", c.dp)}${line("GST 18%", c.gst)}<tr class="pp-strong"><th>Total charges</th><td>${money(c.total)}</td></tr></table>`;
+  setHTML($("ppChargeList"), `<table class="pp-pnl">${line("Brokerage", c.brokerage)}${line("STT", c.stt)}${line("Exchange transaction charge", c.exchange)}${line("SEBI fee", c.sebi)}${line("Stamp duty", c.stamp)}${line("DP charge", c.dp)}${line("GST 18%", c.gst)}<tr class="pp-strong"><th>Total charges</th><td>${money(c.total)}</td></tr></table>`);
  }
 
  function render() {
@@ -881,10 +893,7 @@
   pe.className = net >= 0 ? "pp-up" : "pp-down";
   renderQuote();
   renderWatchlist();
-  renderPositions(a);
-  renderPending(a);
-  renderOrders(a);
-  renderPnl(a);
+  accountView.render();
   updateEstimate();
  }
  let renderQueued = false;
@@ -1012,23 +1021,6 @@
   else if (t.type === "limit") setMsg(`Limit ${t.side} placed. It fills when the price reaches ${money(t.limit)}.`, "ok");
   else setMsg(`${t.side === "buy" ? "Bought" : "Sold"} ${t.qty} ${state.symbol} at ${money(state.prices[state.symbol])}${practiceNote()}.`, "ok");
  });
- $("ppPending").addEventListener("click", e => {
-  const id = e.target.dataset.cancel;
-  if (!id) return;
-  const a = account();
-  a.pending = a.pending.filter(o => o.id !== id);
-  save();
-  scheduleRender();
- });
- $("ppPositions").addEventListener("click", e => {
-  const key = e.target.dataset.exit;
-  if (!key) return;
-  const p = account().positions[key];
-  if (!p) return;
-  const qty = freeToSell(account(), p.sym, p.product);
-  const err = qty > 0 ? placeOrder({ side: "sell", sym: p.sym, product: p.product, qty, type: "market" }) : "This position is already covered by open sell orders.";
-  setMsg(err || `Exited ${qty} ${p.sym} at ${money(state.prices[p.sym])}${practiceNote()}.`, err ? "error" : "ok");
- });
  $("ppPlan").addEventListener("change", e => { store.prefs.plan = e.target.value; save(); scheduleRender(); });
  $("ppSlab").addEventListener("input", e => { store.prefs.slab = Math.min(50, Math.max(0, Number(e.target.value) || 0)); save(); scheduleRender(); });
  $("ppReset").addEventListener("click", () => {
@@ -1042,6 +1034,7 @@
  document.addEventListener("mp-theme-change", () => { if (state.chart) state.chart.applyOptions(chartOptions()); });
  window.addEventListener("beforeunload", () => { save(); stopFeed(); });
  setInterval(save, 30000);
+ setInterval(autoSquareOff, 30000);
 
  // ---------- Init ----------
  function syncChartControls() {
@@ -1057,6 +1050,13 @@
  $("ppPlan").value = store.prefs.plan;
  $("ppSlab").value = store.prefs.slab;
  $("ppIndList").innerHTML = INDICATORS.map(i => `<label><input type="checkbox" value="${i.id}"${store.prefs.indicators.includes(i.id) ? " checked" : ""}>${i.color ? `<i class="pp-swatch" style="background:${i.color}"></i>` : `<i class="pp-swatch pp-swatch-vol"></i>`}${esc(i.label)}</label>`).join("");
+ const accountView = PaperAccount.create({
+  account, cfg, nameOf, money, signed, fmt, esc, posQty, posAvg, posCost, taxEstimate,
+  price: sym => state.prices[sym], ref: sym => state.ref[sym],
+  slab: () => Number(store.prefs.slab) || 0, today: isToday,
+  onExit: exitPosition, onCancel: cancelOrder, downloadCsv,
+  onSelect: sym => { selectSymbol(sym); $("ppChartWrap").scrollIntoView({ behavior: "smooth", block: "center" }); }
+ });
  syncChartControls();
  selectFeed(FEEDS[store.prefs.feed] ? store.prefs.feed : "nse");
 })();
