@@ -278,7 +278,6 @@ body.ss-open{overflow:hidden}
  .main-nav a{font-size:15px}
 }
 /* Very narrow phones: keep the M mark, drop the wordmark so every header control fits. */
-@media(max-width:420px){.site-header .brand-name{display:none}}
 
 /* ---------- Back to top ---------- */
 .back-to-top{position:fixed;right:18px;bottom:18px;z-index:40;width:42px;height:42px;border-radius:50%;border:1px solid #31435b;background:#142238;color:#e7edf5;font-size:18px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.3)}
@@ -980,16 +979,14 @@ html[data-theme="light"] .test-cta-text strong{color:#0f1b2d}
 html[data-theme="light"] .test-cta-text span{color:#4a5b70}
 html[data-theme="light"] .test-cta-go{color:#0b7d5e}
 
-/* ---------- Brand: MarketPathAcademy logo and wordmark ---------- */
-/* The logo has a white background, so it sits on a white rounded tile in both themes. */
-.brand-logo{width:40px;height:40px;flex:none;border-radius:10px;background:#ffffff;padding:2px;object-fit:contain;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
-.brand-name{white-space:nowrap;letter-spacing:-.2px}
-.brand-path{color:#3ccf7f}
-.brand-name .brand-light{font-weight:600;color:#9fb3cc}
-.footer-brand .brand-logo{width:32px;height:32px;border-radius:8px}
-html[data-theme="light"] .brand-name{color:#0b2e5f}
-html[data-theme="light"] .brand-path{color:#178a4a}
-html[data-theme="light"] .brand-name .brand-light{color:#3d4f66}
-html[data-theme="light"] .brand-logo{box-shadow:0 0 0 1px #d5dde8}
-@media(max-width:1180px){.site-header .brand{font-size:18px}.site-header .brand-logo{width:36px;height:36px}}
-@media(max-width:560px){.site-header .brand{font-size:16px;gap:8px}.site-header .brand-logo{width:34px;height:34px}}
+/* ---------- Brand: the MarketPathAcademy logo ---------- */
+/* Two versions of the same transparent logo: the dark theme's has the navy lightened so it reads on the dark
+   header; the light theme's keeps the original colours. */
+.brand-full{display:block;height:52px;width:auto;flex:none}
+.brand-on-light{display:none}
+html[data-theme="light"] .brand-on-light{display:block}
+html[data-theme="light"] .brand-on-dark{display:none}
+.footer-brand .brand-full{height:38px}
+@media(max-width:1180px){.site-header .brand-full{height:46px}}
+@media(max-width:680px){.site-header .brand-full{height:38px}}
+@media(max-width:400px){.site-header .brand-full{height:31px}}

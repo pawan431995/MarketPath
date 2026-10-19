@@ -86,7 +86,7 @@
   footer.innerHTML = `
    <div class="ft-grid">
     <div class="ft-brand">
-     <a class="brand footer-brand" href="${url("index.html")}"><img class="brand-logo" src="${url("")}images/logo-mark.png" alt="" width="40" height="40"><span class="brand-name">Market<span class="brand-path">Path</span><span class="brand-light">Academy</span></span></a>
+     <a class="brand footer-brand" href="${url("index.html")}"><img class="brand-full brand-on-dark" src="${url("images/logo-horizontal-dark.png")}" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="${url("images/logo-horizontal.png")}" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a>
      <p>${esc(t.tagline)}</p>
     </div>
     <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
