@@ -141,7 +141,7 @@
                 <div class="pt-trade-btns"><button type="button" class="pt-buy" data-trade="buy">Buy</button><button type="button" class="pt-sell" data-trade="sell">Sell</button></div>
               </div>
               <div class="pp-chartbar">
-                <div class="pp-seg" id="ppTf" role="group" aria-label="Timeframe"><button type="button" data-tf="1">1m</button><button type="button" data-tf="5">5m</button><button type="button" data-tf="15">15m</button></div>
+                <details class="pp-menu pp-tf-menu"><summary class="pp-btn" id="ppTfBtn" aria-label="Timeframe">5m</summary><div class="pp-menu-body pp-tf-list" id="ppTf" role="group" aria-label="Timeframe"></div></details>
                 <label><span class="sr-only">Chart type</span><select id="ppChartType" class="pp-select" aria-label="Chart type"><option value="candles">Candles</option><option value="ha">Heikin Ashi</option><option value="bars">OHLC bars</option><option value="line">Line</option><option value="area">Area</option></select></label>
                 <details class="pp-menu"><summary class="pp-btn">ƒx Indicators</summary><div class="pp-menu-body" id="ppIndList"></div></details>
               </div>
@@ -163,6 +163,7 @@
                 <div id="ppChart" class="pp-chart" role="img" aria-label="Price chart for the selected stock"></div>
                 <svg id="ppDrawLayer" class="pp-draw-layer" aria-hidden="true"></svg>
               </div>
+              <div class="pp-ranges" id="ppRanges" role="group" aria-label="Date range"></div>
               <p class="demo-note" id="ppNote"></p>
             </div>
             <div class="pt-pane pt-account-pane" id="ppAccount" hidden>

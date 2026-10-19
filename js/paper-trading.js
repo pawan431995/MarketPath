@@ -47,14 +47,49 @@
   }
  };
 
+ // Chart indicators: every indicator taught in the lessons, plus common moving averages. Each one lists its
+ // series (key, colour, kind: line, step, dots or hist), whether it gets its own pane, reference levels, and
+ // calc(bars, closes) -> { key: values aligned to bars }. A value is a number, null (not enough data yet),
+ // { value, color } for a coloured point, or GAP to break the line. vol: needs traded volume, which the
+ // real-price feed does not have.
+ const GAP = "gap";
+ const G_UP = "#2fbf8f", G_DOWN = "#ef5f6b";
+ const trendColour = (values, up) => values.map((v, i) => (v === null ? null : i > 0 && up[i - 1] !== null && up[i] !== up[i - 1] ? GAP : { value: v, color: up[i] ? G_UP : G_DOWN }));
+ const INDICATOR_GROUPS = [["ma", "Moving averages"], ["overlay", "Trend and price overlays"], ["osc", "Oscillators (own pane)"], ["volume", "Volume"]];
  const INDICATORS = [
-  { id: "vol", label: "Volume" },
-  { id: "sma20", label: "SMA 20", color: "#ffbf78" },
-  { id: "ema50", label: "EMA 50", color: "#a994ff" },
-  { id: "bb", label: "Bollinger Bands 20, 2", color: "#45a9d9" },
-  { id: "vwap", label: "VWAP", color: "#ff8ed1" },
-  { id: "rsi", label: "RSI 14 (own pane)", color: "#a994ff" },
-  { id: "macd", label: "MACD 12, 26, 9 (own pane)", color: "#45a9d9" }
+  { id: "ema9", group: "ma", label: "EMA 9", color: "#f4d35e", lines: [{ key: "ema9", color: "#f4d35e" }], calc: (b, c) => ({ ema9: PI.ema(c, 9) }) },
+  { id: "ema21", group: "ma", label: "EMA 21", color: "#2ec4b6", lines: [{ key: "ema21", color: "#2ec4b6" }], calc: (b, c) => ({ ema21: PI.ema(c, 21) }) },
+  { id: "sma20", group: "ma", label: "SMA 20", color: "#ffbf78", lines: [{ key: "sma20", color: "#ffbf78", width: 2 }], calc: (b, c) => ({ sma20: PI.sma(c, 20) }) },
+  { id: "ema50", group: "ma", label: "EMA 50", color: "#a994ff", lines: [{ key: "ema50", color: "#a994ff", width: 2 }], calc: (b, c) => ({ ema50: PI.ema(c, 50) }) },
+  { id: "sma50", group: "ma", label: "SMA 50", color: "#ff7a45", lines: [{ key: "sma50", color: "#ff7a45", width: 2 }], calc: (b, c) => ({ sma50: PI.sma(c, 50) }) },
+  { id: "sma200", group: "ma", label: "SMA 200", color: "#8d99ae", lines: [{ key: "sma200", color: "#8d99ae", width: 2 }], calc: (b, c) => ({ sma200: PI.sma(c, 200) }) },
+  { id: "bb", group: "overlay", label: "Bollinger Bands 20, 2", color: "#45a9d9",
+   lines: [{ key: "bbU", color: "#45a9d9" }, { key: "bbM", color: "rgba(69,169,217,.7)", style: 2 }, { key: "bbL", color: "#45a9d9" }],
+   calc: (b, c) => { const x = PI.bollinger(c, 20, 2); return { bbU: x.upper, bbM: x.mid, bbL: x.lower }; } },
+  { id: "supertrend", group: "overlay", label: "Supertrend 10, 3", color: G_UP, lines: [{ key: "st", color: G_UP, width: 2 }],
+   calc: b => { const x = PI.supertrend(b, 10, 3); return { st: trendColour(x.value, x.up) }; } },
+  { id: "psar", group: "overlay", label: "Parabolic SAR 0.02, 0.2", color: "#ffbf78", lines: [{ key: "psar", color: "#ffbf78", kind: "dots" }],
+   calc: b => { const x = PI.psar(b); return { psar: x.value.map((v, i) => (v === null ? null : { value: v, color: x.up[i] ? G_UP : G_DOWN })) }; } },
+  { id: "ichimoku", group: "overlay", label: "Ichimoku cloud 9, 26, 52", color: "#d95926",
+   lines: [{ key: "ichT", color: "#45a9d9" }, { key: "ichK", color: "#d95926" }, { key: "ichA", color: "rgba(47,191,143,.85)" }, { key: "ichB", color: "rgba(239,95,107,.85)" }, { key: "ichC", color: "#a994ff", style: 2 }],
+   calc: b => { const x = PI.ichimoku(b); return { ichT: x.tenkan, ichK: x.kijun, ichA: x.spanA, ichB: x.spanB, ichC: x.chikou }; } },
+  { id: "pivots", group: "overlay", label: "Pivot points (classic, daily)", color: "#ffbf78",
+   lines: [{ key: "pvP", color: "#ffbf78", kind: "step", style: 2 }, { key: "pvR1", color: G_DOWN, kind: "step", style: 2 }, { key: "pvR2", color: G_DOWN, kind: "step", style: 1 }, { key: "pvS1", color: G_UP, kind: "step", style: 2 }, { key: "pvS2", color: G_UP, kind: "step", style: 1 }],
+   calc: b => { const x = PI.pivots(b); return { pvP: x.p, pvR1: x.r1, pvR2: x.r2, pvS1: x.s1, pvS2: x.s2 }; } },
+  { id: "vwap", group: "overlay", label: "VWAP", color: "#ff8ed1", vol: true, intraday: true, lines: [{ key: "vwap", color: "#ff8ed1", width: 2 }], calc: b => ({ vwap: PI.vwap(b) }) },
+  { id: "rsi", group: "osc", label: "RSI 14", color: "#a994ff", pane: true, levels: [70, 30], lines: [{ key: "rsi", color: "#a994ff", width: 2 }], calc: (b, c) => ({ rsi: PI.rsi(c, 14) }) },
+  { id: "macd", group: "osc", label: "MACD 12, 26, 9", color: "#45a9d9", pane: true,
+   lines: [{ key: "macdHist", kind: "hist" }, { key: "macd", color: "#45a9d9", width: 2 }, { key: "macdSig", color: "#ffbf78" }],
+   calc: (b, c) => { const m = PI.macd(c); return { macd: m.macd, macdSig: m.signal, macdHist: m.hist.map(v => (v === null ? null : { value: v, color: v >= 0 ? "rgba(47,191,143,.6)" : "rgba(239,95,107,.6)" })) }; } },
+  { id: "stoch", group: "osc", label: "Stochastic 14, 3, 3", color: "#45a9d9", pane: true, levels: [80, 20],
+   lines: [{ key: "stK", color: "#45a9d9", width: 2 }, { key: "stD", color: "#ffbf78" }], calc: b => { const x = PI.stochastic(b); return { stK: x.k, stD: x.d }; } },
+  { id: "cci", group: "osc", label: "CCI 20", color: "#ff8ed1", pane: true, levels: [100, -100], lines: [{ key: "cci", color: "#ff8ed1", width: 2 }], calc: b => ({ cci: PI.cci(b, 20) }) },
+  { id: "adx", group: "osc", label: "ADX 14 with +DI / −DI", short: "ADX 14", color: "#f4d35e", pane: true, levels: [25],
+   lines: [{ key: "adx", color: "#f4d35e", width: 2 }, { key: "pdi", color: G_UP }, { key: "mdi", color: G_DOWN }], calc: b => { const x = PI.adx(b); return { adx: x.adx, pdi: x.pdi, mdi: x.mdi }; } },
+  { id: "atr", group: "osc", label: "ATR 14", color: "#ffbf78", pane: true, lines: [{ key: "atr", color: "#ffbf78", width: 2 }], calc: b => ({ atr: PI.atr(b, 14) }) },
+  { id: "vol", group: "volume", label: "Volume bars", vol: true },
+  { id: "obv", group: "volume", label: "OBV (On-Balance Volume)", short: "OBV", color: "#45a9d9", pane: true, vol: true, lines: [{ key: "obv", color: "#45a9d9", width: 2 }], calc: b => ({ obv: PI.obv(b) }) },
+  { id: "mfi", group: "volume", label: "MFI 14 (Money Flow Index)", short: "MFI 14", color: "#ff8ed1", pane: true, vol: true, levels: [80, 20], lines: [{ key: "mfi", color: "#ff8ed1", width: 2 }], calc: b => ({ mfi: PI.mfi(b, 14) }) }
  ];
 
  const NSE_NAME = new Map(typeof NSE_SYMBOLS !== "undefined" ? NSE_SYMBOLS : []);
@@ -62,9 +97,45 @@
  const $ = id => document.getElementById(id);
  const esc = s => MP.esc(s);
  const cfg = () => FEEDS[state.feed];
- const tfMin = () => (state.feed === "nse" ? Math.max(5, store.prefs.tf) : store.prefs.tf);
- // Real prices carry no volume, so the volume pane is skipped on the NSE feed.
- const volOn = () => store.prefs.indicators.includes("vol") && state.feed !== "nse";
+ // ---------- Timeframes (like a broker chart: minutes, hours, days) ----------
+ // [id, menu label, short label, seconds]. Intraday candles are built from the feed's base bars (1-minute on the
+ // simulated and Finnhub feeds, 5-minute real prices on the NSE feed); 1D/1W/1M use daily candles.
+ const TIMEFRAMES = [
+  ["1", "1 Min", "1m", 60], ["2", "2 Min", "2m", 120], ["3", "3 Min", "3m", 180], ["4", "4 Min", "4m", 240],
+  ["5", "5 Min", "5m", 300], ["10", "10 Min", "10m", 600], ["15", "15 Min", "15m", 900], ["30", "30 Min", "30m", 1800],
+  ["60", "1 Hour", "1h", 3600], ["120", "2 Hours", "2h", 7200], ["180", "3 Hours", "3h", 10800], ["240", "4 Hours", "4h", 14400],
+  ["D", "1 Day", "1D", 86400], ["W", "1 Week", "1W", 604800], ["M", "1 Month", "1M", 2629800]
+ ];
+ const TF_GROUPS = [[0, 8], [8, 12], [12, 15]];
+ const DAILY_TF = ["D", "W", "M"];
+ // Date-range buttons under the chart: each picks a suitable timeframe and zooms to the period.
+ const RANGES = [["1D", "Today", 1], ["5D", "5 days", 5], ["1M", "1 month", 30], ["3M", "3 months", 91], ["6M", "6 months", 182], ["1Y", "1 year", 365], ["2Y", "2 years", 730]];
+ function tfAvailable(id) {
+  if (state.feed === "finnhub") return !DAILY_TF.includes(id); // quotes are collected while the page is open
+  if (state.feed === "nse") return DAILY_TF.includes(id) || Number(id) % 5 === 0; // real intraday data is 5-minute
+  return true;
+ }
+ const tfId = () => {
+  const id = String(store.prefs.tf);
+  if (TIMEFRAMES.some(t => t[0] === id) && tfAvailable(id)) return id;
+  return state.feed === "nse" ? "5" : "1";
+ };
+ const tfDef = () => TIMEFRAMES.find(t => t[0] === tfId());
+ const tfSec = () => tfDef()[3];
+ const isDaily = () => DAILY_TF.includes(tfId());
+ function rangeTf(days) {
+  if (days <= 1) return state.feed === "nse" ? "5" : "1";
+  if (days <= 5) return state.feed === "nse" ? "15" : "5";
+  if (state.feed === "finnhub") return "15";
+  return days > 365 ? "W" : "D";
+ }
+ // Real prices carry no volume, so volume-based indicators are unavailable on the NSE feed.
+ // (daily candles from the data files do carry volume, so on 1D/1W/1M they work). VWAP resets every day, so it
+ // only makes sense on intraday timeframes.
+ const indAvailable = def => !(def.vol && state.feed === "nse" && !isDaily()) && !(def.intraday && isDaily());
+ const indOn = id => { const def = INDICATORS.find(d => d.id === id); return !!def && indAvailable(def) && store.prefs.indicators.includes(id); };
+ const activeIndicators = () => INDICATORS.filter(d => indOn(d.id));
+ const volOn = () => indOn("vol");
  const fmt = n => Number(n).toLocaleString(cfg().locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
  const money = n => `${cfg().currency} ${fmt(n)}`;
  const signed = n => `${n >= 0 ? "+" : "−"}${money(Math.abs(n))}`;
@@ -74,7 +145,8 @@
  const state = {
   feed: "sim", symbol: null, bars: {}, prices: {}, ref: {}, base: {}, noQuote: new Set(), keyBad: false,
   stop: null, chart: null, series: {}, view: [], lastLen: 0, hoverTime: null, expanded: false,
-  screen: "chart", focus: null // terminal section shown, and the watchlist row whose B / S / chart buttons are open
+  screen: "chart", focus: null, // terminal section shown, and the watchlist row whose B / S / chart buttons are open
+  daily: {}, range: null, pendingRange: null // daily candles per symbol; the date-range button in use and one still to apply
  };
  const WATCHLISTS = 5, WATCH_MAX = 50;
  const SCREENS = ["watchlist", "dashboard", "chart", "orders", "holdings", "positions", "funds", "portfolio", "history"];
@@ -493,6 +565,7 @@
   }
   if (state.feed !== "nse") return;
   await loadIntraday(state.symbol);
+  loadDaily(state.symbol);
   activeSymbols().forEach(applyQuote);
   nseNote();
   updateChart(true);
@@ -523,7 +596,7 @@
   stopFeed();
   save();
   state.feed = feed;
-  state.bars = {}; state.prices = {}; state.ref = {}; state.base = {};
+  state.bars = {}; state.prices = {}; state.ref = {}; state.base = {}; state.daily = {};
   live.anchor = {}; live.glide = {}; live.sig = {}; live.band = {}; live.after = {};
   state.noQuote.clear();
   state.keyBad = false;
@@ -537,9 +610,9 @@
   $("ppSearch").placeholder = feed !== "finnhub" ? "Search eg: infy, tcs, reliance" : "Search eg: AAPL, Apple";
   state.focus = null;
   closeOrder();
-  document.querySelectorAll('#ppTf [data-tf="1"]').forEach(b => { b.hidden = feed === "nse"; }); // real data is 5-minute
   store.prefs.feed = feed;
   syncChartControls(); // the effective timeframe depends on the feed
+  renderIndMenu(); // volume indicators are unavailable on the real-price feed
   $("ppSearch").value = "";
   searchResults = [];
   closeSearch();
@@ -566,17 +639,20 @@
   closeSearch();
   buildChart();
   scheduleRender();
+  loadDaily(sym);
   if (state.feed === "nse") {
    loadIntraday(sym).then(() => { if (state.symbol === sym && state.feed === "nse") { nseNote(); buildChart(); scheduleRender(); } });
   }
  }
 
  // ---------- Chart ----------
- function aggregate(bars, tf) {
-  if (tf === 1) return bars;
-  const sec = tf * 60, out = [];
+ // Intraday candles of sec seconds from the base bars. On the NSE feed they start at 9:15 am IST, as on NSE
+ // charts; on the simulated feed at midnight IST.
+ function aggregate(bars, sec) {
+  if (sec <= 60) return bars;
+  const off = state.feed === "nse" ? 13500 : state.feed === "sim" ? -19800 : 0, out = [];
   for (const b of bars) {
-   const t = Math.floor(b.time / sec) * sec, last = out[out.length - 1];
+   const t = Math.floor((b.time - off) / sec) * sec + off, last = out[out.length - 1];
    if (last && last.time === t) {
     last.high = Math.max(last.high, b.high);
     last.low = Math.min(last.low, b.low);
@@ -587,27 +663,119 @@
   return out;
  }
 
+ // ---------- Daily, weekly and monthly candles ----------
+ // A daily candle's time is the start of its IST day. Day numbers count days since 1 Jan 1970 in IST
+ // (day 0 was a Thursday).
+ const istDayNum = sec => Math.floor((sec + 19800) / 86400);
+ const dayStart = d => d * 86400 - 19800;
+ const weekday = d => (d + 4) % 7; // 0 = Sunday … 6 = Saturday
+ // Seeded random numbers, so a stock's simulated history is the same on every visit.
+ function seeded(seed) {
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+ }
+ // Simulated feed: about two years of simulated trading days that end where the intraday simulation starts.
+ function simDaily(sym) {
+  if (state.daily[sym]) return state.daily[sym];
+  const base = state.bars[sym] && state.bars[sym].length ? state.bars[sym][0].open : seedPrice(sym);
+  const r = seeded(Math.floor(hash(sym + "daily") * 4294967296));
+  const g = () => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+  const today = istDayNum(Date.now() / 1000), vol = 2e5 + hash(sym + "v") * 4e6, out = [];
+  let close = base;
+  for (let d = today - 1; out.length < 500; d--) {
+   if (weekday(d) === 0 || weekday(d) === 6) continue;
+   const open = Math.max(1, close / (1 + g() * 0.014));
+   const hi = Math.max(open, close) * (1 + Math.abs(g()) * 0.006), lo = Math.min(open, close) * (1 - Math.abs(g()) * 0.006);
+   out.push({ time: dayStart(d), open: roundTick(open), high: roundTick(hi), low: roundTick(lo), close: roundTick(close), volume: Math.round(vol * (0.5 + r())) });
+   close = Math.max(1, open / (1 + g() * 0.004)); // the previous day's close, before the overnight gap
+  }
+  return (state.daily[sym] = out.reverse());
+ }
+ // NSE feed: real daily candles from data/daily/<SYM>.js (NIFTY 500 stocks, written by tools/fetch-quotes.js).
+ function nseDaily(sym) {
+  if (state.daily[sym]) return state.daily[sym];
+  const d = (window.MP_DAILY || {})[sym];
+  if (!d) return [];
+  return (state.daily[sym] = d.t.map((day, i) => ({ time: dayStart(day), open: d.o[i], high: d.h[i], low: d.l[i], close: d.c[i], volume: d.v[i] })));
+ }
+ const dailyLoading = new Set();
+ function loadDaily(sym) {
+  if (state.feed !== "nse" || !isDaily() || !sym || (window.MP_DAILY || {})[sym] || dailyLoading.has(sym) || !isLiveCovered(sym)) return;
+  dailyLoading.add(sym);
+  loadScript(dataUrl(`data/daily/${dataFile(sym)}.js`)).catch(() => {}).then(() => {
+   dailyLoading.delete(sym);
+   delete state.daily[sym];
+   if (state.symbol === sym && state.feed === "nse" && isDaily()) { buildChart(); scheduleRender(); }
+  });
+ }
+ // The stored daily history, with today's candle kept up to date from the intraday prices.
+ function dailyBars(sym) {
+  const hist = state.feed === "sim" ? simDaily(sym) : state.feed === "nse" ? nseDaily(sym) : [];
+  if (!hist.length) return [];
+  const out = hist.slice(), today = istDayNum(Date.now() / 1000);
+  const todays = (state.bars[sym] || []).filter(b => istDayNum(b.time) === today);
+  if (todays.length && weekday(today) !== 0 && weekday(today) !== 6) {
+   const last = out[out.length - 1], hi = Math.max(...todays.map(b => b.high)), lo = Math.min(...todays.map(b => b.low)), close = todays[todays.length - 1].close;
+   if (istDayNum(last.time) === today) out[out.length - 1] = Object.assign({}, last, { high: Math.max(last.high, hi), low: Math.min(last.low, lo), close });
+   else if (istDayNum(last.time) < today) out.push({ time: dayStart(today), open: todays[0].open, high: hi, low: lo, close, volume: todays.reduce((v, b) => v + b.volume, 0) });
+  }
+  return out;
+ }
+ // Weekly candles start on Monday, monthly ones on the 1st.
+ function groupDays(days, id) {
+  const key = b => {
+   const d = istDayNum(b.time);
+   if (id === "W") return d - ((d + 3) % 7);
+   const dt = new Date(d * 86400000);
+   return Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), 1) / 86400000;
+  };
+  const out = [];
+  days.forEach(b => {
+   const t = dayStart(key(b)), last = out[out.length - 1];
+   if (last && last.time === t) { last.high = Math.max(last.high, b.high); last.low = Math.min(last.low, b.low); last.close = b.close; last.volume += b.volume; }
+   else out.push({ time: t, open: b.open, high: b.high, low: b.low, close: b.close, volume: b.volume });
+  });
+  return out;
+ }
+ function chartBars() {
+  if (!isDaily()) return aggregate(state.bars[state.symbol] || [], tfSec());
+  const days = dailyBars(state.symbol);
+  return tfId() === "D" ? days : groupDays(days, tfId());
+ }
+ // Lightweight Charts shows UTC: intraday times are shifted to the viewer's clock, daily candles to their date.
+ const tOff = () => (isDaily() ? 19800 : TZ);
+ function applyRange() {
+  const v = state.view, r = RANGES.find(x => x[0] === state.pendingRange);
+  if (!state.chart || !r || !v.length) return;
+  state.pendingRange = null;
+  const last = v[v.length - 1].time;
+  const from = r[2] === 1 ? v.find(b => istDayNum(b.time) === istDayNum(last)).time : last - r[2] * 86400;
+  try {
+   if (from <= v[0].time) state.chart.timeScale().fitContent();
+   else state.chart.timeScale().setVisibleRange({ from: from + tOff(), to: last + tOff() });
+  } catch (e) { state.chart.timeScale().fitContent(); }
+ }
+
  function seriesData() {
-  const raw = aggregate(state.bars[state.symbol] || [], tfMin());
-  const ct = store.prefs.chartType, on = id => store.prefs.indicators.includes(id);
-  const t = b => b.time + TZ;
+  const raw = chartBars();
+  const ct = store.prefs.chartType;
+  const off = tOff(), t = b => b.time + off;
   const closes = raw.map(b => b.close);
-  const line = arr => raw.reduce((acc, b, i) => { if (arr[i] !== null && isFinite(arr[i])) acc.push({ time: t(b), value: arr[i] }); return acc; }, []);
+  // Values aligned to the bars -> chart points (see INDICATORS for the value forms).
+  const points = arr => raw.reduce((acc, b, i) => {
+   const v = arr[i];
+   if (v === GAP) acc.push({ time: t(b) });
+   else if (v && typeof v === "object") { if (isFinite(v.value)) acc.push({ time: t(b), value: v.value, color: v.color }); }
+   else if (v !== null && isFinite(v)) acc.push({ time: t(b), value: v });
+   return acc;
+  }, []);
   const d = { raw };
   if (ct === "line" || ct === "area") d.main = raw.map(b => ({ time: t(b), value: b.close }));
   else d.main = (ct === "ha" ? PI.heikinAshi(raw) : raw).map(b => ({ time: t(b), open: b.open, high: b.high, low: b.low, close: b.close }));
   if (volOn()) d.vol = raw.map(b => ({ time: t(b), value: b.volume, color: b.close >= b.open ? "rgba(47,191,143,.45)" : "rgba(239,95,107,.45)" }));
-  if (on("sma20")) d.sma20 = line(PI.sma(closes, 20));
-  if (on("ema50")) d.ema50 = line(PI.ema(closes, 50));
-  if (on("bb")) { const bb = PI.bollinger(closes, 20, 2); d.bbU = line(bb.upper); d.bbM = line(bb.mid); d.bbL = line(bb.lower); }
-  if (on("vwap")) d.vwap = line(PI.vwap(raw));
-  if (on("rsi")) d.rsi = line(PI.rsi(closes, 14));
-  if (on("macd")) {
-   const m = PI.macd(closes);
-   d.macd = line(m.macd);
-   d.macdSig = line(m.signal);
-   d.macdHist = raw.reduce((acc, b, i) => { const v = m.hist[i]; if (v !== null) acc.push({ time: t(b), value: v, color: v >= 0 ? "rgba(47,191,143,.6)" : "rgba(239,95,107,.6)" }); return acc; }, []);
-  }
+  activeIndicators().forEach(def => {
+   if (def.calc) Object.entries(def.calc(raw, closes)).forEach(([key, arr]) => { d[key] = points(arr); });
+  });
   return d;
  }
 
@@ -619,17 +787,17 @@
    layout: { background: { type: "solid", color: "transparent" }, textColor: light ? "#4a5b70" : "#9caec4", panes: { separatorColor: border } },
    grid: { vertLines: { color: light ? "#eef2f7" : "#16233a" }, horzLines: { color: light ? "#e6ebf2" : "#1b2a40" } },
    rightPriceScale: { borderColor: border },
-   timeScale: { borderColor: border, timeVisible: true, secondsVisible: false, rightOffset: 6 }
+   timeScale: { borderColor: border, timeVisible: !isDaily(), secondsVisible: false, rightOffset: 6 }
   };
  }
 
  function extraPanes() {
-  return ["rsi", "macd"].filter(id => store.prefs.indicators.includes(id)).length;
+  return activeIndicators().filter(d => d.pane).length;
  }
  function sizeChart() {
   const el = $("ppChart");
   // Expanded: fill the screen below the terminal bar and the chart toolbars (about 250px tall in total).
-  el.style.height = state.expanded ? "max(320px, calc(100vh - 250px))" : `${440 + extraPanes() * 130}px`;
+  el.style.height = state.expanded ? `max(${320 + extraPanes() * 90}px, calc(100vh - 250px))` : `${440 + extraPanes() * 120}px`;
  }
 
  function buildChart() {
@@ -642,44 +810,41 @@
   state.series = {};
   const LW = LightweightCharts, chart = LW.createChart($("ppChart"), chartOptions()), s = state.series;
   state.chart = chart;
-  const ct = store.prefs.chartType, on = id => store.prefs.indicators.includes(id);
+  const ct = store.prefs.chartType;
   const priceFormat = { type: "price", precision: 2, minMove: cfg().minMove };
   if (ct === "line") s.main = chart.addSeries(LW.LineSeries, { color: "#48e0b0", lineWidth: 2, priceFormat });
   else if (ct === "area") s.main = chart.addSeries(LW.AreaSeries, { lineColor: "#48e0b0", topColor: "rgba(72,224,176,.32)", bottomColor: "rgba(72,224,176,0)", lineWidth: 2, priceFormat });
   else if (ct === "bars") s.main = chart.addSeries(LW.BarSeries, { upColor: UP, downColor: DOWN, priceFormat });
   else s.main = chart.addSeries(LW.CandlestickSeries, { upColor: UP, downColor: DOWN, borderVisible: false, wickUpColor: UP, wickDownColor: DOWN, priceFormat });
 
-  const line = (key, color, pane, extra) => {
-   s[key] = chart.addSeries(LW.LineSeries, Object.assign({ color, lineWidth: 1, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }, extra || {}), pane);
-  };
   if (volOn()) {
    s.vol = chart.addSeries(LW.HistogramSeries, { priceScaleId: "vol", priceFormat: { type: "volume" }, priceLineVisible: false, lastValueVisible: false }, 0);
    chart.priceScale("vol").applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
   }
   s.main.priceScale().applyOptions({ scaleMargins: { top: 0.08, bottom: volOn() ? 0.2 : 0.08 } });
-  if (on("sma20")) line("sma20", "#ffbf78", 0, { lineWidth: 2 });
-  if (on("ema50")) line("ema50", "#a994ff", 0, { lineWidth: 2 });
-  if (on("bb")) { line("bbU", "#45a9d9", 0); line("bbM", "rgba(69,169,217,.7)", 0, { lineStyle: 2 }); line("bbL", "#45a9d9", 0); }
-  if (on("vwap")) line("vwap", "#ff8ed1", 0, { lineWidth: 2 });
+  // Overlays share the price pane; oscillators get a pane each, in menu order.
   let pane = 1;
-  if (on("rsi")) {
-   line("rsi", "#a994ff", pane, { lineWidth: 2, lastValueVisible: true });
-   [70, 30].forEach(v => s.rsi.createPriceLine({ price: v, color: "rgba(156,174,196,.55)", lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "" }));
-   pane++;
-  }
-  if (on("macd")) {
-   s.macdHist = chart.addSeries(LW.HistogramSeries, { priceLineVisible: false, lastValueVisible: false }, pane);
-   line("macd", "#45a9d9", pane, { lineWidth: 2 });
-   line("macdSig", "#ffbf78", pane);
-   pane++;
-  }
+  activeIndicators().filter(def => def.lines).forEach(def => {
+   const p = def.pane ? pane++ : 0;
+   let first = null;
+   def.lines.forEach(ln => {
+    if (ln.kind === "hist") { s[ln.key] = chart.addSeries(LW.HistogramSeries, { priceLineVisible: false, lastValueVisible: false }, p); return; }
+    const opts = { color: ln.color, lineWidth: ln.width || 1, lineStyle: ln.style || 0, priceLineVisible: false, lastValueVisible: !!def.pane && !first, crosshairMarkerVisible: false, title: def.pane && !first ? def.short || def.label : "" };
+    if (ln.kind === "dots") Object.assign(opts, { lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 2 });
+    if (ln.kind === "step") opts.lineType = LW.LineType ? LW.LineType.WithSteps : 1;
+    s[ln.key] = chart.addSeries(LW.LineSeries, opts, p);
+    first = first || s[ln.key];
+   });
+   (def.levels || []).forEach(v => first.createPriceLine({ price: v, color: "rgba(156,174,196,.55)", lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: "" }));
+  });
   const panes = chart.panes();
   if (panes.length > 1) { panes[0].setStretchFactor(3); panes.slice(1).forEach(p => p.setStretchFactor(1)); }
 
   updateChart(true);
+  applyRange();
   chart.timeScale().subscribeVisibleLogicalRangeChange(() => drawings.schedule());
   chart.subscribeCrosshairMove(param => {
-   state.hoverTime = param && param.time !== undefined ? param.time - TZ : null;
+   state.hoverTime = param && param.time !== undefined ? param.time - tOff() : null;
    updateLegend();
    drawings.schedule();
   });
@@ -690,10 +855,13 @@
   const len = d.raw.length;
   state.view = d.raw;
   if (state.chart) {
-   if (full || len < state.lastLen || len > state.lastLen + 1) {
-    Object.keys(state.series).forEach(k => state.series[k].setData(d[k] || []));
-   } else {
-    Object.keys(state.series).forEach(k => { const arr = d[k]; if (arr && arr.length) state.series[k].update(arr[arr.length - 1]); });
+   const setAll = () => Object.keys(state.series).forEach(k => state.series[k].setData(d[k] || []));
+   if (full || len < state.lastLen || len > state.lastLen + 1) setAll();
+   else {
+    // A new tick usually changes only the last point; some indicators (a flipped Supertrend, a new day's pivots)
+    // can change an earlier one, which update() refuses, so fall back to a full redraw.
+    try { Object.keys(state.series).forEach(k => { const arr = d[k]; if (arr && arr.length) state.series[k].update(arr[arr.length - 1]); }); }
+    catch (e) { setAll(); }
    }
    drawings.schedule();
   }
@@ -708,19 +876,21 @@
   bar = bar || v[v.length - 1];
   if (!bar) {
    const p = state.prices[state.symbol];
-   const text = state.feed === "nse" && p ? `last close ${money(p)} · the intraday chart covers NIFTY 500 stocks` : "waiting for prices…";
+   const text = isDaily() && state.feed === "nse"
+    ? (isLiveCovered(state.symbol) ? "loading daily candles…" : `last close ${p ? money(p) : "—"} · daily candles cover NIFTY 500 stocks`)
+    : state.feed === "nse" && p ? `last close ${money(p)} · the intraday chart covers NIFTY 500 stocks` : "waiting for prices…";
    $("ppLegend").innerHTML = `<strong>${esc(state.symbol || "")}</strong> <span>${esc(text)}</span>`;
    return;
   }
   const up = bar.close >= bar.open ? "pp-up" : "pp-down";
-  const tf = tfMin();
-  const inds = INDICATORS.filter(i => i.color && store.prefs.indicators.includes(i.id)).map(i => `<i style="color:${i.color}">${esc(i.label.replace(" (own pane)", ""))}</i>`).join(" ");
-  $("ppLegend").innerHTML = `<strong>${esc(state.symbol)}</strong> · ${tf}m <span>O <b class="${up}">${fmt(bar.open)}</b></span><span>H <b class="${up}">${fmt(bar.high)}</b></span><span>L <b class="${up}">${fmt(bar.low)}</b></span><span>C <b class="${up}">${fmt(bar.close)}</b></span>${bar.volume ? `<span>Vol <b>${Math.round(bar.volume).toLocaleString("en-IN")}</b></span>` : ""}<br>${inds}`;
+  const tf = tfDef()[2];
+  const inds = activeIndicators().filter(i => i.color && !i.pane).map(i => `<i style="color:${i.color}">${esc(i.label)}</i>`).join(" ");
+  $("ppLegend").innerHTML = `<strong>${esc(state.symbol)}</strong> · ${tf} <span>O <b class="${up}">${fmt(bar.open)}</b></span><span>H <b class="${up}">${fmt(bar.high)}</b></span><span>L <b class="${up}">${fmt(bar.low)}</b></span><span>C <b class="${up}">${fmt(bar.close)}</b></span>${bar.volume ? `<span>Vol <b>${Math.round(bar.volume).toLocaleString("en-IN")}</b></span>` : ""}<br>${inds}`;
  }
 
  const drawings = PaperDrawings.create({
   svg: $("ppDrawLayer"),
-  getContext: () => ({ chart: state.chart, series: state.series.main, bars: state.view, tfSec: tfMin() * 60 }),
+  getContext: () => ({ chart: state.chart, series: state.series.main, bars: state.view, tfSec: tfSec() }),
   getList: () => drawingsFor(state.symbol),
   onChange: save,
   format: fmt,
@@ -1161,23 +1331,40 @@
   else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
  });
 
- $("ppTf").addEventListener("click", e => {
-  const b = e.target.closest("[data-tf]");
-  if (!b) return;
-  store.prefs.tf = Number(b.dataset.tf);
+ function setTimeframe(id, range) {
+  store.prefs.tf = id;
+  state.range = range || null;
+  state.pendingRange = range || null;
   save();
   syncChartControls();
+  renderIndMenu(); // some indicators depend on the timeframe
+  loadDaily(state.symbol);
   buildChart();
+ }
+ $("ppTf").addEventListener("click", e => {
+  const b = e.target.closest("[data-tf]");
+  if (!b || b.disabled) return;
+  b.closest("details").open = false;
+  setTimeframe(b.dataset.tf);
+  $("ppTfBtn").focus();
+ });
+ $("ppRanges").addEventListener("click", e => {
+  const b = e.target.closest("[data-range]");
+  if (!b) return;
+  const r = RANGES.find(x => x[0] === b.dataset.range);
+  setTimeframe(rangeTf(r[2]), r[0]);
  });
  $("ppChartType").addEventListener("change", e => {
   store.prefs.chartType = e.target.value;
   save();
   buildChart();
  });
- const indMenu = document.querySelector(".pp-menu");
- document.addEventListener("pointerdown", e => { if (indMenu && indMenu.open && !indMenu.contains(e.target)) indMenu.open = false; });
+ // Drop-down menus (timeframe, indicators) close on a click outside them or on Esc.
+ const openMenus = () => [...document.querySelectorAll("#paperApp .pp-menu[open]")];
+ document.addEventListener("pointerdown", e => openMenus().forEach(m => { if (!m.contains(e.target)) m.open = false; }));
  document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && indMenu && indMenu.open) { indMenu.open = false; indMenu.querySelector("summary").focus(); }
+  if (e.key !== "Escape") return;
+  openMenus().forEach(m => { m.open = false; m.querySelector("summary").focus(); });
  });
  $("ppIndList").addEventListener("change", e => {
   const id = e.target.value;
@@ -1185,6 +1372,16 @@
   if (e.target.checked) list.push(id);
   store.prefs.indicators = list;
   save();
+  renderIndMenu();
+  const box = $("ppIndList").querySelector(`input[value="${id}"]`);
+  if (box) box.focus(); // the menu was re-rendered: keep keyboard focus on the same box
+  buildChart();
+ });
+ $("ppIndList").addEventListener("click", e => {
+  if (!e.target.closest("[data-ind-clear]")) return;
+  store.prefs.indicators = [];
+  save();
+  renderIndMenu();
   buildChart();
  });
  $("ppDraw").addEventListener("click", e => {
@@ -1222,16 +1419,31 @@
  setInterval(autoSquareOff, 30000);
 
  // ---------- Init ----------
+ // Indicator menu, grouped like the lessons. Volume indicators are shown but disabled on the real-price feed.
+ function renderIndMenu() {
+  const nse = state.feed === "nse", count = activeIndicators().length;
+  $("ppIndList").innerHTML = INDICATOR_GROUPS.map(([g, title]) => `<fieldset class="pp-ind-group"><legend>${title}</legend>${INDICATORS.filter(d => d.group === g).map(d => {
+   const off = !indAvailable(d);
+   const why = d.intraday && isDaily() ? "VWAP restarts every day, so it is shown on intraday timeframes only." : "Needs traded volume. Real prices include volume only on the 1D, 1W and 1M timeframes.";
+   return `<label class="${off ? "off" : ""}"${off ? ` title="${why}"` : ""}><input type="checkbox" value="${d.id}"${store.prefs.indicators.includes(d.id) ? " checked" : ""}${off ? " disabled" : ""}>${d.color ? `<i class="pp-swatch" style="background:${d.color}"></i>` : `<i class="pp-swatch pp-swatch-vol"></i>`}<span>${esc(d.label)}</span>${d.pane ? "<small>pane</small>" : ""}</label>`;
+  }).join("")}${g === "volume" && nse && !isDaily() ? '<p class="pp-ind-note">These need traded volume. Real prices include volume only on the 1D, 1W and 1M timeframes (or use the simulated feed).</p>' : ""}</fieldset>`).join("")
+   + `<div class="pp-ind-foot"><button type="button" class="pp-mini" data-ind-clear${count ? "" : " disabled"}>Remove all</button><a href="pages/lesson.html?topic=technical-indicators">How each indicator works →</a></div>`;
+  $("ppIndList").closest("details").querySelector("summary").innerHTML = `ƒx Indicators${count ? ` <small class="pp-ind-count">${count}</small>` : ""}`;
+ }
  function syncChartControls() {
-  document.querySelectorAll("#ppTf [data-tf]").forEach(b => {
-   const on = Number(b.dataset.tf) === tfMin();
-   b.classList.toggle("active", on);
-   b.setAttribute("aria-pressed", String(on));
-  });
+  const cur = tfId();
+  const why = id => (state.feed === "nse" ? "Real prices come in 5-minute steps" : DAILY_TF.includes(id) ? "Daily candles are not available on this feed" : "");
+  $("ppTf").innerHTML = TF_GROUPS.map(([a, b]) => `<div class="pp-tf-group">${TIMEFRAMES.slice(a, b).map(([id, label]) => {
+   const ok = tfAvailable(id);
+   return `<button type="button" data-tf="${id}" aria-pressed="${id === cur}" class="${id === cur ? "active" : ""}"${ok ? "" : ` disabled title="${why(id)}"`}>${label}</button>`;
+  }).join("")}</div>`).join("");
+  $("ppTfBtn").textContent = tfDef()[2];
+  $("ppTfBtn").setAttribute("aria-label", `Timeframe: ${tfDef()[1]}`);
+  $("ppRanges").innerHTML = RANGES.map(([id, label]) => `<button type="button" data-range="${id}" title="${label}" aria-pressed="${state.range === id}" class="${state.range === id ? "active" : ""}">${id}</button>`).join("");
   $("ppChartType").value = store.prefs.chartType;
  }
  $("ppFeed").innerHTML = Object.entries(FEEDS).map(([id, f]) => `<option value="${id}">${esc(f.label)}</option>`).join("");
- $("ppIndList").innerHTML = INDICATORS.map(i => `<label><input type="checkbox" value="${i.id}"${store.prefs.indicators.includes(i.id) ? " checked" : ""}>${i.color ? `<i class="pp-swatch" style="background:${i.color}"></i>` : `<i class="pp-swatch pp-swatch-vol"></i>`}${esc(i.label)}</label>`).join("");
+ renderIndMenu();
  const accountView = PaperAccount.create({
   account, cfg, nameOf, money, signed, fmt, esc, posQty, posAvg, posCost, taxEstimate,
   price: sym => state.prices[sym], ref: sym => state.ref[sym],
