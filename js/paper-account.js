@@ -116,8 +116,10 @@ const PaperAccount = (function () {
       <label class="pt-field"><span>Brokerage plan</span><select data-plan>${api.plans.map(([id, label]) => `<option value="${id}"${api.plan() === id ? " selected" : ""}>${esc(label)}</option>`).join("")}</select></label>
       <label class="pt-field"><span>Your income-tax slab (%), for intraday income</span><input data-slab type="number" min="0" max="50" step="1" value="${api.slab()}"></label>
      </div>
-     <p class="ppa-hint">Brokerage, STT, exchange charges, SEBI fee, stamp duty, DP charge and GST are added to every order. Tax on gains is estimated in Portfolio.</p>
-    </section>` : ""}
+     <label class="pt-check"><input type="checkbox" data-slip ${api.slippageOn() ? "checked" : ""}> Add estimated slippage to market orders (recommended: real orders rarely fill at exactly the last price) ${api.infoButton("slippage")}</label>
+     <p class="ppa-hint">Brokerage, STT, exchange charges, SEBI fee, stamp duty, DP charge and GST are added to every order ${api.infoButton("charges")}. Tax on gains is estimated in Portfolio ${api.infoButton("tax")}.</p>
+    </section>
+    <section class="ppa-panel"><h4><span>Charges calculator ${api.infoButton("charges")}</span></h4><p class="ppa-hint">Work out every statutory charge on a round trip (buy, then sell) before you trade, and the price you must sell at just to break even. It uses the brokerage plan above.</p><div data-fee-calc></div></section>` : ""}
     <section class="ppa-panel ppa-danger"><h4>Reset account</h4><p class="ppa-hint">Start again with ${money(c.start)}. Holdings, positions, orders, funds and P&amp;L for this feed are cleared.</p><button type="button" class="pp-mini" data-reset>Reset practice account</button></section>`;
   }
   function fundsCards() {
@@ -153,7 +155,7 @@ const PaperAccount = (function () {
    return `
     <div class="ppa-cards">
      ${card("Total value", money(total), `Your capital ${money(capital)}`)}
-     ${card("Net P&amp;L after tax", signed(net), pct((net / capital) * 100), cls(net))}
+     ${card(`Net P&amp;L after tax ${api.infoButton("pnl")}`, signed(net), pct((net / capital) * 100), cls(net))}
      ${card("Today's P&amp;L", signed(day), "On open positions", cls(day))}
      ${card("Invested", money(invested), `Current value ${money(value)}`)}
      ${card("Unrealised P&amp;L", signed(unreal), invested ? pct((unreal / invested) * 100) : "", cls(unreal))}
@@ -166,7 +168,7 @@ const PaperAccount = (function () {
       <ul class="ppa-alloc">${alloc.map(p => `<li><i style="background:${p.color}"></i><span>${esc(p.label)}</span><b>${money(p.v)}</b><small>${p.pct.toFixed(1)}%</small></li>`).join("")}</ul>
      </section>
      <section class="ppa-panel">
-      <h4>P&amp;L, charges and tax</h4>
+      <h4><span>P&amp;L, charges and tax ${api.infoButton("tax")}</span></h4>
       <table class="pp-pnl">
        ${row("Realised P&amp;L (after charges)", signed(realized), cls(realized))}
        ${inr ? row("Short-term capital gain", signed(a.realized.stcg), "", true) + row("Long-term capital gain", signed(a.realized.ltcg), "", true) + row("Intraday (speculative) income", signed(a.realized.intraday), "", true) : ""}
@@ -319,6 +321,7 @@ const PaperAccount = (function () {
    if (shown !== view) {
     body.innerHTML = view === "funds" ? fundsStatic() : `<div data-live="main"></div>`;
     shown = view;
+    if (view === "funds") PaperCosts.mountFeeCalc(body.querySelector("[data-fee-calc]"), { plan: api.plan });
    } else if (pressing) return; // do not replace a button while it is being pressed
    Object.entries(LIVE[view]).forEach(([region, fn]) => {
     const el = body.querySelector(`[data-live="${region}"]`);
@@ -362,7 +365,8 @@ const PaperAccount = (function () {
    form.elements.amount.value = "";
   });
   body.addEventListener("change", e => {
-   if (e.target.matches("[data-plan]")) api.onPlan(e.target.value);
+   if (e.target.matches("[data-plan]")) { api.onPlan(e.target.value); const calc = body.querySelector("[data-fee-calc]"); if (calc && calc._update) calc._update(); }
+   if (e.target.matches("[data-slip]")) api.onSlippage(e.target.checked);
   });
   body.addEventListener("input", e => {
    if (e.target.matches("[data-slab]")) api.onSlab(e.target.value);

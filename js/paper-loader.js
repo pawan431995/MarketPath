@@ -7,7 +7,7 @@
  const SCRIPTS = [
   "https://unpkg.com/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js",
   "js/paper-symbols.js", "js/paper-charges.js", "js/paper-indicators.js", "js/paper-drawings.js",
-  "js/paper-account.js", "js/paper-trading.js"
+  "js/paper-costs.js", "js/paper-journal.js", "js/paper-replay.js", "js/paper-account.js", "js/paper-trading.js"
  ];
  let started = false;
  function load() {

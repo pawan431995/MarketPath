@@ -149,7 +149,8 @@
   daily: {}, range: null, pendingRange: null // daily candles per symbol; the date-range button in use and one still to apply
  };
  const WATCHLISTS = 5, WATCH_MAX = 50;
- const SCREENS = ["watchlist", "dashboard", "chart", "orders", "holdings", "positions", "funds", "portfolio", "history"];
+ const SCREENS = ["watchlist", "dashboard", "chart", "replay", "orders", "holdings", "positions", "funds", "portfolio", "history", "journal"];
+ const OWN_PANES = { chart: "ptChartPane", replay: "ptReplayPane", journal: "ptJournalPane" }; // sections with their own pane
 
  // ---------- Persistence (per-viewer; storage can be blocked, so every access is wrapped) ----------
  const store = (function load() {
@@ -157,7 +158,7 @@
   try { s = JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { s = null; }
   s = s && typeof s === "object" ? s : {};
   ["accounts", "watchlists", "drawings", "lastPrices", "names"].forEach(k => { s[k] = s[k] || {}; });
-  s.prefs = Object.assign({ tf: 1, chartType: "candles", indicators: ["vol", "sma20"], plan: "zero", slab: 30 }, s.prefs || {});
+  s.prefs = Object.assign({ tf: 1, chartType: "candles", indicators: ["vol", "sma20"], plan: "zero", slab: 30, slippage: true }, s.prefs || {});
   return s;
  })();
  function save() {
@@ -200,6 +201,24 @@
   if (cfg().charges !== "india") return { brokerage: 0, stt: 0, exchange: 0, sebi: 0, stamp: 0, dp: 0, gst: 0, total: 0 };
   return PaperCharges.compute(side, product, qty, price, store.prefs.plan);
  }
+ // Estimated slippage on a market order (see PaperCosts.slippage and its disclosure). The stock's average daily
+ // traded value comes from the last 20 daily candles when they are loaded.
+ let journal = null; // the trading journal (created at start-up)
+ function advOf(sym) {
+  const d = state.feed === "nse" ? ((window.MP_DAILY || {})[sym] ? nseDaily(sym) : []) : state.daily[sym] || [];
+  const last = d.slice(-20).filter(b => b.volume > 0);
+  return last.length >= 5 ? last.reduce((s, b) => s + b.close * b.volume, 0) / last.length : 0;
+ }
+ function tierOf(sym) {
+  if (state.feed === "finnhub") return "high";
+  if (state.feed === "sim") return KNOWN_BASE[sym] ? "high" : "mid";
+  if (!isLiveCovered(sym)) return "low";
+  return advOf(sym) >= 5e9 ? "high" : "mid";
+ }
+ function slippageFor(side, qty, price, sym) {
+  if (!store.prefs.slippage || !(qty > 0) || !(price > 0)) return null;
+  return PaperCosts.slippage({ price, qty, side, tier: tierOf(sym), adv: advOf(sym), tick: cfg().minMove });
+ }
  const posKey = (sym, product) => `${sym}|${product}`;
  const posQty = p => p.lots.reduce((s, l) => s + l.qty, 0);
  const posAvg = p => { const q = posQty(p); return q ? p.lots.reduce((s, l) => s + l.qty * l.price, 0) / q : 0; };
@@ -223,7 +242,9 @@
   if (!Number.isInteger(order.qty) || order.qty <= 0) return "Enter a whole-number quantity above zero.";
   if (order.type === "limit" && !(order.limit > 0)) return "Enter a limit price above zero.";
   if (order.product === "intraday" && !order.tag && pastSquareOff()) return "New intraday orders are not allowed after 3:20 pm. Use the Delivery product, or trade intraday tomorrow.";
-  const ref = order.type === "limit" ? order.limit : price;
+  // Market orders fill at the shown price plus the estimated slippage; limit orders at the limit price.
+  const slip = order.type === "market" ? slippageFor(order.side, order.qty, price, order.sym) : null;
+  const ref = order.type === "limit" ? order.limit : slip ? slip.fillPrice : price;
   if (order.side === "buy") {
    const need = order.qty * ref + charges("buy", order.product, order.qty, ref).total;
    if (need > available(a)) return `Not enough virtual funds: this order needs ${money(need)} and ${money(available(a))} is available.`;
@@ -237,7 +258,8 @@
    limit: order.type === "limit" ? order.limit : null, status: "open", price: null
   };
   if (order.tag) rec.tag = order.tag;
-  if (order.type === "market") fill(a, rec, price);
+  if (slip) rec.slippage = Math.round(slip.total * 100) / 100;
+  if (order.type === "market") fill(a, rec, Math.round(ref * 100) / 100);
   else a.pending.push(rec);
   save();
   scheduleRender();
@@ -258,10 +280,11 @@
    if (!p) return;
    a.cash += rec.qty * price - c.total;
    const sellCps = c.total / rec.qty, now = Date.now();
-   let left = rec.qty, gain = 0;
+   let left = rec.qty, gain = 0, cost = 0, buyCharges = 0, opened = now;
    while (left > 0 && p.lots.length) {
     const lot = p.lots[0], q = Math.min(left, lot.qty);
     const g = q * (price - sellCps) - q * (lot.price + lot.cps);
+    cost += q * lot.price; buyCharges += q * lot.cps; opened = Math.min(opened, lot.time);
     const cat = rec.product === "intraday" ? "intraday" : (now - lot.time) / 86400000 > PaperCharges.tax.longTermDays ? "ltcg" : "stcg";
     a.realized[cat] += g;
     gain += g;
@@ -271,6 +294,12 @@
    }
    if (!p.lots.length) delete a.positions[key];
    rec.gain = gain;
+   // Every closed trade goes to the trading journal.
+   if (journal) journal.record({
+    source: "paper", sym: rec.sym, side: "long", product: rec.product, qty: rec.qty, entry: Math.round((cost / rec.qty) * 100) / 100, exit: price,
+    pnl: Math.round(gain * 100) / 100, charges: Math.round((buyCharges + c.total) * 100) / 100, openedAt: opened, closedAt: now,
+    autoExit: rec.tag === "Auto square-off" ? "Auto square-off" : undefined, feed: state.feed
+   });
   }
   a.charges += c.total;
   rec.status = "filled";
@@ -990,6 +1019,17 @@
   const inWl = watchlist().includes(sym);
   $("ppStar").textContent = inWl ? "★ In watchlist" : "☆ Add to watchlist";
   $("ppStar").setAttribute("aria-pressed", String(inWl));
+  setHTML($("ptSource"), sourceBadge());
+ }
+ // The data-source badge on the chart: where the prices come from, how late they are, and whether they are real.
+ function sourceBadge() {
+  if (state.feed === "sim") return `<i class="pt-dot warn"></i>SIMULATED · not real prices ⓘ`;
+  if (state.feed === "finnhub") return `<i class="pt-dot ok"></i>FINNHUB · live quotes ⓘ`;
+  if (isDaily()) return `<i class="pt-dot ok"></i>NSE · daily candles · Yahoo Finance ⓘ`;
+  const t = nseQuotes && nseQuotes.marketTime ? new Date(nseQuotes.marketTime).toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit" }) : null;
+  if (!marketOpenNow()) return `<i class="pt-dot warn"></i>NSE · market closed · practice prices${t ? ` · last real ${t}` : ""} ⓘ`;
+  if (state.symbol && nseQuotes && !isLiveCovered(state.symbol)) return `<i class="pt-dot warn"></i>NSE · last close + simulated ticks ⓘ`;
+  return `<i class="pt-dot ok"></i>NSE · Yahoo Finance · delayed 5–10 min${t ? ` · ${t} IST` : ""} ⓘ`;
  }
 
  // Watchlist rows like a broker app: symbol coloured by the day's move, change, % change and LTP. Hovering a row
@@ -1024,20 +1064,22 @@
   if (!SCREENS.includes(name)) name = "chart";
   state.screen = name;
   $("paperApp").dataset.view = name;
-  $("ptChartPane").hidden = name !== "chart";
-  $("ppAccount").hidden = name === "chart" || name === "watchlist";
+  Object.entries(OWN_PANES).forEach(([view, id]) => { $(id).hidden = name !== view; });
+  $("ppAccount").hidden = name === "watchlist" || !!OWN_PANES[name];
+  if (name === "replay") replay.show(); else replay.hide();
+  if (name === "journal") journal.show($("ptJournalPane"));
   document.querySelectorAll("#ptNav [data-view]").forEach(b => {
    const on = b.dataset.view === name;
    b.setAttribute("aria-selected", String(on));
    b.tabIndex = on ? 0 : -1;
   });
   try { localStorage.setItem("mp-paper-tab", name); } catch (e) { /* storage unavailable */ }
-  if (name !== "chart" && name !== "watchlist") accountView.show(name);
+  if (name !== "watchlist" && !OWN_PANES[name]) accountView.show(name);
   if (name === "chart") { sizeChart(); drawings.schedule(); }
   scheduleRender();
  }
  function renderNav() {
-  const counts = accountView.counts();
+  const counts = Object.assign(accountView.counts(), { journal: journal ? journal.pendingCount() : 0 });
   document.querySelectorAll("#ptNav [data-view]").forEach(b => {
    const n = counts[b.dataset.view];
    let tag = b.querySelector("small");
@@ -1128,7 +1170,7 @@
   if (!p) return;
   const qty = freeToSell(a, p.sym, p.product);
   const err = qty > 0 ? placeOrder({ side: "sell", sym: p.sym, product: p.product, qty, type: "market" }) : "This position is already covered by open sell orders.";
-  toast(err || `Exited ${qty} ${p.sym} at ${money(state.prices[p.sym])}${practiceNote()}.`, err ? "error" : "ok");
+  toast(err || `Exited ${qty} ${p.sym} at ${money(a.orders[0].price)}${practiceNote()}.`, err ? "error" : "ok");
  }
  function cancelOrder(id) {
   const a = account(), o = a.pending.find(x => x.id === id);
@@ -1189,10 +1231,12 @@
   $("ptOrderSub").textContent = `${state.feed === "finnhub" ? "US" : "NSE"} ${price ? money(price) : "—"}${ch ? ` (${ch.pct >= 0 ? "+" : "−"}${Math.abs(ch.pct).toFixed(2)}%)` : ""}${practiceNote() ? " · after-hours practice price" : ""}`;
   const ref = t.type === "limit" ? t.limit : price;
   if (!(ref > 0) || !(t.qty > 0)) { $("ppEstimate").textContent = "Enter a quantity and price to see the estimate."; setHTML($("ppChargeList"), ""); return; }
-  const value = t.qty * ref, c = charges(t.side, t.product, t.qty, ref);
+  const slip = t.type === "market" ? slippageFor(t.side, t.qty, price, state.symbol) : null;
+  const px = slip ? slip.fillPrice : ref, value = t.qty * px, c = charges(t.side, t.product, t.qty, px);
+  const slipHtml = slip ? `<span>Est. slippage <b>${money(slip.total)}</b> (${slip.bps.toFixed(1)} bps) <button type="button" class="pt-info-btn" data-disclose="slippage" aria-label="How slippage is estimated">ⓘ</button></span>` : "";
   setHTML($("ppEstimate"), t.side === "buy"
-   ? `<span>Required <b>${money(value + c.total)}</b></span><span>Available <b>${money(available(a))}</b></span><span>Charges <b>${money(c.total)}</b></span>`
-   : `<span>You receive <b>${money(value - c.total)}</b></span><span>Can sell <b>${Math.max(0, freeToSell(a, state.symbol, t.product))} qty</b></span><span>Charges <b>${money(c.total)}</b></span>`);
+   ? `<span>Required <b>${money(value + c.total)}</b></span><span>Available <b>${money(available(a))}</b></span><span>Charges <b>${money(c.total)}</b></span>${slipHtml}`
+   : `<span>You receive <b>${money(value - c.total)}</b></span><span>Can sell <b>${Math.max(0, freeToSell(a, state.symbol, t.product))} qty</b></span><span>Charges <b>${money(c.total)}</b></span>${slipHtml}`);
   const line = (label, v) => (v ? `<tr><th>${label}</th><td>${money(v)}</td></tr>` : "");
   setHTML($("ppChargeList"), `<table class="pp-pnl">${line("Brokerage", c.brokerage)}${line("STT", c.stt)}${line("Exchange transaction charge", c.exchange)}${line("SEBI fee", c.sebi)}${line("Stamp duty", c.stamp)}${line("DP charge", c.dp)}${line("GST 18%", c.gst)}<tr class="pp-strong"><th>Total charges</th><td>${money(c.total)}</td></tr></table>`);
  }
@@ -1202,7 +1246,7 @@
   renderNav();
   renderWatchlist();
   if (state.screen === "chart") renderQuote();
-  else if (state.screen !== "watchlist") accountView.render();
+  else if (state.screen !== "watchlist" && !OWN_PANES[state.screen]) accountView.render();
   if (!$("ptOrder").hidden) updateEstimate();
  }
  let renderQueued = false;
@@ -1411,7 +1455,10 @@
   if (err) { setMsg(err, "error"); return; }
   closeOrder();
   if (t.type === "limit") toast(`Order placed: limit ${t.side} ${t.qty} ${state.symbol} at ${money(t.limit)}. It fills when the price reaches it.`, "ok");
-  else toast(`Order executed: ${t.side === "buy" ? "bought" : "sold"} ${t.qty} ${state.symbol} at ${money(state.prices[state.symbol])}${practiceNote()}.`, "ok");
+  else {
+   const o = account().orders[0], slipTxt = o && o.slippage ? ` (incl. ${money(o.slippage)} est. slippage)` : "";
+   toast(`Order executed: ${t.side === "buy" ? "bought" : "sold"} ${t.qty} ${state.symbol} at ${money(o ? o.price : state.prices[state.symbol])}${slipTxt}${practiceNote()}.`, "ok");
+  }
  });
  document.addEventListener("mp-theme-change", () => { if (state.chart) state.chart.applyOptions(chartOptions()); });
  window.addEventListener("beforeunload", () => { save(); stopFeed(); });
@@ -1455,7 +1502,23 @@
   onTrade: (side, sym) => openOrder(side, sym),
   onFunds: moveFunds, onReset: resetAccount,
   onPlan: id => { store.prefs.plan = id; save(); scheduleRender(); },
-  onSlab: v => { store.prefs.slab = Math.min(50, Math.max(0, Number(v) || 0)); save(); scheduleRender(); }
+  onSlab: v => { store.prefs.slab = Math.min(50, Math.max(0, Number(v) || 0)); save(); scheduleRender(); },
+  slippageOn: () => !!store.prefs.slippage,
+  onSlippage: on => { store.prefs.slippage = on; save(); scheduleRender(); },
+  infoButton: PaperCosts.infoButton
+ });
+ journal = PaperJournal.create({
+  esc, money, signed, toast, capital: () => 1000000, infoButton: PaperCosts.infoButton,
+  busy: () => !$("ptOrder").hidden || !$("ptInfo").hidden,
+  onChange: renderNav
+ });
+ const replay = PaperReplay.create({
+  esc, money, signed, fmt, toast, journal, loadScript, dataUrl, dataFile, names: NSE_NAME, infoButton: PaperCosts.infoButton,
+  plan: () => store.prefs.plan, slippageOn: () => !!store.prefs.slippage,
+  defaultSymbol: () => (state.feed === "nse" && state.symbol && isLiveCovered(state.symbol) ? state.symbol : "RELIANCE"),
+  // NIFTY 500 stocks have replay data; the list comes from the quotes file, or from data/universe.json.
+  covered: () => (window.MP_QUOTES ? Promise.resolve(Object.keys(MP_QUOTES.q).filter(s => MP_QUOTES.q[s][3] === 1).sort())
+   : fetch(window.MPChrome ? MPChrome.url("data/universe.json") : "data/universe.json").then(r => r.json()).then(l => l.slice().sort()).catch(() => []))
  });
  syncChartControls();
  // The index strip in the terminal bar uses the same data file as the site's index ribbon.
