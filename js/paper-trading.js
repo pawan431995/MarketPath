@@ -3,8 +3,10 @@
 // "sim" simulates any NSE-listed stock in the browser (a random walk around a per-symbol base price), for practice
 // at any hour; "finnhub" polls Finnhub's free quote and symbol-search APIs with the visitor's own API key.
 // Each feed keeps its own account, watchlist and drawings, because the feeds price in different currencies.
+// The page section is a broker-style terminal: a top bar with the sections, a watchlist column (five lists) with
+// Buy / Sell / Chart buttons on each row, the chart, and an order window.
 // Needs shared.js (MP.esc), paper-symbols.js, paper-charges.js, paper-indicators.js, paper-drawings.js and
-// paper-account.js (the Portfolio, Holdings, Positions and Orders views).
+// paper-account.js (the Dashboard, Orders, Holdings, Positions, Funds, Portfolio and Trade history views).
 // Lightweight Charts is optional: prices, orders and P&L still work if it fails to load.
 (function () {
  const STORE_KEY = "mp-paper-v2";
@@ -71,8 +73,11 @@
 
  const state = {
   feed: "sim", symbol: null, bars: {}, prices: {}, ref: {}, base: {}, noQuote: new Set(), keyBad: false,
-  stop: null, chart: null, series: {}, view: [], lastLen: 0, hoverTime: null, expanded: false
+  stop: null, chart: null, series: {}, view: [], lastLen: 0, hoverTime: null, expanded: false,
+  screen: "chart", focus: null // terminal section shown, and the watchlist row whose B / S / chart buttons are open
  };
+ const WATCHLISTS = 5, WATCH_MAX = 50;
+ const SCREENS = ["watchlist", "dashboard", "chart", "orders", "holdings", "positions", "funds", "portfolio", "history"];
 
  // ---------- Persistence (per-viewer; storage can be blocked, so every access is wrapped) ----------
  const store = (function load() {
@@ -91,14 +96,24 @@
  function writeKey(key) { try { localStorage.setItem(KEY_STORE, key); } catch (e) { /* storage unavailable */ } }
 
  function account() {
-  const a = store.accounts[state.feed];
-  if (a && a.realized) return a;
-  return (store.accounts[state.feed] = { cash: cfg().start, positions: {}, pending: [], orders: [], realized: { stcg: 0, ltcg: 0, intraday: 0 }, charges: 0 });
+  let a = store.accounts[state.feed];
+  if (!a || !a.realized) a = store.accounts[state.feed] = { cash: cfg().start, positions: {}, pending: [], orders: [], realized: { stcg: 0, ltcg: 0, intraday: 0 }, charges: 0 };
+  // Funds added or withdrawn: deposits is the net amount, ledger the statement (added in the terminal version).
+  if (typeof a.deposits !== "number") a.deposits = 0;
+  if (!Array.isArray(a.ledger)) a.ledger = [];
+  return a;
  }
- function watchlist() {
-  if (!Array.isArray(store.watchlists[state.feed])) store.watchlists[state.feed] = cfg().watchlist.slice();
-  return store.watchlists[state.feed];
+ // Five watchlists per feed, like a broker app. Earlier versions kept one array per feed: it becomes list 1.
+ function watchStore() {
+  let w = store.watchlists[state.feed];
+  if (Array.isArray(w)) w = { lists: [w], active: 0 };
+  if (!w || !Array.isArray(w.lists)) w = { lists: [cfg().watchlist.slice()], active: 0 };
+  while (w.lists.length < WATCHLISTS) w.lists.push([]);
+  if (!(w.active >= 0 && w.active < WATCHLISTS)) w.active = 0;
+  return (store.watchlists[state.feed] = w);
  }
+ const watchlist = () => watchStore().lists[watchStore().active];
+ const capital = a => cfg().start + (a.deposits || 0);
  function drawingsFor(sym) {
   const f = store.drawings[state.feed] || (store.drawings[state.feed] = {});
   return f[sym] || (f[sym] = []);
@@ -123,9 +138,6 @@
  function freeToSell(a, sym, product) {
   const p = a.positions[posKey(sym, product)];
   return (p ? posQty(p) : 0) - pendingSellQty(a, sym, product);
- }
- function holdingsValue(a) {
-  return Object.values(a.positions).reduce((s, p) => s + posQty(p) * (state.prices[p.sym] || posAvg(p)), 0);
  }
  function taxEstimate(a) {
   if (cfg().charges !== "india") return { stcgTax: 0, ltcgTax: 0, intradayTax: 0, cess: 0, total: 0 };
@@ -522,8 +534,9 @@
   $("ppKey").value = feed === "finnhub" ? readKey() : "";
   $("ppProductRow").hidden = cfg().charges !== "india";
   $("ppChargesBox").hidden = cfg().charges !== "india";
-  $("ppSettingsBox").hidden = cfg().charges !== "india";
-  $("ppSearch").placeholder = feed !== "finnhub" ? "Search any NSE stock by name or symbol" : "Search symbols on Finnhub (e.g. Apple, AAPL)";
+  $("ppSearch").placeholder = feed !== "finnhub" ? "Search eg: infy, tcs, reliance" : "Search eg: AAPL, Apple";
+  state.focus = null;
+  closeOrder();
   document.querySelectorAll('#ppTf [data-tf="1"]').forEach(b => { b.hidden = feed === "nse"; }); // real data is 5-minute
   store.prefs.feed = feed;
   syncChartControls(); // the effective timeframe depends on the feed
@@ -542,6 +555,7 @@
    setNote("Add your free Finnhub API key (finnhub.io) to load live quotes. The key stays in this browser.");
   }
   buildChart();
+  accountView.reset();
   scheduleRender();
  }
 
@@ -614,8 +628,8 @@
  }
  function sizeChart() {
   const el = $("ppChart");
-  // Expanded: fill the screen below the toolbars (about 290px tall in total).
-  el.style.height = state.expanded ? "max(320px, calc(100vh - 290px))" : `${400 + extraPanes() * 130}px`;
+  // Expanded: fill the screen below the terminal bar and the chart toolbars (about 250px tall in total).
+  el.style.height = state.expanded ? "max(320px, calc(100vh - 250px))" : `${440 + extraPanes() * 130}px`;
  }
 
  function buildChart() {
@@ -750,7 +764,7 @@
   if (!q) { closeSearch(); return; }
   const wl = watchlist();
   list.innerHTML = searchResults.length
-   ? searchResults.map((r, i) => `<li role="option" id="ppOpt${i}" data-sym="${esc(r.sym)}" aria-selected="${i === searchActive}" class="${i === searchActive ? "active" : ""}"><span class="pp-opt-sym">${esc(r.sym)}</span><span class="pp-opt-name">${esc(r.name)}</span><button type="button" class="pp-opt-add" data-add="${esc(r.sym)}" aria-label="${wl.includes(r.sym) ? "In watchlist" : "Add " + esc(r.sym) + " to watchlist"}" title="${wl.includes(r.sym) ? "In watchlist" : "Add to watchlist"}">${wl.includes(r.sym) ? "★" : "☆"}</button></li>`).join("")
+   ? searchResults.map((r, i) => `<li role="option" id="ppOpt${i}" data-sym="${esc(r.sym)}" aria-selected="${i === searchActive}" class="${i === searchActive ? "active" : ""}"><span class="pp-opt-sym">${esc(r.sym)}<small>${state.feed === "finnhub" ? "US" : "NSE"}</small></span><span class="pp-opt-name">${esc(r.name)}</span><button type="button" class="pp-opt-add${wl.includes(r.sym) ? " added" : ""}" data-add="${esc(r.sym)}" aria-label="${wl.includes(r.sym) ? "Remove " + esc(r.sym) + " from watchlist" : "Add " + esc(r.sym) + " to watchlist"}" title="${wl.includes(r.sym) ? "In watchlist (press to remove)" : "Add to watchlist"}">${wl.includes(r.sym) ? "✓" : "+"}</button></li>`).join("")
    : `<li class="pp-opt-empty">${state.feed === "finnhub" && !readKey() ? "Save a Finnhub API key to search." : "No matching stocks."}</li>`;
   list.hidden = false;
   input.setAttribute("aria-expanded", "true");
@@ -770,9 +784,18 @@
  }
  function toggleWatch(sym) {
   const wl = watchlist(), i = wl.indexOf(sym);
-  if (i >= 0) wl.splice(i, 1); else { wl.push(sym); ensureData(sym); if (state.feed === "finnhub" && readKey()) quoteFinnhub(sym); }
+  if (i >= 0) wl.splice(i, 1);
+  else if (wl.length >= WATCH_MAX) { toast(`A watchlist holds up to ${WATCH_MAX} stocks. Use another list (1–${WATCHLISTS}) below.`, "error"); return; }
+  else { wl.push(sym); ensureData(sym); if (state.feed === "finnhub" && readKey()) quoteFinnhub(sym); }
   save();
   scheduleRender();
+ }
+ // Picking a search result adds it to the open watchlist (if it is not there) and opens it, as broker apps do.
+ function pickResult(sym) {
+  $("ppSearch").value = "";
+  if (!watchlist().includes(sym)) toggleWatch(sym);
+  state.focus = sym;
+  selectSymbol(sym);
  }
 
  // ---------- Rendering ----------
@@ -787,7 +810,6 @@
   if (!(p > 0) || !(r > 0)) return null;
   return { abs: p - r, pct: (p / r - 1) * 100 };
  }
- const changeHtml = ch => (ch ? `<span class="${ch.abs >= 0 ? "pp-up" : "pp-down"}">${ch.pct >= 0 ? "+" : ""}${ch.pct.toFixed(2)}%</span>` : "—");
 
  function renderQuote() {
   const sym = state.symbol, p = state.prices[sym], ch = change(sym);
@@ -800,12 +822,131 @@
   $("ppStar").setAttribute("aria-pressed", String(inWl));
  }
 
+ // Watchlist rows like a broker app: symbol coloured by the day's move, change, % change and LTP. Hovering a row
+ // (or tapping it on a touch screen) shows Buy, Sell, Chart and Delete buttons over it.
  function renderWatchlist() {
-  const wl = watchlist();
+  const w = watchStore(), wl = watchlist();
   setHTML($("ppWatch"), wl.length ? wl.map(sym => {
-   const p = state.prices[sym];
-   return `<tr data-sym="${esc(sym)}" class="${sym === state.symbol ? "sel" : ""}"><td><strong>${esc(sym)}</strong><small>${esc(nameOf(sym))}</small></td><td class="num">${p ? money(p) : state.noQuote.has(sym) ? "no quote" : "—"}</td><td class="num">${changeHtml(change(sym))}</td><td class="num"><button type="button" class="pp-x" data-remove="${esc(sym)}" aria-label="Remove ${esc(sym)} from watchlist" title="Remove">✕</button></td></tr>`;
-  }).join("") : `<tr><td colspan="4" class="pp-empty">Your watchlist is empty. Search for a stock and press ☆ to add it.</td></tr>`);
+   const p = state.prices[sym], ch = change(sym), tone = ch ? (ch.abs >= 0 ? "pp-up" : "pp-down") : "";
+   const s = esc(sym);
+   return `<li data-sym="${s}" class="${sym === state.symbol ? "sel" : ""}${sym === state.focus ? " open" : ""}">
+    <button type="button" class="pt-w-main" data-open="${s}" aria-expanded="${sym === state.focus}" aria-label="${s}${ch ? `, ${ch.pct >= 0 ? "up" : "down"} ${Math.abs(ch.pct).toFixed(2)}%` : ""}, show buy, sell and chart options">
+     <span class="pt-w-sym ${tone}">${s}<small>${esc(nameOf(sym))}</small></span>
+     <span class="pt-w-chg">${ch ? `${ch.abs >= 0 ? "" : "−"}${fmt(Math.abs(ch.abs))}` : ""}</span>
+     <span class="pt-w-pct ${tone}">${ch ? `${ch.pct >= 0 ? "" : "−"}${Math.abs(ch.pct).toFixed(2)}% ${ch.abs >= 0 ? "▴" : "▾"}` : ""}</span>
+     <span class="pt-w-ltp ${tone}">${p ? fmt(p) : state.noQuote.has(sym) ? "no quote" : "—"}</span>
+    </button>
+    <span class="pt-w-acts">
+     <button type="button" class="pt-b" data-trade="buy" data-sym="${s}" title="Buy ${s} (B)">B</button>
+     <button type="button" class="pt-s" data-trade="sell" data-sym="${s}" title="Sell ${s} (S)">S</button>
+     <button type="button" class="pt-a" data-chart="${s}" title="Open the chart for ${s}" aria-label="Chart ${s}">📈</button>
+     <button type="button" class="pt-a" data-remove="${s}" title="Remove ${s} from this watchlist" aria-label="Remove ${s}">🗑</button>
+    </span>
+   </li>`;
+  }).join("") : `<li class="pt-w-empty"><strong>Watchlist ${w.active + 1} is empty</strong>Search above and pick a stock, or press + on a result, to add it here.</li>`);
+  $("ptWatchName").textContent = `Watchlist ${w.active + 1}`;
+  $("ptWatchCount").textContent = `${wl.length} / ${WATCH_MAX}`;
+  setHTML($("ptWatchTabs"), w.lists.map((l, i) => `<button type="button" role="tab" data-list="${i}" aria-selected="${i === w.active}" title="Watchlist ${i + 1} (${l.length} stocks)">${i + 1}</button>`).join(""));
+ }
+
+ // ---------- Terminal: sections, index strip, order window and messages ----------
+ function setScreen(name) {
+  if (!SCREENS.includes(name)) name = "chart";
+  state.screen = name;
+  $("paperApp").dataset.view = name;
+  $("ptChartPane").hidden = name !== "chart";
+  $("ppAccount").hidden = name === "chart" || name === "watchlist";
+  document.querySelectorAll("#ptNav [data-view]").forEach(b => {
+   const on = b.dataset.view === name;
+   b.setAttribute("aria-selected", String(on));
+   b.tabIndex = on ? 0 : -1;
+  });
+  try { localStorage.setItem("mp-paper-tab", name); } catch (e) { /* storage unavailable */ }
+  if (name !== "chart" && name !== "watchlist") accountView.show(name);
+  if (name === "chart") { sizeChart(); drawings.schedule(); }
+  scheduleRender();
+ }
+ function renderNav() {
+  const counts = accountView.counts();
+  document.querySelectorAll("#ptNav [data-view]").forEach(b => {
+   const n = counts[b.dataset.view];
+   let tag = b.querySelector("small");
+   if (!n) { if (tag) tag.remove(); return; }
+   if (!tag) { tag = document.createElement("small"); b.appendChild(tag); }
+   if (tag.textContent !== String(n)) tag.textContent = n;
+  });
+ }
+ function indices() {
+  const d = window.MP_INDICES;
+  return d && Array.isArray(d.items) ? d.items.filter(i => i && i.last > 0) : [];
+ }
+ function renderIndices() {
+  const list = indices().filter(i => i.name === "NIFTY 50" || i.name === "SENSEX");
+  setHTML($("ptIndices"), list.map(i => `<span class="pt-idx"><b>${esc(i.name)}</b><span class="${i.change >= 0 ? "pp-up" : "pp-down"}">${Number(i.last).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><small>${i.change >= 0 ? "+" : "−"}${Math.abs(i.change).toFixed(2)} (${i.pct >= 0 ? "+" : "−"}${Math.abs(i.pct).toFixed(2)}%)</small></span>`).join(""));
+ }
+
+ let toastTimer = null;
+ function toast(text, kind) {
+  const el = $("ptToast");
+  el.textContent = text;
+  el.className = `pt-toast${kind ? " " + kind : ""}`;
+  el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, kind === "error" ? 7000 : 4500);
+ }
+
+ // The order window: a dialog over the terminal, coloured by side (blue to buy, orange to sell).
+ let orderReturn = null;
+ function openOrder(side, sym) {
+  if (sym && sym !== state.symbol) selectSymbol(sym);
+  document.querySelector(`input[name="ppSide"][value="${side === "sell" ? "sell" : "buy"}"]`).checked = true;
+  // Selling something you hold: start with its product and the quantity you can sell.
+  if (side === "sell") {
+   const a = account(), held = ["delivery", "intraday"].find(p => freeToSell(a, state.symbol, p) > 0);
+   if (held) {
+    document.querySelector(`input[name="ppProduct"][value="${held}"]`).checked = true;
+    $("ppQty").value = freeToSell(a, state.symbol, held);
+   }
+  }
+  if ($("ppType").value === "limit" && !(Number($("ppLimit").value) > 0)) $("ppLimit").value = state.prices[state.symbol] || "";
+  setMsg("");
+  updateEstimate();
+  orderReturn = document.activeElement;
+  $("ptOrder").hidden = false;
+  $("ppQty").focus();
+  $("ppQty").select();
+ }
+ function closeOrder() {
+  if ($("ptOrder").hidden) return;
+  $("ptOrder").hidden = true;
+  if (orderReturn && document.contains(orderReturn)) orderReturn.focus();
+  orderReturn = null;
+ }
+
+ // Virtual funds: kind "add" or "withdraw". Returns an error message, or null when done.
+ function moveFunds(kind, amount) {
+  const a = account();
+  if (!(amount > 0) || !isFinite(amount)) return "Enter an amount above zero.";
+  amount = Math.round(amount * 100) / 100;
+  if (kind === "add" && capital(a) + amount > cfg().start * 100) return `Practice accounts are capped at ${money(cfg().start * 100)} of capital.`;
+  if (kind === "withdraw" && amount > available(a)) return `You can withdraw up to ${money(Math.max(0, available(a)))}; the rest is invested or blocked for open orders.`;
+  const sign = kind === "add" ? 1 : -1;
+  a.cash += sign * amount;
+  a.deposits += sign * amount;
+  a.ledger.push({ time: Date.now(), kind, amount, balance: a.cash });
+  a.ledger = a.ledger.slice(-200);
+  save();
+  scheduleRender();
+  return null;
+ }
+ function resetAccount() {
+  const c = cfg();
+  if (!confirm(`Reset the ${c.label.toLowerCase()} account to ${money(c.start)}? Holdings, positions, orders, funds and P&L will be cleared.`)) return false;
+  delete store.accounts[state.feed];
+  save();
+  toast("Practice account reset.", "ok");
+  scheduleRender();
+  return true;
  }
 
  // Writes only when the markup changed, so a price tick does not rebuild unchanged parts of the page.
@@ -817,7 +958,7 @@
   if (!p) return;
   const qty = freeToSell(a, p.sym, p.product);
   const err = qty > 0 ? placeOrder({ side: "sell", sym: p.sym, product: p.product, qty, type: "market" }) : "This position is already covered by open sell orders.";
-  setMsg(err || `Exited ${qty} ${p.sym} at ${money(state.prices[p.sym])}${practiceNote()}.`, err ? "error" : "ok");
+  toast(err || `Exited ${qty} ${p.sym} at ${money(state.prices[p.sym])}${practiceNote()}.`, err ? "error" : "ok");
  }
  function cancelOrder(id) {
   const a = account(), o = a.pending.find(x => x.id === id);
@@ -846,7 +987,7 @@
    const qty = freeToSell(a, p.sym, p.product);
    if (qty > 0 && !placeOrder({ side: "sell", sym: p.sym, product: "intraday", qty, type: "market", tag: "Auto square-off" })) done++;
   });
-  if (done) setMsg(`3:20 pm: ${done} intraday position${done > 1 ? "s were" : " was"} squared off automatically.`, "ok");
+  if (done) toast(`3:20 pm: ${done} intraday position${done > 1 ? "s were" : " was"} squared off automatically.`, "ok");
  }
  function downloadCsv(name, rows) {
   const cell = v => `"${String(v).replace(/"/g, '""')}"`;
@@ -871,30 +1012,28 @@
  function updateEstimate() {
   const a = account(), t = currentTicket(), price = state.prices[state.symbol];
   $("ppLimitRow").hidden = t.type !== "limit";
-  $("ppSubmit").textContent = `${t.side === "buy" ? "Buy" : "Sell"} ${state.symbol || ""}`;
-  $("ppSubmit").classList.toggle("pp-sell-btn", t.side === "sell");
+  $("ppSubmit").textContent = t.side === "buy" ? "Buy" : "Sell";
+  $("ptOrder").classList.toggle("sell", t.side === "sell");
+  $("ptOrderTitle").textContent = `${t.side === "buy" ? "Buy" : "Sell"} ${state.symbol || ""} × ${t.qty > 0 ? t.qty : 0} Qty`;
+  const ch = change(state.symbol);
+  $("ptOrderSub").textContent = `${state.feed === "finnhub" ? "US" : "NSE"} ${price ? money(price) : "—"}${ch ? ` (${ch.pct >= 0 ? "+" : "−"}${Math.abs(ch.pct).toFixed(2)}%)` : ""}${practiceNote() ? " · after-hours practice price" : ""}`;
   const ref = t.type === "limit" ? t.limit : price;
   if (!(ref > 0) || !(t.qty > 0)) { $("ppEstimate").textContent = "Enter a quantity and price to see the estimate."; setHTML($("ppChargeList"), ""); return; }
   const value = t.qty * ref, c = charges(t.side, t.product, t.qty, ref);
-  $("ppEstimate").textContent = `Value ${money(value)} · charges ${money(c.total)} · ${t.side === "buy" ? `needs ${money(value + c.total)}` : `you receive ${money(value - c.total)}`} · available ${money(available(a))}`;
+  setHTML($("ppEstimate"), t.side === "buy"
+   ? `<span>Required <b>${money(value + c.total)}</b></span><span>Available <b>${money(available(a))}</b></span><span>Charges <b>${money(c.total)}</b></span>`
+   : `<span>You receive <b>${money(value - c.total)}</b></span><span>Can sell <b>${Math.max(0, freeToSell(a, state.symbol, t.product))} qty</b></span><span>Charges <b>${money(c.total)}</b></span>`);
   const line = (label, v) => (v ? `<tr><th>${label}</th><td>${money(v)}</td></tr>` : "");
   setHTML($("ppChargeList"), `<table class="pp-pnl">${line("Brokerage", c.brokerage)}${line("STT", c.stt)}${line("Exchange transaction charge", c.exchange)}${line("SEBI fee", c.sebi)}${line("Stamp duty", c.stamp)}${line("DP charge", c.dp)}${line("GST 18%", c.gst)}<tr class="pp-strong"><th>Total charges</th><td>${money(c.total)}</td></tr></table>`);
  }
 
  function render() {
-  const a = account(), c = cfg();
-  const tax = taxEstimate(a);
-  const total = a.cash + holdingsValue(a), net = total - c.start - tax.total;
-  $("ppAvail").textContent = money(available(a));
-  $("ppInvested").textContent = money(holdingsValue(a));
-  $("ppTotal").textContent = money(total);
-  const pe = $("ppPnl");
-  pe.textContent = `${signed(net)} (${(net / c.start * 100).toFixed(2)}%)`;
-  pe.className = net >= 0 ? "pp-up" : "pp-down";
-  renderQuote();
+  renderIndices();
+  renderNav();
   renderWatchlist();
-  accountView.render();
-  updateEstimate();
+  if (state.screen === "chart") renderQuote();
+  else if (state.screen !== "watchlist") accountView.render();
+  if (!$("ptOrder").hidden) updateEstimate();
  }
  let renderQueued = false;
  function scheduleRender() {
@@ -910,16 +1049,19 @@
   document.body.classList.toggle("pp-noscroll", on);
   const b = $("ppExpand");
   b.setAttribute("aria-pressed", String(on));
-  b.textContent = on ? "⤡ Collapse" : "⤢ Expand";
-  b.title = on ? "Collapse (Esc)" : "Expand to full screen";
+  b.textContent = on ? "⤡" : "⤢";
+  b.title = on ? "Exit full screen (Esc)" : "Full screen";
+  b.setAttribute("aria-label", b.title);
   sizeChart();
   drawings.schedule();
  }
  function setSideHidden(on) {
-  $("paperApp").classList.toggle("pp-side-hidden", on);
+  $("paperApp").classList.toggle("pt-watch-hidden", on);
   const b = $("ppSideToggle");
   b.setAttribute("aria-pressed", String(on));
-  b.textContent = on ? "⇤ Show panel" : "⇥ Hide panel";
+  b.textContent = on ? "⇥" : "⇤";
+  b.title = on ? "Show the watchlist" : "Hide the watchlist";
+  b.setAttribute("aria-label", b.title);
   drawings.schedule();
  }
 
@@ -945,7 +1087,7 @@
   } else if (e.key === "Enter") {
    e.preventDefault();
    const r = searchResults[searchActive >= 0 ? searchActive : 0];
-   if (r) { $("ppSearch").value = ""; selectSymbol(r.sym); }
+   if (r) pickResult(r.sym);
   } else if (e.key === "Escape") {
    e.stopPropagation();
    closeSearch();
@@ -956,16 +1098,67 @@
   const add = e.target.closest("[data-add]");
   if (add) { toggleWatch(add.dataset.add); renderSearch(); return; }
   const li = e.target.closest("li[data-sym]");
-  if (li) { $("ppSearch").value = ""; selectSymbol(li.dataset.sym); }
+  if (li) pickResult(li.dataset.sym);
  });
  $("ppSearch").addEventListener("blur", () => setTimeout(closeSearch, 150));
 
  $("ppStar").addEventListener("click", () => toggleWatch(state.symbol));
+ // Watchlist: a row press shows its buttons (and selects the stock); B / S open the order window; the chart
+ // button opens the chart section.
  $("ppWatch").addEventListener("click", e => {
-  const rm = e.target.closest("[data-remove]");
-  if (rm) { toggleWatch(rm.dataset.remove); return; }
-  const row = e.target.closest("tr[data-sym]");
-  if (row) selectSymbol(row.dataset.sym);
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.remove) { if (state.focus === b.dataset.remove) state.focus = null; toggleWatch(b.dataset.remove); }
+  else if (b.dataset.trade) openOrder(b.dataset.trade, b.dataset.sym);
+  else if (b.dataset.chart) { state.focus = b.dataset.chart; selectSymbol(b.dataset.chart); setScreen("chart"); }
+  else if (b.dataset.open) {
+   state.focus = state.focus === b.dataset.open ? null : b.dataset.open;
+   if (b.dataset.open !== state.symbol) selectSymbol(b.dataset.open); else scheduleRender();
+  }
+ });
+ $("ppWatch").addEventListener("keydown", e => {
+  // Keyboard shortcuts on a focused row, as in broker apps: B to buy, S to sell, C for the chart.
+  const li = e.target.closest("li[data-sym]");
+  if (!li || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === "b" || k === "s") { e.preventDefault(); openOrder(k === "b" ? "buy" : "sell", li.dataset.sym); }
+  else if (k === "c") { e.preventDefault(); selectSymbol(li.dataset.sym); setScreen("chart"); }
+ });
+ $("ptWatchTabs").addEventListener("click", e => {
+  const b = e.target.closest("[data-list]");
+  if (!b) return;
+  watchStore().active = Number(b.dataset.list);
+  state.focus = null;
+  save();
+  activeSymbols().forEach(ensureData);
+  if (state.feed === "finnhub" && readKey()) watchlist().forEach(sym => { if (!state.prices[sym]) quoteFinnhub(sym); });
+  scheduleRender();
+ });
+ $("ptNav").addEventListener("click", e => {
+  const b = e.target.closest("[data-view]");
+  if (b) setScreen(b.dataset.view);
+ });
+ $("ptNav").addEventListener("keydown", e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const tabs = [...document.querySelectorAll("#ptNav [data-view]")].filter(b => b.offsetParent !== null);
+  const i = tabs.findIndex(b => b.dataset.view === state.screen), next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+  if (next) { setScreen(next.dataset.view); next.focus(); }
+ });
+ document.querySelector(".pt-trade-btns").addEventListener("click", e => {
+  const b = e.target.closest("[data-trade]");
+  if (b) openOrder(b.dataset.trade);
+ });
+ $("ptOrder").addEventListener("click", e => {
+  if (e.target === $("ptOrder") || e.target.closest("[data-close-order]")) closeOrder();
+ });
+ $("ptOrder").addEventListener("keydown", e => {
+  if (e.key === "Escape") { e.stopPropagation(); closeOrder(); return; }
+  if (e.key !== "Tab") return;
+  // Keep keyboard focus inside the order window while it is open.
+  const f = [...$("ptOrder").querySelectorAll("button, input, select, summary")].filter(x => !x.disabled && x.offsetParent !== null);
+  if (!f.length) return;
+  if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+  else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
  });
 
  $("ppTf").addEventListener("click", e => {
@@ -1004,10 +1197,11 @@
  ["pointermove", "wheel"].forEach(ev => $("ppChartWrap").addEventListener(ev, () => drawings.schedule(), { passive: true }));
 
  $("ppExpand").addEventListener("click", () => setExpanded(!state.expanded));
- $("ppSideToggle").addEventListener("click", () => setSideHidden(!$("paperApp").classList.contains("pp-side-hidden")));
+ $("ppSideToggle").addEventListener("click", () => setSideHidden(!$("paperApp").classList.contains("pt-watch-hidden")));
  document.addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
-  if (drawings.tool() !== "cursor") drawings.setTool("cursor");
+  if (!$("ptOrder").hidden) closeOrder();
+  else if (drawings.tool() !== "cursor") drawings.setTool("cursor");
   else if (state.expanded) setExpanded(false);
  });
 
@@ -1017,19 +1211,10 @@
   e.preventDefault();
   const t = currentTicket();
   const err = placeOrder(Object.assign({ sym: state.symbol }, t));
-  if (err) setMsg(err, "error");
-  else if (t.type === "limit") setMsg(`Limit ${t.side} placed. It fills when the price reaches ${money(t.limit)}.`, "ok");
-  else setMsg(`${t.side === "buy" ? "Bought" : "Sold"} ${t.qty} ${state.symbol} at ${money(state.prices[state.symbol])}${practiceNote()}.`, "ok");
- });
- $("ppPlan").addEventListener("change", e => { store.prefs.plan = e.target.value; save(); scheduleRender(); });
- $("ppSlab").addEventListener("input", e => { store.prefs.slab = Math.min(50, Math.max(0, Number(e.target.value) || 0)); save(); scheduleRender(); });
- $("ppReset").addEventListener("click", () => {
-  const c = cfg();
-  if (!confirm(`Reset the ${c.label.toLowerCase()} account to ${money(c.start)}? Positions, orders and P&L will be cleared.`)) return;
-  delete store.accounts[state.feed];
-  save();
-  setMsg("Practice account reset.", "ok");
-  scheduleRender();
+  if (err) { setMsg(err, "error"); return; }
+  closeOrder();
+  if (t.type === "limit") toast(`Order placed: limit ${t.side} ${t.qty} ${state.symbol} at ${money(t.limit)}. It fills when the price reaches it.`, "ok");
+  else toast(`Order executed: ${t.side === "buy" ? "bought" : "sold"} ${t.qty} ${state.symbol} at ${money(state.prices[state.symbol])}${practiceNote()}.`, "ok");
  });
  document.addEventListener("mp-theme-change", () => { if (state.chart) state.chart.applyOptions(chartOptions()); });
  window.addEventListener("beforeunload", () => { save(); stopFeed(); });
@@ -1046,17 +1231,27 @@
   $("ppChartType").value = store.prefs.chartType;
  }
  $("ppFeed").innerHTML = Object.entries(FEEDS).map(([id, f]) => `<option value="${id}">${esc(f.label)}</option>`).join("");
- $("ppPlan").innerHTML = Object.entries(PaperCharges.plans).map(([id, p]) => `<option value="${id}">${esc(p.label)}</option>`).join("");
- $("ppPlan").value = store.prefs.plan;
- $("ppSlab").value = store.prefs.slab;
  $("ppIndList").innerHTML = INDICATORS.map(i => `<label><input type="checkbox" value="${i.id}"${store.prefs.indicators.includes(i.id) ? " checked" : ""}>${i.color ? `<i class="pp-swatch" style="background:${i.color}"></i>` : `<i class="pp-swatch pp-swatch-vol"></i>`}${esc(i.label)}</label>`).join("");
  const accountView = PaperAccount.create({
   account, cfg, nameOf, money, signed, fmt, esc, posQty, posAvg, posCost, taxEstimate,
   price: sym => state.prices[sym], ref: sym => state.ref[sym],
   slab: () => Number(store.prefs.slab) || 0, today: isToday,
-  onExit: exitPosition, onCancel: cancelOrder, downloadCsv,
-  onSelect: sym => { selectSymbol(sym); $("ppChartWrap").scrollIntoView({ behavior: "smooth", block: "center" }); }
+  plan: () => store.prefs.plan, plans: Object.entries(PaperCharges.plans).map(([id, p]) => [id, p.label]),
+  capital, available, blocked: reservedForBuys, indices,
+  onExit: exitPosition, onCancel: cancelOrder, downloadCsv, onGoto: setScreen,
+  onSelect: sym => { selectSymbol(sym); setScreen("chart"); },
+  onTrade: (side, sym) => openOrder(side, sym),
+  onFunds: moveFunds, onReset: resetAccount,
+  onPlan: id => { store.prefs.plan = id; save(); scheduleRender(); },
+  onSlab: v => { store.prefs.slab = Math.min(50, Math.max(0, Number(v) || 0)); save(); scheduleRender(); }
  });
  syncChartControls();
+ // The index strip in the terminal bar uses the same data file as the site's index ribbon.
+ document.addEventListener("mp-indices", scheduleRender);
+ setInterval(renderIndices, 60000);
+ let firstScreen = "chart";
+ try { firstScreen = localStorage.getItem("mp-paper-tab") || "chart"; } catch (e) { /* storage unavailable */ }
+ if (firstScreen === "watchlist" && !window.matchMedia("(max-width: 900px)").matches) firstScreen = "chart";
+ setScreen(SCREENS.includes(firstScreen) ? firstScreen : "chart");
  selectFeed(FEEDS[store.prefs.feed] ? store.prefs.feed : "nse");
 })();

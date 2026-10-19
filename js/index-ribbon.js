@@ -75,7 +75,8 @@
  function load() {
   const s = document.createElement("script");
   s.src = `${MPChrome.url("data/indices.js")}?t=${Date.now()}`; // bypass the cache on each refresh
-  s.onload = () => { loadedAt = Date.now(); render(); s.remove(); schedule(); };
+  // mp-indices tells other parts of the page (the paper-trading terminal bar) that new index data arrived.
+  s.onload = () => { loadedAt = Date.now(); render(); s.remove(); schedule(); document.dispatchEvent(new CustomEvent("mp-indices")); };
   s.onerror = () => { s.remove(); schedule(); }; // keep showing the last data, if any
   document.head.appendChild(s);
  }

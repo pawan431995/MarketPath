@@ -11,16 +11,20 @@ Responsive static website starter using HTML, CSS and vanilla JavaScript.
 - English/Hindi language dropdown; the choice is remembered between pages
 - Searchable, level-filtered topic library (beginner, intermediate, advanced). Search matches every typed word, ranks title matches first and shows a result count
 - Light and dark theme toggle on every page (dark by default; the choice is remembered on the device)
-- Paper trading practice module, broker-style:
-  - Search any of the ~2,600 NSE-listed stocks (list from NSE's `EQUITY_L.csv`), with a saved watchlist
+- Paper trading practice terminal, laid out like a broker's trading window:
+  - Top bar with NIFTY 50 and SENSEX and the sections Dashboard, Chart, Orders, Holdings, Positions, Funds, Portfolio and Trade history
+  - Watchlist column: search any of the ~2,600 NSE-listed stocks (list from NSE's `EQUITY_L.csv`) to add them; five watchlists; each row shows change, % change and LTP, and hovering (or tapping) it shows Buy, Sell, Chart and Delete buttons (keys B, S and C also work)
+  - Order window opened by Buy or Sell: product (CNC or MIS), quantity, market or limit, required margin and a charges breakdown
   - Live-updating chart (TradingView Lightweight Charts, Apache-2.0): candles, Heikin Ashi, OHLC bars, line and area; 1m/5m/15m
   - Indicators: volume, SMA 20, EMA 50, Bollinger Bands, VWAP, RSI 14 and MACD (in their own panes)
   - Drawing tools: trend line, horizontal level, zone, Fibonacci retracement, long/short risk-reward box, eraser and undo; drawings are saved per stock
   - Virtual ₹10 lakh account: delivery and intraday products, market and limit orders, FIFO positions and one-click exit
   - Indian charges on every order (brokerage plan, STT, exchange charge, SEBI fee, stamp duty, DP charge, GST) and an estimated tax on realized gains (STCG, LTCG with the ₹1.25 lakh exemption, intraday at your slab, cess). Rates live in `js/paper-charges.js`; verify them before relying on them
-  - Broker-style account views: Portfolio (value, today's and overall P&L, allocation, charges and tax), Holdings (delivery), Positions (intraday), Orders (open, executed and cancelled, with CSV) and Trade history (win rate, average win and loss, day-by-day P&L, tradebook CSV)
+  - Funds: add or withdraw virtual money (counted as capital, not profit) with a statement, brokerage plan and tax slab settings, and account reset
+  - Dashboard: margin available, holdings P&L, open positions, market overview and recent orders
+  - Account views: Portfolio (value, today's and overall P&L, allocation, charges and tax), Holdings (delivery), Positions (intraday), Orders (open, executed and cancelled, with CSV) and Trade history (win rate, average win and loss, day-by-day P&L, tradebook CSV)
   - On the real-price feed, intraday positions are squared off automatically at 3:20 pm IST and new intraday orders are blocked after that, as brokers do
-  - Expand to full screen, hide the order panel, and collapse each section
+  - Full-screen mode and a button to hide the watchlist; on phones the watchlist is its own tab and the order window opens from the bottom
   - Loads only when its section comes into view (js/paper-loader.js), so the homepage stays light
   - Real NSE prices by default, delayed about 5–10 minutes and refreshed every 5 minutes in market hours: NIFTY 500 stocks with a real 5-minute chart (5 trading days), every other listed stock at its last closing price. Between the 5-minute real updates, in market hours, the price moves every 2 seconds with simulated ticks around the latest real price (sized by each stock's own recent volatility, within 1%), and glides to each new real price; the chart's current candle builds from these ticks. After the close and at weekends, an after-hours practice mode keeps prices moving within the last session's real range (starting from the closing price), and orders fill at these practice prices, labelled as such; real prices resume at 9:15 am IST
   - A simulated feed (practice at any hour) and optional Finnhub quotes with your own free API key remain available as separate accounts
@@ -98,8 +102,8 @@ marketpath-static-website/
 │   ├── calc-defs-*.js         Calculator definitions by category: personal, investing, retirement, loans, property, tax, business
 │   ├── theme.js               Light/dark theme toggle (loaded in <head> to avoid a flash)
 │   ├── paper-loader.js        Loads the paper-trading scripts when the section is about to be seen
-│   ├── paper-trading.js       Paper trading module: feeds, search, chart, order ticket, orders and P&L
-│   ├── paper-account.js       Portfolio, Holdings, Positions, Orders and Trade history views
+│   ├── paper-trading.js       Paper trading terminal: feeds, watchlists, search, chart, order window, orders and funds
+│   ├── paper-account.js       Dashboard, Orders, Holdings, Positions, Funds, Portfolio and Trade history views
 │   ├── lesson-catalog.js      Lesson titles and summaries for the homepage (generated by tools/build-search-index.js)
 │   ├── paper-symbols.js       NSE-listed stocks for the search (generated by tools/build-nse-symbols.js)
 │   ├── paper-charges.js       Brokerage, statutory charges and tax rates used by paper trading

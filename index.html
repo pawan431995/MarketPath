@@ -95,103 +95,115 @@
     </section>
 
     <section class="section paper-section" id="paper">
-      <div class="section-heading"><div><div class="eyebrow">PAPER TRADING · PRACTICE ONLY</div><h2>Trade a virtual account</h2><p>Search any NSE stock, chart it with indicators and drawings, and place practice orders with realistic charges and tax. No real money and no broker are involved.</p></div><span class="pill pill-outline" id="feedBadge">SIMULATED</span></div>
-      <div class="paper-app" id="paperApp">
-        <div class="paper-panel pp-main">
-          <div class="paper-toolbar">
-            <div class="pp-search">
-              <label class="sr-only" for="ppSearch">Search stocks</label>
+      <div class="section-heading"><div><div class="eyebrow">PAPER TRADING · PRACTICE ONLY</div><h2>Your practice trading terminal</h2><p>A broker-style trading window with virtual money: build watchlists, place orders, read charts with indicators and drawings, and track holdings, positions and funds. No real money and no broker are involved.</p></div><span class="pill pill-outline" id="feedBadge">SIMULATED</span></div>
+      <div class="pt" id="paperApp" data-view="chart">
+        <header class="pt-top">
+          <div class="pt-indices" id="ptIndices" aria-label="Market indices"></div>
+          <nav class="pt-nav" id="ptNav" role="tablist" aria-label="Terminal sections">
+            <button type="button" role="tab" data-view="watchlist" class="pt-mobile-only">Watchlist</button>
+            <button type="button" role="tab" data-view="dashboard">Dashboard</button>
+            <button type="button" role="tab" data-view="chart">Chart</button>
+            <button type="button" role="tab" data-view="orders">Orders</button>
+            <button type="button" role="tab" data-view="holdings">Holdings</button>
+            <button type="button" role="tab" data-view="positions">Positions</button>
+            <button type="button" role="tab" data-view="funds">Funds</button>
+            <button type="button" role="tab" data-view="portfolio">Portfolio</button>
+            <button type="button" role="tab" data-view="history">Trade history</button>
+          </nav>
+          <div class="pt-tools">
+            <button type="button" class="pp-btn pt-icon" id="ppSideToggle" aria-pressed="false" title="Hide the watchlist">⇤</button>
+            <button type="button" class="pp-btn pt-icon" id="ppExpand" aria-pressed="false" title="Full screen">⤢</button>
+          </div>
+        </header>
+        <div class="pp-keyrow" id="ppKeyRow" hidden>
+          <input id="ppKey" type="password" autocomplete="off" placeholder="Finnhub API key (free at finnhub.io)" aria-label="Finnhub API key">
+          <button type="button" class="btn btn-secondary" id="ppSaveKey">Save key</button>
+        </div>
+        <div class="pt-body">
+          <aside class="pt-watch" aria-label="Watchlist">
+            <div class="pp-search pt-search">
+              <label class="sr-only" for="ppSearch">Search stocks to add</label>
               <span class="pp-search-icon" aria-hidden="true">⌕</span>
-              <input id="ppSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search any NSE stock by name or symbol" role="combobox" aria-expanded="false" aria-controls="ppSearchList" aria-autocomplete="list">
+              <input id="ppSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search eg: infy, tcs, reliance" role="combobox" aria-expanded="false" aria-controls="ppSearchList" aria-autocomplete="list">
               <ul id="ppSearchList" class="pp-search-list" role="listbox" aria-label="Matching stocks" hidden></ul>
             </div>
-            <label class="pp-field"><span class="sr-only">Price feed</span><select id="ppFeed" aria-label="Price feed"></select></label>
-            <div class="pp-layout-btns">
-              <button type="button" class="pp-btn" id="ppSideToggle" aria-pressed="false" title="Hide the order panel to widen the chart">⇥ Hide panel</button>
-              <button type="button" class="pp-btn" id="ppExpand" aria-pressed="false" title="Expand to full screen">⤢ Expand</button>
+            <label class="pt-feed"><span>Prices</span><select id="ppFeed" class="pp-select" aria-label="Price feed"></select></label>
+            <div class="pt-watch-head"><strong id="ptWatchName">Watchlist 1</strong><small id="ptWatchCount"></small></div>
+            <ul class="pt-watch-list" id="ppWatch" aria-label="Watchlist stocks"></ul>
+            <div class="pt-watch-tabs" id="ptWatchTabs" role="tablist" aria-label="Watchlists"></div>
+          </aside>
+          <div class="pt-work">
+            <div class="pt-pane pt-chart-pane" id="ptChartPane">
+              <div class="pp-quote-row">
+                <div class="pp-sym"><h3 id="ppSymTitle">—</h3><small id="ppSymName"></small></div>
+                <button type="button" class="pp-btn pp-star" id="ppStar" aria-pressed="false">☆ Add to watchlist</button>
+                <div class="pp-quote"><strong id="ppPrice">—</strong><span id="ppChange" class="pp-change"></span></div>
+                <div class="pt-trade-btns"><button type="button" class="pt-buy" data-trade="buy">Buy</button><button type="button" class="pt-sell" data-trade="sell">Sell</button></div>
+              </div>
+              <div class="pp-chartbar">
+                <div class="pp-seg" id="ppTf" role="group" aria-label="Timeframe"><button type="button" data-tf="1">1m</button><button type="button" data-tf="5">5m</button><button type="button" data-tf="15">15m</button></div>
+                <label><span class="sr-only">Chart type</span><select id="ppChartType" class="pp-select" aria-label="Chart type"><option value="candles">Candles</option><option value="ha">Heikin Ashi</option><option value="bars">OHLC bars</option><option value="line">Line</option><option value="area">Area</option></select></label>
+                <details class="pp-menu"><summary class="pp-btn">ƒx Indicators</summary><div class="pp-menu-body" id="ppIndList"></div></details>
+              </div>
+              <div class="pp-draw" id="ppDraw" role="toolbar" aria-label="Drawing tools">
+                <button type="button" data-tool="cursor" class="active" aria-pressed="true" title="Cursor: pan and zoom">↖<span>Cursor</span></button>
+                <button type="button" data-tool="trend" aria-pressed="false" title="Trend line">╱<span>Trend</span></button>
+                <button type="button" data-tool="hline" aria-pressed="false" title="Horizontal line">―<span>Level</span></button>
+                <button type="button" data-tool="rect" aria-pressed="false" title="Rectangle zone">▭<span>Zone</span></button>
+                <button type="button" data-tool="fib" aria-pressed="false" title="Fibonacci retracement">≣<span>Fib</span></button>
+                <button type="button" data-tool="rr" aria-pressed="false" title="Long or short position: entry, stop and a 1:2 target">⇅<span>Long/Short</span></button>
+                <button type="button" data-tool="erase" aria-pressed="false" title="Eraser: click a drawing to delete it">⌫<span>Erase</span></button>
+                <span class="pp-draw-sep" aria-hidden="true"></span>
+                <button type="button" data-action="undo" title="Undo last drawing">↶<span>Undo</span></button>
+                <button type="button" data-action="clear" title="Clear all drawings on this stock">✕<span>Clear</span></button>
+              </div>
+              <p class="pp-draw-hint" id="ppDrawHint" aria-live="polite"></p>
+              <div class="pp-chart-wrap" id="ppChartWrap">
+                <div class="pp-legend" id="ppLegend"></div>
+                <div id="ppChart" class="pp-chart" role="img" aria-label="Price chart for the selected stock"></div>
+                <svg id="ppDrawLayer" class="pp-draw-layer" aria-hidden="true"></svg>
+              </div>
+              <p class="demo-note" id="ppNote"></p>
+            </div>
+            <div class="pt-pane pt-account-pane" id="ppAccount" hidden>
+              <div class="ppa-body" id="ppa-body" role="tabpanel" tabindex="0"></div>
             </div>
           </div>
-          <div class="pp-keyrow" id="ppKeyRow" hidden>
-            <input id="ppKey" type="password" autocomplete="off" placeholder="Finnhub API key (free at finnhub.io)" aria-label="Finnhub API key">
-            <button type="button" class="btn btn-secondary" id="ppSaveKey">Save key</button>
-          </div>
-          <div class="pp-quote-row">
-            <div class="pp-sym"><h3 id="ppSymTitle">—</h3><small id="ppSymName"></small></div>
-            <button type="button" class="pp-btn pp-star" id="ppStar" aria-pressed="false">☆ Add to watchlist</button>
-            <div class="pp-quote"><strong id="ppPrice">—</strong><span id="ppChange" class="pp-change"></span></div>
-          </div>
-          <div class="pp-chartbar">
-            <div class="pp-seg" id="ppTf" role="group" aria-label="Timeframe"><button type="button" data-tf="1">1m</button><button type="button" data-tf="5">5m</button><button type="button" data-tf="15">15m</button></div>
-            <label><span class="sr-only">Chart type</span><select id="ppChartType" class="pp-select" aria-label="Chart type"><option value="candles">Candles</option><option value="ha">Heikin Ashi</option><option value="bars">OHLC bars</option><option value="line">Line</option><option value="area">Area</option></select></label>
-            <details class="pp-menu"><summary class="pp-btn">ƒx Indicators</summary><div class="pp-menu-body" id="ppIndList"></div></details>
-          </div>
-          <div class="pp-draw" id="ppDraw" role="toolbar" aria-label="Drawing tools">
-            <button type="button" data-tool="cursor" class="active" aria-pressed="true" title="Cursor: pan and zoom">↖<span>Cursor</span></button>
-            <button type="button" data-tool="trend" aria-pressed="false" title="Trend line">╱<span>Trend</span></button>
-            <button type="button" data-tool="hline" aria-pressed="false" title="Horizontal line">―<span>Level</span></button>
-            <button type="button" data-tool="rect" aria-pressed="false" title="Rectangle zone">▭<span>Zone</span></button>
-            <button type="button" data-tool="fib" aria-pressed="false" title="Fibonacci retracement">≣<span>Fib</span></button>
-            <button type="button" data-tool="rr" aria-pressed="false" title="Long or short position: entry, stop and a 1:2 target">⇅<span>Long/Short</span></button>
-            <button type="button" data-tool="erase" aria-pressed="false" title="Eraser: click a drawing to delete it">⌫<span>Erase</span></button>
-            <span class="pp-draw-sep" aria-hidden="true"></span>
-            <button type="button" data-action="undo" title="Undo last drawing">↶<span>Undo</span></button>
-            <button type="button" data-action="clear" title="Clear all drawings on this stock">✕<span>Clear</span></button>
-          </div>
-          <p class="pp-draw-hint" id="ppDrawHint" aria-live="polite"></p>
-          <div class="pp-chart-wrap" id="ppChartWrap">
-            <div class="pp-legend" id="ppLegend"></div>
-            <div id="ppChart" class="pp-chart" role="img" aria-label="Price chart for the selected stock"></div>
-            <svg id="ppDrawLayer" class="pp-draw-layer" aria-hidden="true"></svg>
-          </div>
-          <p class="demo-note" id="ppNote"></p>
-          <details class="pp-box" open>
-            <summary>Watchlist</summary>
-            <div class="pp-watch">
-              <table>
-                <thead><tr><th>Stock</th><th class="num">Price</th><th class="num">Change</th><th class="num"><span class="sr-only">Remove</span></th></tr></thead>
-                <tbody id="ppWatch"></tbody>
-              </table>
-            </div>
-          </details>
         </div>
-        <aside class="paper-panel pp-side" aria-label="Virtual account and order ticket">
-          <div class="pp-stats">
-            <div><small>Available cash</small><strong id="ppAvail">—</strong></div>
-            <div><small>Holdings value</small><strong id="ppInvested">—</strong></div>
-            <div><small>Total value</small><strong id="ppTotal">—</strong></div>
-            <div><small>Net P&amp;L after tax</small><strong id="ppPnl">—</strong></div>
+        <div class="pt-toast" id="ptToast" role="status" aria-live="polite" hidden></div>
+        <div class="pt-modal" id="ptOrder" hidden>
+          <div class="pt-order" role="dialog" aria-modal="true" aria-labelledby="ptOrderTitle">
+            <form id="ppOrderForm" class="pp-order">
+              <header class="pt-order-head">
+                <div><strong id="ptOrderTitle">Buy</strong><small id="ptOrderSub"></small></div>
+                <div class="pt-side-switch" role="radiogroup" aria-label="Order side">
+                  <label><input type="radio" name="ppSide" value="buy" checked><span>Buy</span></label>
+                  <label><input type="radio" name="ppSide" value="sell"><span>Sell</span></label>
+                </div>
+              </header>
+              <div class="pt-order-body">
+                <div class="pp-sides pp-product" id="ppProductRow" role="radiogroup" aria-label="Product">
+                  <label title="Delivery (CNC): shares go to your demat; capital gains tax applies"><input type="radio" name="ppProduct" value="delivery" checked><span>Delivery <small>CNC</small></span></label>
+                  <label title="Intraday (MIS): bought and sold the same day; taxed as business income"><input type="radio" name="ppProduct" value="intraday"><span>Intraday <small>MIS</small></span></label>
+                </div>
+                <div class="pt-order-grid">
+                  <label class="pt-field"><span>Qty.</span><input id="ppQty" type="number" min="1" step="1" value="1"></label>
+                  <label class="pt-field" id="ppLimitRow" hidden><span>Price</span><input id="ppLimit" type="number" min="0.05" step="0.05"></label>
+                  <label class="pt-field"><span>Order type</span><select id="ppType"><option value="market">Market</option><option value="limit">Limit</option></select></label>
+                </div>
+                <p class="pp-estimate" id="ppEstimate"></p>
+                <details class="pp-box pp-charges" id="ppChargesBox"><summary>Charges breakdown</summary><div id="ppChargeList"></div></details>
+                <p class="pp-msg" id="ppMsg" aria-live="polite"></p>
+              </div>
+              <footer class="pt-order-foot">
+                <button type="submit" class="pt-submit" id="ppSubmit">Buy</button>
+                <button type="button" class="btn btn-secondary" data-close-order>Cancel</button>
+              </footer>
+            </form>
           </div>
-          <form id="ppOrderForm" class="pp-order">
-            <div class="pp-sides" role="radiogroup" aria-label="Order side">
-              <label><input type="radio" name="ppSide" value="buy" checked><span>Buy</span></label>
-              <label><input type="radio" name="ppSide" value="sell"><span>Sell</span></label>
-            </div>
-            <div class="pp-sides pp-product" id="ppProductRow" role="radiogroup" aria-label="Product">
-              <label title="Delivery (CNC): shares go to your demat; capital gains tax applies"><input type="radio" name="ppProduct" value="delivery" checked><span>Delivery</span></label>
-              <label title="Intraday (MIS): bought and sold the same day; taxed as business income"><input type="radio" name="ppProduct" value="intraday"><span>Intraday</span></label>
-            </div>
-            <div class="pp-row"><label for="ppType">Order type</label><select id="ppType"><option value="market">Market</option><option value="limit">Limit</option></select></div>
-            <div class="pp-row"><label for="ppQty">Quantity</label><input id="ppQty" type="number" min="1" step="1" value="10"></div>
-            <div class="pp-row" id="ppLimitRow" hidden><label for="ppLimit">Limit price</label><input id="ppLimit" type="number" min="0.05" step="0.05"></div>
-            <p class="pp-estimate" id="ppEstimate"></p>
-            <details class="pp-box pp-charges" id="ppChargesBox"><summary>Charges breakdown</summary><div id="ppChargeList"></div></details>
-            <button class="btn btn-primary full-btn" type="submit" id="ppSubmit">Buy</button>
-            <p class="pp-msg" id="ppMsg" aria-live="polite"></p>
-          </form>
-          <details class="pp-box" id="ppSettingsBox">
-            <summary>Charges and tax settings</summary>
-            <div class="pp-row"><label for="ppPlan">Brokerage plan</label><select id="ppPlan"></select></div>
-            <div class="pp-row"><label for="ppSlab">Your income-tax slab for intraday (%)</label><input id="ppSlab" type="number" min="0" max="50" step="1"></div>
-            <p class="fine-print">Rates used: STT 0.1% on delivery buys and sells, 0.025% on intraday sells; NSE transaction charge 0.00297%; SEBI fee ₹10 per crore; stamp duty 0.015% (delivery) or 0.003% (intraday) on buys; DP charge ₹13.50 per delivery sell; GST 18% on brokerage and fees. Tax: STCG 20%, LTCG 12.5% above ₹1.25 lakh, intraday at your slab, plus 4% cess. Rates change, so verify them with your broker and the Tax Basics lesson.</p>
-          </details>
-          <button type="button" class="btn btn-secondary full-btn pp-reset" id="ppReset">Reset practice account</button>
-          <p class="fine-print">Virtual money only. Market orders fill at the displayed price with no slippage. No leverage, short selling or automatic intraday square-off is simulated. Tax is an estimate that treats all charges as deductible. Nothing here is investment or tax advice.</p>
-        </aside>
+        </div>
       </div>
-      <section class="pp-account" id="ppAccount" aria-label="Your paper trading account">
-        <div class="ppa-tabs" role="tablist" aria-label="Account views"></div>
-        <div class="ppa-body" id="ppa-body" role="tabpanel" tabindex="0"></div>
-      </section>
+      <p class="fine-print pt-fine">Virtual money only. Market orders fill at the displayed price with no slippage. No leverage or short selling is simulated. Tax is an estimate that treats all charges as deductible. Nothing here is investment or tax advice.</p>
     </section>
 
     <section class="section" id="tools">
