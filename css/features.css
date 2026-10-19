@@ -262,12 +262,12 @@ body.ss-open{overflow:hidden}
 .ss-suggest button:hover{border-color:#2e796b}
 .ss-foot{margin:0;padding:9px 16px;border-top:1px solid #26384e;font-size:11px;color:#7f94ad}
 @media(max-width:1240px){.hdr-search-label,.hdr-search kbd{display:none}}
-@media(min-width:1241px) and (max-width:1400px){.main-nav{gap:20px}}
+@media(min-width:1061px) and (max-width:1300px){.main-nav{gap:18px}}
 @media(max-width:680px){.hdr-search{order:1;margin-left:auto}.theme-toggle{margin-left:0}.ss-overlay{padding-top:12px}.ss-dialog{max-height:88vh}.ss-foot{display:none}
  .site-header{gap:8px;padding:0 12px}.hdr-search,.theme-toggle{padding:6px 8px}.language-picker select{max-width:88px;padding:7px 6px;font-size:13px}}
-/* Narrower screens: collapse the seven-link nav into the ☰ menu before it would wrap. The header must not clip
+/* Narrower screens: collapse the nav into the ☰ menu before it would wrap. The header must not clip
    (styles.css set overflow:hidden at 900px, which hid the opened menu below the header on every page). */
-@media(max-width:1240px){
+@media(max-width:1060px){
  .site-header{overflow:visible}
  .menu-toggle{display:block;order:2;margin-left:0}
  .language-picker{order:3}
@@ -965,3 +965,17 @@ html[data-theme="light"] .sc-trend i.on{background:#d9f5ec;color:#0b6b50}
 html[data-theme="light"] .sb-summary p{color:#8a4a10}
 html[data-theme="light"] .sb-click:hover td{background:#f4f7fb}
 html[data-theme="light"] .sb-detail{border-color:#d5dde8}
+
+/* Homepage: link to the final test under the course list */
+.test-cta{display:flex;align-items:center;gap:16px;margin-top:22px;padding:18px 22px;border:1px solid #2e796b;border-radius:16px;background:linear-gradient(120deg,rgba(72,224,176,.10),rgba(69,169,217,.08));color:inherit;transition:border-color .2s,transform .2s}
+.test-cta:hover{border-color:#48e0b0;transform:translateY(-1px)}
+.test-cta-icon{font-size:30px;flex:none}
+.test-cta-text{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.test-cta-text strong{font-family:Manrope,sans-serif;font-size:17px;color:#e7edf5}
+.test-cta-text span{font-size:13px;color:#9aadc2}
+.test-cta-go{flex:none;font-weight:700;color:#7df1c7;font-size:14px}
+@media(max-width:680px){.test-cta{flex-wrap:wrap}.test-cta-go{width:100%}}
+html[data-theme="light"] .test-cta{border-color:#8fd9bd;background:linear-gradient(120deg,#e9f8f2,#eaf3fb)}
+html[data-theme="light"] .test-cta-text strong{color:#0f1b2d}
+html[data-theme="light"] .test-cta-text span{color:#4a5b70}
+html[data-theme="light"] .test-cta-go{color:#0b7d5e}
