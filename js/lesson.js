@@ -21,6 +21,8 @@ const UI = {
    },
    disclaimer: "Educational content only, not investment advice. Markets carry risk, including loss of capital. Examples are simplified and may exclude charges, taxes and slippage.",
    footerText: "Learn the market, one concept at a time.", disclaimerLink: "Disclaimer", privacyLink: "Privacy policy", contactLink: "Contact",
+   minRead: "min read", relatedCalcs: "Plan it with a calculator", doneTitle: "Finished this module?", doneText: "Mark it complete to track your progress on the home page. Scoring 60% or more in the quiz marks it complete too.",
+   markDone: "Mark as complete", isDone: "Completed ✓", undoDone: "Mark as not complete", quizSaved: "Score saved. Module marked complete — well done!", quizBest: "Best score",
    levels: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" } },
  hi: { navLearn: "सीखें", navChart: "चार्ट लैब", navTools: "कैलकुलेटर", navQuiz: "क्विज़", navGlossary: "शब्दावली", navAbout: "हमारे बारे में",
    library: "लाइब्रेरी", adPlaceholder: "विज्ञापन स्थान · स्वीकृति के बाद Google AdSense जोड़ें", allTopics: "सभी विषय", prev: "पिछला पाठ", next: "अगला पाठ",
@@ -42,6 +44,8 @@ const UI = {
    },
    disclaimer: "केवल शैक्षिक सामग्री, निवेश सलाह नहीं। बाज़ार में जोखिम होता है, जिसमें पूँजी खोने का जोखिम भी शामिल है। उदाहरण सरल किए गए हैं और इनमें शुल्क, टैक्स या स्लिपेज शामिल नहीं हो सकते।",
    footerText: "एक-एक अवधारणा करके बाज़ार सीखें।", disclaimerLink: "अस्वीकरण", privacyLink: "गोपनीयता नीति", contactLink: "संपर्क",
+   minRead: "मिनट पढ़ने का समय", relatedCalcs: "कैलकुलेटर से योजना बनाएँ", doneTitle: "यह मॉड्यूल पूरा हुआ?", doneText: "होम पेज पर अपनी प्रगति देखने के लिए इसे पूरा चिह्नित करें। क्विज़ में 60% या अधिक स्कोर करने पर भी यह पूरा चिह्नित होता है।",
+   markDone: "पूरा चिह्नित करें", isDone: "पूरा हुआ ✓", undoDone: "अधूरा चिह्नित करें", quizSaved: "स्कोर सहेजा गया। मॉड्यूल पूरा चिह्नित हुआ — शाबाश!", quizBest: "सर्वश्रेष्ठ स्कोर",
    levels: { beginner: "शुरुआती", intermediate: "मध्यम", advanced: "उन्नत" } }
 };
 
@@ -60,6 +64,26 @@ const CALC_SPECS = {
 };
 
 const LESSON_EXTRAS = { en: LESSON_EXTRAS_EN, hi: LESSON_EXTRAS_HI };
+
+// Calculators on the calculators page that go with each module: [calculator id, English name, Hindi name].
+const RELATED_CALCS = {
+ foundations: [["trade-breakeven", "Trade break-even", "ट्रेड ब्रेक-ईवन"], ["stock-average", "Stock average price", "शेयर औसत क़ीमत"], ["emergency-fund", "Emergency fund", "इमरजेंसी फ़ंड"]],
+ "market-rules": [["capital-gains", "Capital gains tax", "कैपिटल गेन टैक्स"], ["trade-breakeven", "Trade break-even", "ट्रेड ब्रेक-ईवन"]],
+ investing: [["compound-interest", "Compound interest", "चक्रवृद्धि ब्याज"], ["goal", "Goal planner", "लक्ष्य योजना"], ["net-worth", "Net worth", "नेट वर्थ"], ["inflation", "Inflation", "महँगाई"]],
+ "sip-mutual-funds": [["sip", "SIP calculator", "SIP कैलकुलेटर"], ["step-up-sip", "Step-up SIP", "स्टेप-अप SIP"], ["swp", "SWP", "SWP"], ["xirr", "XIRR", "XIRR"]],
+ "fundamental-analysis": [["cagr", "CAGR", "CAGR"], ["roi", "Return on investment", "निवेश पर रिटर्न"]],
+ "valuation-basics": [["npv-irr", "NPV & IRR", "NPV और IRR"], ["cagr", "CAGR", "CAGR"]],
+ "cash-flow-statement": [["runway", "Working capital & cash runway", "वर्किंग कैपिटल और कैश रनवे"]],
+ "balance-sheet": [["runway", "Working capital & cash runway", "वर्किंग कैपिटल और कैश रनवे"]],
+ "corporate-actions": [["drip", "Dividend reinvestment", "डिविडेंड रीइन्वेस्टमेंट"], ["stock-average", "Stock average price", "शेयर औसत क़ीमत"]],
+ "swing-trading": [["position-size", "Position size", "पोज़िशन साइज़"], ["trade-breakeven", "Trade break-even", "ट्रेड ब्रेक-ईवन"]],
+ "risk-management": [["position-size", "Position size", "पोज़िशन साइज़"], ["emergency-fund", "Emergency fund", "इमरजेंसी फ़ंड"]],
+ "intraday-trading": [["position-size", "Position size", "पोज़िशन साइज़"], ["trade-breakeven", "Trade break-even", "ट्रेड ब्रेक-ईवन"]],
+ "futures-options": [["position-size", "Position size", "पोज़िशन साइज़"], ["income-tax", "Income tax: new vs old", "इनकम टैक्स: नई बनाम पुरानी"]],
+ "tax-basics": [["income-tax", "Income tax: new vs old", "इनकम टैक्स: नई बनाम पुरानी"], ["capital-gains", "Capital gains tax", "कैपिटल गेन टैक्स"], ["hra", "HRA exemption", "HRA छूट"], ["gst", "GST", "GST"]],
+ "trading-psychology": [["position-size", "Position size", "पोज़िशन साइज़"]]
+};
+const hasProgress = typeof MPProgress !== "undefined";
 
 let lang = "en";
 let slug = "";
@@ -93,7 +117,8 @@ function renderModuleNav() {
  if (!document.getElementById("moduleNav")) return;
  document.getElementById("moduleNav").innerHTML = LESSON_ORDER.map(s => {
   const L = (LESSONS[lang] && LESSONS[lang][s]) || LESSONS.en[s];
-  return `<a href="${lessonHref(s)}"${s === slug ? ' class="active" aria-current="page"' : ""}>${esc(L.title)}</a>`;
+  const done = hasProgress && MPProgress.isDone(s) ? ' <span class="done-mark" aria-label="completed">✓</span>' : "";
+  return `<a href="${lessonHref(s)}"${s === slug ? ' class="active" aria-current="page"' : ""}>${esc(L.title)}${done}</a>`;
  }).join("");
 }
 
@@ -139,7 +164,8 @@ function renderTopicGrid() {
  document.getElementById("topicGrid").innerHTML = LESSON_ORDER.map(s => {
   const L = (LESSONS[lang] && LESSONS[lang][s]) || LESSONS.en[s];
   const active = s === slug ? " topic-chip-active" : "";
-  return `<a class="topic-chip${active}" href="${lessonHref(s)}"><strong>${esc(L.title)}</strong><small>${esc(UI[lang].levels[LESSONS.en[s].level])} · ${esc(L.time)}</small></a>`;
+  const done = hasProgress && MPProgress.isDone(s) ? `<span class="done-mark" aria-label="${esc(UI[lang].isDone)}">✓</span>` : "";
+  return `<a class="topic-chip${active}" href="${lessonHref(s)}"><strong>${esc(L.title)} ${done}</strong><small>${esc(UI[lang].levels[LESSONS.en[s].level])} · ${esc(L.time)}</small></a>`;
  }).join("");
 }
 
@@ -208,7 +234,13 @@ function quizBlock(items) {
 function drawQuiz(host) {
  const u = UI[lang];
  if (mq.i >= mq.items.length) {
-  host.innerHTML = `<div class="quiz-score"><small>${esc(u.quizScore)}</small><strong>${mq.score} / ${mq.items.length}</strong><button class="btn btn-primary" data-mq-retry>${esc(u.quizRetry)}</button></div>`;
+  let note = "";
+  if (hasProgress && !mq.saved) {
+   mq.saved = true;
+   if (MPProgress.saveQuiz(slug, mq.score, mq.items.length)) { note = `<p class="quiz-saved">${esc(u.quizSaved)}</p>`; renderDone(); renderModuleNav(); renderTopicGrid(); }
+  }
+  const best = hasProgress && MPProgress.read().quiz[slug];
+  host.innerHTML = `<div class="quiz-score"><small>${esc(u.quizScore)}</small><strong>${mq.score} / ${mq.items.length}</strong>${best ? `<p class="quiz-best">${esc(u.quizBest)}: ${best.score} / ${best.total}</p>` : ""}${note}<button class="btn btn-primary" data-mq-retry>${esc(u.quizRetry)}</button></div>`;
   return;
  }
  const it = mq.items[mq.i], answered = mq.chosen !== null;
@@ -236,8 +268,26 @@ function bindQuiz(items) {
    drawQuiz(host); return;
   }
   if (e.target.closest("[data-mq-next]")) { mq.i++; mq.chosen = null; drawQuiz(host); return; }
-  if (e.target.closest("[data-mq-retry]")) { mq.i = 0; mq.score = 0; mq.chosen = null; drawQuiz(host); }
+  if (e.target.closest("[data-mq-retry]")) { mq.i = 0; mq.score = 0; mq.chosen = null; mq.saved = false; drawQuiz(host); }
  };
+}
+
+// ---- related calculators and completion ----
+function relatedBlock(s) {
+ const list = RELATED_CALCS[s];
+ if (!list) return "";
+ return `<section class="lesson-block"><h2>${esc(UI[lang].relatedCalcs)}</h2><div class="related-calcs">${list.map(([id, en, hi]) => `<a class="related-calc" href="calculators.html#${encodeURIComponent(id)}"><span aria-hidden="true">₹</span>${esc(lang === "hi" ? hi : en)} <span aria-hidden="true">↗</span></a>`).join("")}</div></section>`;
+}
+function renderDone() {
+ const box = document.getElementById("doneBox");
+ if (!box || !hasProgress) return;
+ const u = UI[lang], done = MPProgress.isDone(slug);
+ box.classList.toggle("is-done", done);
+ box.innerHTML = `<div><h2>${esc(done ? u.isDone : u.doneTitle)}</h2><p>${esc(u.doneText)}</p></div><button type="button" class="btn ${done ? "btn-secondary" : "btn-primary"}" id="doneBtn" aria-pressed="${done}">${esc(done ? u.undoDone : u.markDone)}</button>`;
+ document.getElementById("doneBtn").addEventListener("click", () => {
+  MPProgress.setDone(slug, !MPProgress.isDone(slug));
+  renderDone(); renderModuleNav(); renderTopicGrid();
+ });
 }
 
 // ---- lesson body ----
@@ -297,7 +347,7 @@ function renderLesson() {
    <div class="eyebrow">${esc(UI[lang].levels[en.level])}</div>
    <h1 class="lesson-title">${esc(L.title)}</h1>
    <p class="lesson-summary">${esc(L.summary)}</p>
-   <div class="lesson-meta"><span class="level-badge">${esc(UI[lang].levels[en.level])}</span><span class="level-badge">${esc(L.time)}</span></div>
+   <div class="lesson-meta"><span class="level-badge">${esc(UI[lang].levels[en.level])}</span><span class="level-badge">${esc(L.time)}</span><span class="level-badge" id="readTime"></span></div>
   </header>
   ${sections.map(sec => `
    <section class="lesson-section">
@@ -314,6 +364,8 @@ function renderLesson() {
   ${termsBlock(meta.terms)}
   ${faqBlock(content.faq)}
   ${quizBlock(content.quiz)}
+  ${relatedBlock(slug)}
+  ${hasProgress ? `<section class="done-box" id="doneBox" aria-live="polite"></section>` : ""}
   <p class="fine-print lesson-disclaimer">${esc(UI[lang].disclaimer)}</p>
   <nav class="lesson-nav" aria-label="Lesson navigation">
    ${prev ? `<a href="${lessonHref(prev)}"><small>← ${esc(UI[lang].prev)}</small>${navTitle(prev)}</a>` : "<span></span>"}
@@ -325,7 +377,15 @@ function renderLesson() {
  updateProgress();
  bindCalcs();
  bindQuiz(content.quiz);
+ renderDone();
+ // About 200 words a minute for the lesson text (sections only, not tools or quiz).
+ const words = [...root.querySelectorAll(".lesson-section")].reduce((n, sec) => n + sec.textContent.split(/\s+/).length, 0);
+ document.getElementById("readTime").textContent = `${Math.max(1, Math.round(words / 200))} ${UI[lang].minRead}`;
+ if (hasProgress) MPProgress.visit(slug);
  placeAdSlots();
+ // Opened from search with #sec-N: scroll to that section now that it exists.
+ const target = location.hash && document.getElementById(location.hash.slice(1));
+ if (target) setTimeout(() => target.scrollIntoView({ block: "start" }), 0);
 }
 
 function setLanguage(l) {

@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="MarketPath learning module: lessons, charts, tools, try-it calculators, key terms, common questions and a practice quiz, in English and Hindi.">
   <meta name="theme-color" content="#0b1220">
+  <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MarketPath">
+  <meta property="og:title" content="Lesson — MarketPath">
+  <meta property="og:description" content="MarketPath learning module: lessons, charts, tools, try-it calculators, key terms, common questions and a practice quiz, in English and Hindi.">
+  <meta property="og:image" content="../images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
   <title>Lesson — MarketPath</title>
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/features.css">
+  <script src="../js/theme.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -14,11 +24,11 @@
     <a class="brand" href="../index.html" aria-label="MarketPath home"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" class="main-nav" aria-label="Main navigation">
-      <a href="../index.html#courses" data-ui="navLearn">Learn</a>
-      <a href="../index.html#chart" data-ui="navChart">Chart Lab</a>
-      <a href="calculators.html" data-ui="navTools">Calculators</a>
-      <a href="glossary.html" data-ui="navGlossary">Glossary</a>
-      <a href="../index.html#about" data-ui="navAbout">About</a>
+      <a href="../index.html#courses" aria-current="page">Learn</a>
+      <a href="../index.html#paper">Paper trading</a>
+      <a href="../pages/calculators.html">Calculators</a>
+      <a href="../pages/glossary.html">Glossary</a>
+      <a href="../index.html#about">About</a>
     </nav>
     <label class="language-picker"><span class="sr-only">Choose language</span>
       <select id="languageSelect" aria-label="Choose language">
@@ -49,6 +59,10 @@
   </div>
 
   <footer class="site-footer"><a class="brand footer-brand" href="../index.html"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a><p data-ui="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="../index.html#about" data-ui="disclaimerLink">Disclaimer</a><a href="privacy.html" data-ui="privacyLink">Privacy policy</a><a href="contact.html" data-ui="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPath. Educational content only.</small></footer>
+  <script src="../js/site-chrome.js"></script>
+  <script src="../js/site-search.js"></script>
+  <script src="../js/index-ribbon.js"></script>
+  <script src="../js/progress.js"></script>
   <script src="../js/lessons.js"></script>
   <script src="../js/lessons-modules.js"></script>
   <script src="../js/lessons-foundations.js"></script>
@@ -67,9 +81,11 @@
   <script src="../js/patterns-extra.js"></script>
   <script src="../js/glossary-data.js"></script>
   <script src="../js/glossary-finance.js"></script>
+  <script src="../js/glossary-rules.js"></script>
   <script src="../js/module-extras.js"></script>
-    <script src="../js/lessons-tax.js"></script>
+  <script src="../js/lessons-tax.js"></script>
   <script src="../js/lessons-finance.js"></script>
+  <script src="../js/lessons-updates.js"></script>
   <script src="../js/mcq-core.js"></script>
   <script src="../js/mcq-1.js"></script>
   <script src="../js/mcq-2.js"></script>
@@ -78,6 +94,7 @@
   <script src="../js/mcq-5.js"></script>
   <script src="../js/mcq-6.js"></script>
   <script src="../js/mcq-7.js"></script>
+  <script src="../js/lessons-market-rules.js"></script>
   <script src="../js/ads.js"></script>
   <script src="../js/lesson.js"></script>
 </body>

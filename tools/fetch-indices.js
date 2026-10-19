@@ -1,0 +1,97 @@
+// Fetches Indian market index levels and writes data/indices.js (and data/indices.json) for the index ribbon.
+// Browsers cannot read NSE or Yahoo directly from a static site (they do not allow cross-origin requests),
+// so this runs on a schedule (see .github/workflows/update-indices.yml) or by hand:
+//   node tools/fetch-indices.js
+// Sources: NSE's public all-indices endpoint for NSE indices; Yahoo Finance for SENSEX, and as a fallback.
+// Data is for education and display only, may be delayed, and is not an official feed.
+const fs = require("fs");
+const path = require("path");
+
+const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
+// [display name, NSE index name (null = not on NSE), Yahoo symbol]
+const INDICES = [
+ ["NIFTY 50", "NIFTY 50", "^NSEI"],
+ ["SENSEX", null, "^BSESN"],
+ ["NIFTY BANK", "NIFTY BANK", "^NSEBANK"],
+ ["NIFTY NEXT 50", "NIFTY NEXT 50", "^NSMIDCP"],
+ ["NIFTY FIN SERVICE", "NIFTY FINANCIAL SERVICES", "NIFTY_FIN_SERVICE.NS"],
+ ["NIFTY MIDCAP 100", "NIFTY MIDCAP 100", "NIFTY_MIDCAP_100.NS"],
+ ["NIFTY SMALLCAP 100", "NIFTY SMALLCAP 100", "^CNXSC"],
+ ["NIFTY IT", "NIFTY IT", "^CNXIT"],
+ ["NIFTY AUTO", "NIFTY AUTO", "^CNXAUTO"],
+ ["NIFTY PHARMA", "NIFTY PHARMA", "^CNXPHARMA"],
+ ["NIFTY FMCG", "NIFTY FMCG", "^CNXFMCG"],
+ ["NIFTY METAL", "NIFTY METAL", "^CNXMETAL"],
+ ["NIFTY PSU BANK", "NIFTY PSU BANK", "^CNXPSUBANK"],
+ ["INDIA VIX", "INDIA VIX", "^INDIAVIX"]
+];
+const round2 = n => Math.round(n * 100) / 100;
+
+async function fromNse() {
+ // NSE serves the API only to a browser-like session: load the home page first to get its cookies.
+ const home = await fetch("https://www.nseindia.com/", { headers: { "User-Agent": UA, Accept: "text/html" } });
+ const cookies = (home.headers.getSetCookie ? home.headers.getSetCookie() : []).map(c => c.split(";")[0]).join("; ");
+ const res = await fetch("https://www.nseindia.com/api/allIndices", {
+  headers: { "User-Agent": UA, Accept: "application/json", Referer: "https://www.nseindia.com/market-data/live-market-indices", Cookie: cookies }
+ });
+ if (!res.ok) throw new Error(`NSE HTTP ${res.status}`);
+ const json = await res.json();
+ const map = new Map((json.data || []).map(d => [d.index, d]));
+ return { map, timestamp: json.timestamp || null };
+}
+
+async function fromYahoo(symbol) {
+ const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d`, { headers: { "User-Agent": UA } });
+ if (!res.ok) throw new Error(`Yahoo HTTP ${res.status} for ${symbol}`);
+ const r = (((await res.json()).chart || {}).result || [])[0];
+ const meta = r && r.meta;
+ if (!meta || !(meta.regularMarketPrice > 0)) throw new Error(`No Yahoo price for ${symbol}`);
+ // Previous close = the last-but-one daily close (with range=5d, chartPreviousClose is five days back).
+ const closes = (r.indicators?.quote?.[0]?.close || []).filter(v => v > 0);
+ const prev = closes.length >= 2 ? closes[closes.length - 2] : meta.previousClose || meta.chartPreviousClose;
+ return { last: meta.regularMarketPrice, prev, time: meta.regularMarketTime };
+}
+
+async function main() {
+ let nse = null;
+ try { nse = await fromNse(); console.log(`NSE: ${nse.map.size} indices, timestamp ${nse.timestamp}`); }
+ catch (e) { console.warn(`NSE failed (${e.message}); using Yahoo for every index.`); }
+
+ const items = [];
+ let latestYahoo = 0;
+ for (const [name, nseName, yahoo] of INDICES) {
+  const d = nse && nseName ? nse.map.get(nseName) : null;
+  if (d && d.last > 0) {
+   items.push({ name, last: round2(d.last), change: round2(d.variation), pct: round2(d.percentChange), source: "NSE" });
+   continue;
+  }
+  try {
+   const y = await fromYahoo(yahoo);
+   const prev = y.prev;
+   const change = prev ? y.last - prev : 0;
+   items.push({ name, last: round2(y.last), change: round2(change), pct: prev ? round2((change / prev) * 100) : 0, source: "Yahoo" });
+   latestYahoo = Math.max(latestYahoo, y.time || 0);
+  } catch (e) {
+   console.warn(`Skipped ${name}: ${e.message}`);
+  }
+ }
+ if (!items.length) { console.error("No index data fetched; keeping the previous file."); process.exit(1); }
+
+ // Market time: NSE's own timestamp ("17-Oct-2026 15:30:00", IST) when available, else Yahoo's last trade time.
+ let marketTime = null;
+ if (nse && nse.timestamp) {
+  const m = nse.timestamp.match(/(\d{2})-([A-Za-z]{3})-(\d{4}) (\d{2}):(\d{2})/);
+  if (m) marketTime = new Date(`${m[2]} ${m[1]}, ${m[3]} ${m[4]}:${m[5]}:00 GMT+0530`).toISOString();
+ }
+ if (!marketTime && latestYahoo) marketTime = new Date(latestYahoo * 1000).toISOString();
+
+ const data = { fetchedAt: new Date().toISOString(), marketTime, items };
+ const dir = path.join(__dirname, "..", "data");
+ fs.mkdirSync(dir, { recursive: true });
+ fs.writeFileSync(path.join(dir, "indices.json"), JSON.stringify(data, null, 1) + "\n");
+ fs.writeFileSync(path.join(dir, "indices.js"), `// Generated by tools/fetch-indices.js — do not edit by hand.\nwindow.MP_INDICES = ${JSON.stringify(data)};\n`);
+ console.log(`Wrote ${items.length} indices (market time ${marketTime}).`);
+ items.forEach(i => console.log(`  ${i.name.padEnd(20)} ${String(i.last).padStart(10)}  ${i.change >= 0 ? "+" : ""}${i.change} (${i.pct}%)  [${i.source}]`));
+}
+
+main().catch(e => { console.error(e); process.exit(1); });

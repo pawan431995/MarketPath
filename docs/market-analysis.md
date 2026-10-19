@@ -66,8 +66,8 @@ Learners stay on a site when it answers the next question: "what does this word 
 2. **Reading list** (removed from the site by request). The books and sites in sections 1 and 2 are used only as background when writing lesson content. Learners should not need to leave MarketPath.
 3. **Quiz** (done): self-test across all topics with explanations, EN and HI.
 4. **Calculators** (done): goal SIP planner, lumpsum growth, CAGR, break-even cost for trades.
-5. **Indian market rules page** (later): settlement, market hours, circuit limits, KYC, scam signs. Tax rates change with budgets, so they must be checked against official sources before publishing.
-6. **Paper-trading simulator** (later): needs a careful design and data handling. Not built yet.
+5. **Indian market rules** (done): the Market Rules & Investor Protection module covers timings, settlement, circuit limits, KYC and nomination, IPOs, registered advice versus tips, scam signs and how to complain. Rules change, so check SEBI and exchange circulars before each update.
+6. **Paper-trading simulator** (done): virtual account with simulated prices for every NSE stock, charts, indicators, drawing tools, Indian charges and tax. Live NSE data would need a licensed provider.
 7. **Live data, news, community** (not planned): these need a backend or licensed data. Recommend linking to official sources (NSE, BSE, SEBI) for live information.
 
 ## 6. Content rules we follow

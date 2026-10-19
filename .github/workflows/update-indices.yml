@@ -1,0 +1,63 @@
+# Publishes the site to GitHub Pages and refreshes market data: index levels for the ribbon (data/indices.js)
+# and delayed share prices for paper trading (data/quotes.js, data/intraday/).
+# Runs on every push to main, every 5 minutes during Indian market hours, and on demand.
+# Setup: repository Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# Notes: GitHub can delay scheduled runs at busy times, and pauses schedules in repositories with no
+# activity for 60 days. The ribbon shows the time of the data, so a late run is visible to readers.
+name: Deploy site and refresh index data
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # 03:45–10:05 UTC = 9:15 am–3:35 pm IST, Monday to Friday (cron uses UTC). A few extra runs
+    # outside market hours are harmless: the data simply does not change.
+    - cron: "*/5 3-10 * * 1-5"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Bring back the data from the previous run, so a failed fetch keeps the last good prices
+      # and the once-a-day closing prices (data/eod.json) are not fetched again every 5 minutes.
+      - name: Restore last data
+        uses: actions/cache/restore@v4
+        with:
+          path: data
+          key: market-data-${{ github.run_id }}
+          restore-keys: market-data-
+      - name: Fetch index levels
+        # If the sources fail, keep the previous data file and still deploy.
+        continue-on-error: true
+        run: node tools/fetch-indices.js
+      - name: Fetch share prices for paper trading
+        continue-on-error: true
+        run: node tools/fetch-quotes.js
+      - name: Save data for the next run
+        uses: actions/cache/save@v4
+        with:
+          path: data
+          key: market-data-${{ github.run_id }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

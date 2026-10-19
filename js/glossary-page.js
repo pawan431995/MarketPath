@@ -53,6 +53,9 @@ document.addEventListener("DOMContentLoaded", () => {
  sel.value = glLang;
  sel.addEventListener("change", e => { glLang = e.target.value; MP.setLang(glLang); glApplyUI(); glRender(); });
  document.getElementById("glSearch").addEventListener("input", glRender);
+ // ?q=term (from site search) pre-fills the search box.
+ const q = new URLSearchParams(location.search).get("q");
+ if (q) document.getElementById("glSearch").value = q;
  MP.setupMenu();
  placeAdSlots();
  glApplyUI();

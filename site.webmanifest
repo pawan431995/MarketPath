@@ -1,0 +1,10 @@
+{
+  "name": "MarketPath — Learn the Stock Market",
+  "short_name": "MarketPath",
+  "description": "Learn the stock market from basics to advanced trading, with calculators and a paper-trading simulator, in English and Hindi.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "icons": [{ "src": "images/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

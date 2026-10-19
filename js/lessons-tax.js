@@ -143,7 +143,7 @@ Object.assign(LESSON_OVERRIDES.hi, {
 });
 
 Object.assign(MODULE_META, {
- "tax-basics": { terms: ["STT (Securities Transaction Tax)", "Brokerage", "Intraday", "Swing trading", "Dividend", "Brokerage", "Compounding", "Emergency fund"], tools: [], calc: ["cagr"] }
+ "tax-basics": { terms: ["STT (Securities Transaction Tax)", "Brokerage", "Intraday", "Swing trading", "Dividend", "Compounding", "Emergency fund"], tools: [], calc: ["cagr"] }
 });
 
 Object.assign(MODULE_CONTENT.en, {

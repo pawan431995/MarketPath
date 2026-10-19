@@ -1,1 +1,65 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact — MarketPath</title><link rel="stylesheet" href="../css/styles.css"></head><body><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a><a href="../index.html">← Back to home</a></header><main class="section"><div class="eyebrow">GET IN TOUCH</div><h1>Contact MarketPath</h1><p>Questions or suggestions about the learning material? Replace the example email below with your real contact address before publishing.</p><p><a class="btn btn-primary" href="mailto:replace-with-your-email@example.com">Email us ↗</a></p></main><footer class="site-footer"><small>© <span id="year"></span> MarketPath</small></footer><script>document.getElementById('year').textContent=new Date().getFullYear()</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contact MarketPath with questions, suggestions or corrections about the lessons, calculators and tools.">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../site.webmanifest">
+  <title>Contact — MarketPath</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/features.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body data-page="contact">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="MarketPath home"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="mainNav" class="main-nav" aria-label="Main navigation">
+      <a href="../index.html#courses">Learn</a>
+      <a href="../index.html#paper">Paper trading</a>
+      <a href="calculators.html">Calculators</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="../index.html#about">About</a>
+    </nav>
+    <label class="language-picker"><span class="sr-only">Choose language</span>
+      <select id="languageSelect" aria-label="Choose language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </label>
+  </header>
+
+  <main id="main" class="lesson-wrap static-page">
+    <div class="eyebrow" data-ui="contactEyebrow">GET IN TOUCH</div>
+    <h1 class="lesson-title" data-ui="contactTitle">Contact MarketPath</h1>
+    <p class="lesson-summary" data-ui="contactIntro">Questions, suggestions or found a mistake in a lesson? We read every message and use it to improve the site.</p>
+
+    <div class="static-grid">
+      <section class="res-card">
+        <h2 data-ui="contactEmailTitle">Email us</h2>
+        <p data-ui="contactEmailText">Write to us and include the page link if your message is about a specific lesson or calculator.</p>
+        <!-- Replace with your real contact address before publishing. -->
+        <p><a class="btn btn-primary" href="mailto:replace-with-your-email@example.com" data-ui="contactEmailBtn">Email us ↗</a></p>
+      </section>
+      <section class="res-card">
+        <h2 data-ui="contactNotTitle">What we cannot help with</h2>
+        <ul class="static-list">
+          <li data-ui="contactNot1">Buy or sell recommendations, tips or portfolio advice: we are an educational site, not a SEBI-registered adviser.</li>
+          <li data-ui="contactNot2">Problems with your broker account: contact your broker first, then SEBI SCORES if it is not resolved.</li>
+          <li data-ui="contactNot3">Recovering money lost to a scam: report it at cybercrime.gov.in or call 1930 straight away.</li>
+        </ul>
+      </section>
+    </div>
+    <p class="res-more"><a href="lesson.html?topic=market-rules" data-ui="contactLearn">While you wait, the Market Rules &amp; Investor Protection module explains how complaints work →</a></p>
+  </main>
+
+  <footer class="site-footer"><small>© <span id="year"></span> MarketPath</small></footer>
+  <script src="../js/site-chrome.js"></script>
+  <script src="../js/site-search.js"></script>
+  <script src="../js/index-ribbon.js"></script>
+  <script src="../js/static-pages.js"></script>
+</body>
+</html>

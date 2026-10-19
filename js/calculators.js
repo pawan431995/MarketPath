@@ -1,99 +1,453 @@
-// Calculators page: goal SIP planner, lumpsum growth, CAGR, inflation-adjusted value, trade break-even.
-const CALC_UI = {
- en: { navLearn: "Learn", navPatterns: "Patterns", navIndicators: "Indicators", navTools: "Calculators", navQuiz: "Quiz", navGlossary: "Glossary", navResources: "Resources",
-   eyebrow: "CALCULATORS", title: "Investing calculators",
-   intro: "Explore what different amounts, returns and time periods can do. Every result is an estimate: returns are not guaranteed, and taxes, fees and inflation are excluded unless stated.",
-   goalTitle: "Goal SIP planner", goalDesc: "How much to invest each month to reach a target amount.", goalTarget: "Target amount (₹)", monthlyNeeded: "Monthly SIP needed",
-   lumpTitle: "Lumpsum growth", lumpDesc: "What a one-time investment grows to.", amount: "Amount (₹)", futureValue: "Future value",
-   cagrTitle: "Return (CAGR)", cagrDesc: "The steady yearly rate that turns a start value into an end value.", startValue: "Start value (₹)", endValue: "End value (₹)", cagrOut: "Annual return (CAGR)",
-   realTitle: "Inflation-adjusted value", realDesc: "What an amount will be worth in today's money.", inflation: "Expected inflation (%)", realOut: "Value in today's money",
-   beTitle: "Trade break-even", beDesc: "How far the price must move just to cover costs.", qty: "Quantity (shares)", buyPrice: "Buy price (₹)", costs: "Total buy and sell costs (₹)", beOut: "Break-even sell price",
-   years: "Years", rate: "Assumed annual return (%)",
-   disclaimer: "These calculators show illustrative outcomes only. Returns are not guaranteed. Taxes, charges and inflation are excluded unless stated. Costs in the trade calculator should come from your broker's statement.",
-   footerText: "Learn the market, one concept at a time.", disclaimerLink: "Disclaimer", privacyLink: "Privacy policy", contactLink: "Contact",
-   invalid: "Enter valid values", note: { sip: "Assumes monthly investing at the start of each month.", lump: "Compounded yearly at the assumed rate.", cagr: "Steady yearly rate; real returns vary year to year.", real: "Future amount divided by inflation over the period.", be: "Price needed just to cover total costs, before any profit.", perc: "Move needed, as a percentage of the buy price." } },
- hi: { navLearn: "सीखें", navPatterns: "पैटर्न", navIndicators: "इंडिकेटर", navTools: "कैलकुलेटर", navQuiz: "क्विज़", navGlossary: "शब्दावली", navResources: "संसाधन",
-   eyebrow: "कैलकुलेटर", title: "निवेश कैलकुलेटर",
-   intro: "अलग-अलग राशि, रिटर्न और समय-अवधि क्या कर सकते हैं, यह देखें। हर परिणाम एक अनुमान है: रिटर्न की गारंटी नहीं है, और टैक्स, शुल्क व महँगाई जब तक न लिखी हो, शामिल नहीं हैं।",
-   goalTitle: "लक्ष्य SIP प्लानर", goalDesc: "लक्ष्य राशि तक पहुँचने के लिए हर महीने कितना निवेश करना होगा।", goalTarget: "लक्ष्य राशि (₹)", monthlyNeeded: "ज़रूरी मासिक SIP",
-   lumpTitle: "लंपसम ग्रोथ", lumpDesc: "एक बार के निवेश की भविष्य की राशि।", amount: "राशि (₹)", futureValue: "भविष्य की राशि",
-   cagrTitle: "रिटर्न (CAGR)", cagrDesc: "वह स्थिर सालाना दर जो शुरुआती मूल्य को अंतिम मूल्य तक ले जाती है।", startValue: "शुरुआती मूल्य (₹)", endValue: "अंतिम मूल्य (₹)", cagrOut: "सालाना रिटर्न (CAGR)",
-   realTitle: "महँगाई-समायोजित मूल्य", realDesc: "आज के पैसों में किसी राशि की वैल्यू क्या होगी।", inflation: "अपेक्षित महँगाई (%)", realOut: "आज के पैसों में मूल्य",
-   beTitle: "ट्रेड ब्रेक-ईवन", beDesc: "खर्च निकालने के लिए कीमत को कितना चलना होगा।", qty: "मात्रा (शेयर)", buyPrice: "ख़रीद कीमत (₹)", costs: "कुल ख़रीद और बिक्री खर्च (₹)", beOut: "ब्रेक-ईवन बिक्री कीमत",
-   years: "वर्ष", rate: "मान ली गई सालाना दर (%)",
-   disclaimer: "ये कैलकुलेटर केवल उदाहरण परिणाम दिखाते हैं। रिटर्न की गारंटी नहीं है। जब तक न लिखा हो, टैक्स, शुल्क और महँगाई शामिल नहीं हैं। ट्रेड कैलकुलेटर में खर्च आपके ब्रोकर के स्टेटमेंट से लें।",
-   footerText: "एक-एक अवधारणा करके बाज़ार सीखें।", disclaimerLink: "अस्वीकरण", privacyLink: "गोपनीयता नीति", contactLink: "संपर्क",
-   invalid: "सही मान दर्ज करें", note: { sip: "हर महीने की शुरुआत में निवेश मानकर।", lump: "मान ली गई दर पर सालाना चक्रवृद्धि।", cagr: "स्थिर सालाना दर; असली रिटर्न हर साल बदलता है।", real: "भविष्य की राशि को अवधि की महँगाई से भाग दिया गया।", be: "कुल खर्च निकालने के लिए ज़रूरी कीमत, किसी लाभ से पहले।", perc: "ख़रीद कीमत के प्रतिशत के रूप में ज़रूरी चाल।" } }
-};
+// Calculators hub (calculators.html). Two views:
+//  - Directory: search, category chips, popular calculators and every calculator grouped by category.
+//  - Detail (#<id>, optionally #<id>?input=value&...): live inputs, results, chart, table and the method.
+// Definitions are registered by calc-defs-*.js into window.CALCS. Maths: calc-math.js. Charts: calc-charts.js.
+(function () {
+ const CALCS = window.CALCS || [];
+ const BY_ID = new Map(CALCS.map(c => [c.id, c]));
 
-let cLang = "en";
+ const CATS = [
+  { id: "personal", icon: "◔", en: "Personal finance & budgeting", hi: "व्यक्तिगत वित्त और बजट" },
+  { id: "invest", icon: "↗", en: "Investing & wealth building", hi: "निवेश और संपत्ति" },
+  { id: "retire", icon: "◷", en: "Retirement planning", hi: "रिटायरमेंट योजना" },
+  { id: "loans", icon: "⇄", en: "Loans & debt", hi: "लोन और कर्ज़" },
+  { id: "property", icon: "⌂", en: "Real estate & mortgage", hi: "रियल एस्टेट और होम लोन" },
+  { id: "tax", icon: "§", en: "Tax", hi: "टैक्स" },
+  { id: "business", icon: "▤", en: "Business & corporate finance", hi: "बिज़नेस और कॉर्पोरेट वित्त" }
+ ];
+ const CAT = new Map(CATS.map(c => [c.id, c]));
+ const POPULAR = ["sip", "emi", "income-tax", "step-up-sip", "retirement", "fire", "compound-interest", "fd"];
 
-const inr = n => "₹ " + Math.round(n).toLocaleString("en-IN");
-const val = id => Number(document.getElementById(id).value);
-const set = (id, text) => { document.getElementById(id).textContent = text; };
-const note = (id, text) => { document.getElementById(id).textContent = text; };
+ const CURRENCIES = {
+  INR: { sym: "₹", locale: "en-IN", label: "₹ INR" },
+  USD: { sym: "$", locale: "en-US", label: "$ USD" },
+  EUR: { sym: "€", locale: "en-IE", label: "€ EUR" },
+  GBP: { sym: "£", locale: "en-GB", label: "£ GBP" }
+ };
 
-function calcGoal() {
- const target = val("goalTarget"), n = val("goalYears") * 12, r = val("goalRate") / 100 / 12;
- if (!(target > 0 && n > 0 && r >= 0)) { set("goalOut", CALC_UI[cLang].invalid); note("goalNote", ""); return; }
- const factor = r === 0 ? n : ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
- const monthly = target / factor;
- set("goalOut", inr(monthly));
- note("goalNote", `${CALC_UI[cLang].note.sip} ${cLang === "en" ? "Total invested" : "कुल निवेश"}: ${inr(monthly * n)}`);
-}
+ const UI = {
+  en: {
+   navLearn: "Learn", navTools: "Calculators", navGlossary: "Glossary", eyebrow: "CALCULATORS", title: "Financial calculators",
+   intro: "Plan budgets, investments, retirement, loans, property, tax and business decisions. Results update as you type. Every result is an estimate: returns are not guaranteed.",
+   search: n => `Search ${n} calculators…`, all: "All", popular: "Popular", currency: "Currency", back: "All calculators",
+   reset: "Reset", copy: "Copy link", copied: "Link copied", inputs: "Your inputs", results: "Results", how: "How this is calculated",
+   notes: "Things to keep in mind", related: "More in this category", csv: "Download CSV", none: "No calculator matches your search. Try another word.",
+   jump: "Switch calculator", addRow: "Add row", remove: "Remove", total: "Total", fixedCurrency: "Indian rules, shown in ₹", open: "Open",
+   count: n => `${n} calculators`, invalid: "Check the highlighted inputs.",
+   disclaimer: "These calculators show illustrative outcomes only. Returns are not guaranteed. Tax rules and rates change; verify them before acting. Nothing here is financial, tax or legal advice.",
+   footerText: "Learn the market, one concept at a time.", disclaimerLink: "Disclaimer", privacyLink: "Privacy policy", contactLink: "Contact"
+  },
+  hi: {
+   navLearn: "सीखें", navTools: "कैलकुलेटर", navGlossary: "शब्दावली", eyebrow: "कैलकुलेटर", title: "वित्तीय कैलकुलेटर",
+   intro: "बजट, निवेश, रिटायरमेंट, लोन, प्रॉपर्टी, टैक्स और बिज़नेस फ़ैसलों की योजना बनाएँ। टाइप करते ही परिणाम बदलते हैं। हर परिणाम एक अनुमान है: रिटर्न की गारंटी नहीं है।",
+   search: n => `${n} कैलकुलेटर खोजें…`, all: "सभी", popular: "लोकप्रिय", currency: "मुद्रा", back: "सभी कैलकुलेटर",
+   reset: "रीसेट", copy: "लिंक कॉपी करें", copied: "लिंक कॉपी हुआ", inputs: "आपके इनपुट", results: "परिणाम", how: "गणना कैसे होती है",
+   notes: "ध्यान रखें", related: "इस श्रेणी में और", csv: "CSV डाउनलोड करें", none: "आपकी खोज से कोई कैलकुलेटर नहीं मिला। कोई और शब्द आज़माएँ।",
+   jump: "कैलकुलेटर बदलें", addRow: "पंक्ति जोड़ें", remove: "हटाएँ", total: "कुल", fixedCurrency: "भारतीय नियम, ₹ में", open: "खोलें",
+   count: n => `${n} कैलकुलेटर`, invalid: "हाइलाइट किए गए इनपुट जाँचें।",
+   disclaimer: "ये कैलकुलेटर केवल उदाहरण परिणाम दिखाते हैं। रिटर्न की गारंटी नहीं है। टैक्स नियम और दरें बदलती हैं; कदम उठाने से पहले जाँच लें। यहाँ कुछ भी वित्तीय, टैक्स या कानूनी सलाह नहीं है।",
+   footerText: "एक-एक अवधारणा करके बाज़ार सीखें।", disclaimerLink: "अस्वीकरण", privacyLink: "गोपनीयता नीति", contactLink: "संपर्क"
+  }
+ };
 
-function calcLump() {
- const p = val("lumpAmount"), y = val("lumpYears"), rate = val("lumpRate") / 100;
- if (!(p > 0 && y > 0 && rate >= 0)) { set("lumpOut", CALC_UI[cLang].invalid); note("lumpNote", ""); return; }
- const fv = p * Math.pow(1 + rate, y);
- set("lumpOut", inr(fv));
- note("lumpNote", CALC_UI[cLang].note.lump);
-}
+ const STORE_KEY = "mp-calc-v1";
+ const store = (function () {
+  try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (s && typeof s === "object") return Object.assign({ currency: "INR", inputs: {} }, s); } catch (e) { /* storage unavailable */ }
+  return { currency: "INR", inputs: {} };
+ })();
+ function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* storage unavailable */ } }
 
-function calcCagr() {
- const s = val("cagrStart"), e = val("cagrEnd"), y = val("cagrYears");
- if (!(s > 0 && e > 0 && y > 0)) { set("cagrOut", CALC_UI[cLang].invalid); note("cagrNote", ""); return; }
- const c = Math.pow(e / s, 1 / y) - 1;
- set("cagrOut", (c * 100).toFixed(2) + "%");
- note("cagrNote", `${CALC_UI[cLang].note.cagr} ${cLang === "en" ? "Total change" : "कुल बदलाव"}: ${((e / s - 1) * 100).toFixed(1)}%`);
-}
+ const app = document.getElementById("calcApp");
+ const esc = s => MP.esc(s);
+ let lang = MP.getLang() === "hi" ? "hi" : "en";
+ const t = () => UI[lang];
+ const title = c => (lang === "hi" && c.hi ? c.hi[0] : c.title);
+ const desc = c => (lang === "hi" && c.hi ? c.hi[1] : c.desc);
+ const catName = id => (CAT.get(id) || {})[lang] || id;
 
-function calcReal() {
- const a = val("realAmount"), y = val("realYears"), inf = val("realInfl") / 100;
- if (!(a > 0 && y > 0 && inf >= 0)) { set("realOut", CALC_UI[cLang].invalid); note("realNote", ""); return; }
- const real = a / Math.pow(1 + inf, y);
- set("realOut", inr(real));
- note("realNote", `${CALC_UI[cLang].note.real} ${cLang === "en" ? "Purchasing power lost" : "क्रय शक्ति में कमी"}: ${((1 - real / a) * 100).toFixed(1)}%`);
-}
+ // ---------- Formatting ----------
+ function formatter(cur) {
+  const c = CURRENCIES[cur] || CURRENCIES.INR, loc = c.locale;
+  const num = (n, d = 0) => (Number.isFinite(n) ? Number(n).toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d }) : "—");
+  const sign = n => (n < 0 ? "−" : "");
+  const money = (n, d) => {
+   if (!Number.isFinite(n)) return "—";
+   const dd = d !== undefined ? d : Math.abs(n) < 100 && Math.round(n) !== n ? 2 : 0;
+   return `${sign(n)}${c.sym}${num(Math.abs(n), dd)}`;
+  };
+  const short = (n, digits) => {
+   const a = Math.abs(n), trim = v => String(+v.toFixed(digits));
+   if (cur === "INR") {
+    if (a >= 1e7) return `${trim(a / 1e7)} Cr`;
+    if (a >= 1e5) return `${trim(a / 1e5)} L`;
+   } else {
+    if (a >= 1e9) return `${trim(a / 1e9)}B`;
+    if (a >= 1e6) return `${trim(a / 1e6)}M`;
+   }
+   if (a >= 1e3) return `${trim(a / 1e3)}K`;
+   return trim(a);
+  };
+  const words = n => {
+   const a = Math.abs(n), trim = v => String(+v.toFixed(2));
+   let w;
+   if (cur === "INR") w = a >= 1e7 ? `${trim(a / 1e7)} crore` : a >= 1e5 ? `${trim(a / 1e5)} lakh` : a >= 1e3 ? `${trim(a / 1e3)} thousand` : num(a, 0);
+   else w = a >= 1e9 ? `${trim(a / 1e9)} billion` : a >= 1e6 ? `${trim(a / 1e6)} million` : a >= 1e3 ? `${trim(a / 1e3)} thousand` : num(a, 0);
+   return `${sign(n)}${c.sym}${w}`;
+  };
+  const months = m => {
+   if (!Number.isFinite(m)) return "—";
+   const total = Math.round(m), y = Math.floor(total / 12), mo = total % 12;
+   return [y ? `${y} yr${y > 1 ? "s" : ""}` : "", mo ? `${mo} mo` : ""].filter(Boolean).join(" ") || "0 mo";
+  };
+  return {
+   cur, sym: c.sym, num, money, words, months,
+   compact: n => (Number.isFinite(n) ? `${sign(n)}${c.sym}${short(n, 1)}` : "—"),
+   compactNum: n => (Number.isFinite(n) ? `${sign(n)}${short(n, 1)}` : "—"),
+   pct: (n, d = 2) => (Number.isFinite(n) ? `${num(n, d)}%` : "—"),
+   years: y => months(y * 12)
+  };
+ }
+ const currencyOf = c => c.currency || store.currency;
 
-function calcBreakEven() {
- const q = val("beQty"), p = val("bePrice"), c = val("beCosts");
- if (!(q > 0 && p > 0 && c >= 0)) { set("beOut", CALC_UI[cLang].invalid); note("beNote", ""); return; }
- const be = p + c / q;
- set("beOut", `₹ ${be.toFixed(2)} (${(c / q).toFixed(2)} / share)`);
- note("beNote", `${CALC_UI[cLang].note.be} ${cLang === "en" ? "Move needed" : "ज़रूरी चाल"}: ${((c / (q * p)) * 100).toFixed(2)}%. ${CALC_UI[cLang].note.perc}`);
-}
+ // ---------- Routing ----------
+ function parseHash() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  const [id, query] = h.split("?");
+  return { id: BY_ID.has(id) ? id : null, params: new URLSearchParams(query || "") };
+ }
+ function route() {
+  const { id, params } = parseHash();
+  if (id) openCalc(id, params); else renderDirectory();
+ }
+ window.addEventListener("hashchange", route);
 
-function calcAll() { calcGoal(); calcLump(); calcCagr(); calcReal(); calcBreakEven(); }
+ // ---------- Directory ----------
+ let filterCat = "all", query = "";
+ function matches(c, tokens) {
+  if (!tokens.length) return true;
+  const hay = `${c.title} ${c.desc} ${c.keywords || ""} ${catName(c.cat)} ${c.hi ? c.hi.join(" ") : ""}`.toLowerCase();
+  return tokens.every(tok => hay.includes(tok));
+ }
+ function card(c) {
+  return `<a class="calc-card" href="#${esc(c.id)}"><span class="calc-card-icon" aria-hidden="true">${esc(c.icon || CAT.get(c.cat).icon)}</span><span class="calc-card-text"><strong>${esc(title(c))}</strong><small>${esc(desc(c))}</small></span></a>`;
+ }
+ function renderDirectory() {
+  document.title = `${t().title} — MarketPath`;
+  const u = t();
+  app.innerHTML = `
+   <div class="calc-dir">
+    <div class="calc-dir-head">
+     <div class="eyebrow">${esc(u.eyebrow)}</div>
+     <h1 class="calc-h1">${esc(u.title)}</h1>
+     <p class="calc-intro">${esc(u.intro)}</p>
+     <div class="calc-toolbar">
+      <div class="calc-search"><span aria-hidden="true">⌕</span><input id="calcSearch" type="search" autocomplete="off" placeholder="${esc(u.search(CALCS.length))}" aria-label="${esc(u.search(CALCS.length))}" value="${esc(query)}"></div>
+      ${currencySelect()}
+     </div>
+     <div class="calc-chips" role="group" aria-label="Categories">
+      <button type="button" class="calc-chip${filterCat === "all" ? " active" : ""}" data-cat="all" aria-pressed="${filterCat === "all"}">${esc(u.all)} <small>${CALCS.length}</small></button>
+      ${CATS.map(c => `<button type="button" class="calc-chip${filterCat === c.id ? " active" : ""}" data-cat="${c.id}" aria-pressed="${filterCat === c.id}"><span aria-hidden="true">${c.icon}</span> ${esc(c[lang])} <small>${CALCS.filter(x => x.cat === c.id).length}</small></button>`).join("")}
+     </div>
+    </div>
+    <div id="calcDirBody"></div>
+   </div>`;
+  renderDirectoryBody();
+  const input = document.getElementById("calcSearch");
+  input.addEventListener("input", () => { query = input.value; renderDirectoryBody(); });
+  input.addEventListener("keydown", e => {
+   if (e.key !== "Enter") return;
+   const first = app.querySelector("#calcDirBody .calc-card");
+   if (first) location.hash = first.getAttribute("href");
+  });
+  app.querySelectorAll(".calc-chip").forEach(b => b.addEventListener("click", () => {
+   filterCat = b.dataset.cat;
+   app.querySelectorAll(".calc-chip").forEach(x => { const on = x === b; x.classList.toggle("active", on); x.setAttribute("aria-pressed", String(on)); });
+   renderDirectoryBody();
+  }));
+  bindCurrency(renderDirectoryBody);
+ }
+ function renderDirectoryBody() {
+  const u = t(), tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const visible = CALCS.filter(c => (filterCat === "all" || c.cat === filterCat) && matches(c, tokens));
+  let html = "";
+  if (!tokens.length && filterCat === "all") {
+   html += `<section class="calc-section"><h2>${esc(u.popular)}</h2><div class="calc-grid">${POPULAR.map(id => BY_ID.get(id)).filter(Boolean).map(card).join("")}</div></section>`;
+  }
+  CATS.forEach(cat => {
+   const list = visible.filter(c => c.cat === cat.id);
+   if (list.length) html += `<section class="calc-section" id="cat-${cat.id}"><h2><span aria-hidden="true">${cat.icon}</span> ${esc(cat[lang])}</h2><div class="calc-grid">${list.map(card).join("")}</div></section>`;
+  });
+  if (!visible.length) html = `<p class="calc-empty">${esc(u.none)}</p>`;
+  document.getElementById("calcDirBody").innerHTML = html;
+ }
 
-const INPUT_CALCS = {
- goalTarget: calcGoal, goalYears: calcGoal, goalRate: calcGoal,
- lumpAmount: calcLump, lumpYears: calcLump, lumpRate: calcLump,
- cagrStart: calcCagr, cagrEnd: calcCagr, cagrYears: calcCagr,
- realAmount: calcReal, realYears: calcReal, realInfl: calcReal,
- beQty: calcBreakEven, bePrice: calcBreakEven, beCosts: calcBreakEven
-};
+ function currencySelect(c) {
+  if (c && c.currency) return `<span class="calc-fixed-cur">${esc(t().fixedCurrency)}</span>`;
+  return `<label class="calc-cur"><span>${esc(t().currency)}</span><select id="calcCurrency">${Object.entries(CURRENCIES).map(([k, v]) => `<option value="${k}"${store.currency === k ? " selected" : ""}>${esc(v.label)}</option>`).join("")}</select></label>`;
+ }
+ function bindCurrency(after) {
+  const sel = document.getElementById("calcCurrency");
+  if (sel) sel.addEventListener("change", () => { store.currency = sel.value; save(); after(); });
+ }
 
-document.addEventListener("DOMContentLoaded", () => {
- cLang = CALC_UI[MP.getLang()] ? MP.getLang() : "en";
- document.getElementById("year").textContent = new Date().getFullYear();
- const sel = document.getElementById("languageSelect");
- sel.value = cLang;
- sel.addEventListener("change", e => { cLang = e.target.value; MP.setLang(cLang); MP.applyText(CALC_UI, cLang); document.title = CALC_UI[cLang].title + " — MarketPath"; calcAll(); });
- Object.entries(INPUT_CALCS).forEach(([id, fn]) => document.getElementById(id).addEventListener("input", fn));
+ // ---------- Detail ----------
+ let current = null, values = null, lastCarry = null;
+
+ function defaults(c) {
+  const v = {};
+  c.inputs.forEach(inp => { v[inp.id] = inp.type === "rows" ? inp.value.map(r => Object.assign({}, r)) : inp.value; });
+  return v;
+ }
+ function openCalc(id, params) {
+  const c = BY_ID.get(id);
+  current = c;
+  values = defaults(c);
+  const saved = store.inputs[id];
+  if (saved) Object.keys(values).forEach(k => { if (saved[k] !== undefined) values[k] = saved[k]; });
+  params.forEach((val, key) => {
+   const inp = c.inputs.find(i => i.id === key);
+   if (!inp || inp.type === "rows") return;
+   values[key] = inp.type === "select" || inp.type === "text" ? val : Number(val);
+  });
+  renderDetail();
+  window.scrollTo(0, 0);
+ }
+
+ function renderDetail() {
+  const c = current, u = t(), F = formatter(currencyOf(c));
+  document.title = `${title(c)} — MarketPath`;
+  const options = CATS.map(cat => `<optgroup label="${esc(cat[lang])}">${CALCS.filter(x => x.cat === cat.id).map(x => `<option value="${x.id}"${x.id === c.id ? " selected" : ""}>${esc(title(x))}</option>`).join("")}</optgroup>`).join("");
+  const related = CALCS.filter(x => x.cat === c.cat && x.id !== c.id);
+  app.innerHTML = `
+   <div class="calc-detail">
+    <nav class="calc-crumbs" aria-label="Breadcrumb"><a href="#">← ${esc(u.back)}</a><span aria-hidden="true">/</span><span>${esc(catName(c.cat))}</span></nav>
+    <div class="calc-head">
+     <span class="calc-head-icon" aria-hidden="true">${esc(c.icon || CAT.get(c.cat).icon)}</span>
+     <div class="calc-head-text"><h1 class="calc-h1">${esc(title(c))}</h1><p class="calc-intro">${esc(desc(c))}</p></div>
+    </div>
+    <div class="calc-actions">
+     <label class="calc-jump"><span class="sr-only">${esc(u.jump)}</span><select id="calcJump" aria-label="${esc(u.jump)}">${options}</select></label>
+     ${currencySelect(c)}
+     <button type="button" class="pp-btn" id="calcReset">↺ ${esc(u.reset)}</button>
+     <button type="button" class="pp-btn" id="calcCopy">⧉ ${esc(u.copy)}</button>
+    </div>
+    <div class="calc-body${c.inputs.some(i => i.type === "rows" && i.fields.length >= 3) ? " calc-body-wide" : ""}">
+     <form class="calc-inputs" id="calcForm" aria-label="${esc(u.inputs)}" novalidate>
+      <h2 class="calc-panel-title">${esc(u.inputs)}</h2>
+      ${c.inputs.map(inp => fieldHtml(inp, F)).join("")}
+     </form>
+     <div class="calc-results" id="calcResults" aria-live="polite"></div>
+    </div>
+    ${related.length ? `<section class="calc-related"><h2>${esc(u.related)}</h2><div class="calc-related-list">${related.map(x => `<a href="#${x.id}" class="calc-chip">${esc(x.icon || "")} ${esc(title(x))}</a>`).join("")}</div></section>` : ""}
+   </div>`;
+  bindForm(F);
+  document.getElementById("calcJump").addEventListener("change", e => { location.hash = e.target.value; });
+  document.getElementById("calcReset").addEventListener("click", () => {
+   values = defaults(c);
+   delete store.inputs[c.id];
+   save();
+   history.replaceState(null, "", `#${c.id}`);
+   renderDetail();
+  });
+  document.getElementById("calcCopy").addEventListener("click", copyLink);
+  bindCurrency(renderDetail);
+  compute();
+ }
+
+ const UNIT = { percent: "%", years: "yrs", months: "mo" };
+ function fieldHtml(inp, F) {
+  const v = values[inp.id];
+  const hidden = inp.showIf && !inp.showIf(values) ? " hidden" : "";
+  const help = inp.help ? `<p class="ci-help">${esc(inp.help)}</p>` : "";
+  if (inp.type === "rows") return rowsHtml(inp, F, hidden);
+  if (inp.type === "select") {
+   const opts = inp.options;
+   if (opts.length <= 4 && !inp.dropdown) {
+    return `<fieldset class="ci-field" data-wrap="${inp.id}"${hidden}><legend class="ci-label">${esc(inp.label)}</legend><div class="ci-seg">${opts.map(o => `<label><input type="radio" name="ci-${inp.id}" data-id="${inp.id}" value="${esc(o.value)}"${String(v) === String(o.value) ? " checked" : ""}><span>${esc(o.label)}</span></label>`).join("")}</div>${help}</fieldset>`;
+   }
+   return `<div class="ci-field" data-wrap="${inp.id}"${hidden}><label class="ci-label" for="ci-${inp.id}">${esc(inp.label)}</label><select id="ci-${inp.id}" data-id="${inp.id}">${opts.map(o => `<option value="${esc(o.value)}"${String(v) === String(o.value) ? " selected" : ""}>${esc(o.label)}</option>`).join("")}</select>${help}</div>`;
+  }
+  if (inp.type === "text") {
+   return `<div class="ci-field" data-wrap="${inp.id}"${hidden}><label class="ci-label" for="ci-${inp.id}">${esc(inp.label)}</label><input class="ci-text" id="ci-${inp.id}" data-id="${inp.id}" type="text" value="${esc(v)}">${help}</div>`;
+  }
+  const pre = inp.type === "money" ? F.sym : "", post = UNIT[inp.type] || inp.unit || "";
+  const slider = inp.slider === false ? "" : `<input type="range" class="ci-range" data-id="${inp.id}" min="${inp.min}" max="${inp.max}" step="${inp.step || 1}" value="${clamp(v, inp)}" aria-label="${esc(inp.label)}" tabindex="-1">`;
+  return `<div class="ci-field" data-wrap="${inp.id}"${hidden}>
+   <div class="ci-top"><label class="ci-label" for="ci-${inp.id}">${esc(inp.label)}</label>
+    <span class="ci-num">${pre ? `<span class="ci-unit">${esc(pre)}</span>` : ""}<input id="ci-${inp.id}" data-id="${inp.id}" type="number" inputmode="decimal" min="${inp.min}" ${inp.hardMax ? `max="${inp.max}"` : ""} step="any" value="${esc(v)}">${post ? `<span class="ci-unit">${esc(post)}</span>` : ""}</span></div>
+   ${slider}
+   <p class="ci-hint" data-hint="${inp.id}">${esc(hintFor(inp, v, F))}</p>${help}
+  </div>`;
+ }
+ const clamp = (v, inp) => Math.min(inp.max, Math.max(inp.min, Number(v) || 0));
+ function hintFor(inp, v, F) {
+  if (inp.type === "money" && Number(v) >= 1000) return F.words(Number(v));
+  if (inp.type === "months" && Number(v) >= 12) return F.months(Number(v));
+  return "";
+ }
+
+ function rowsHtml(inp, F, hidden) {
+  const rows = values[inp.id] || [];
+  const cols = inp.fields.map(f => f.width || "1fr").join(" ") + " 32px";
+  const total = inp.total ? rows.reduce((s, r) => s + (Number(r[inp.total]) || 0), 0) : null;
+  const cell = (f, r, i) => {
+   const val = r[f.key] === undefined ? "" : r[f.key];
+   const a = `data-rows="${inp.id}" data-row="${i}" data-field="${f.key}" aria-label="${esc(f.label)} ${i + 1}"`;
+   if (f.type === "select") return `<select ${a}>${f.options.map(o => `<option value="${esc(o.value)}"${String(val) === String(o.value) ? " selected" : ""}>${esc(o.label)}</option>`).join("")}</select>`;
+   if (f.type === "text") return `<input type="text" ${a} value="${esc(val)}">`;
+   if (f.type === "date") return `<input type="date" ${a} value="${esc(val)}">`;
+   const pre = f.type === "money" ? `<span class="ci-unit">${esc(F.sym)}</span>` : "";
+   const post = f.type === "percent" ? `<span class="ci-unit">%</span>` : "";
+   return `<span class="ci-num ci-num-row">${pre}<input type="number" inputmode="decimal" step="any" ${a} value="${esc(val)}">${post}</span>`;
+  };
+  return `<fieldset class="ci-field ci-rows" data-wrap="${inp.id}"${hidden}>
+   <legend class="ci-label">${esc(inp.label)}${total !== null ? `<span class="ci-rows-total">${esc(t().total)} ${esc(F.money(total))}</span>` : ""}</legend>
+   <div class="ci-rows-grid" style="grid-template-columns:${cols}">
+    ${inp.fields.map(f => `<span class="ci-rows-h">${esc(f.label)}</span>`).join("")}<span></span>
+    ${rows.map((r, i) => inp.fields.map(f => cell(f, r, i)).join("") + `<button type="button" class="ci-del" data-del="${inp.id}" data-row="${i}" aria-label="${esc(t().remove)} ${i + 1}" title="${esc(t().remove)}">✕</button>`).join("")}
+   </div>
+   <button type="button" class="ci-add" data-add="${inp.id}">+ ${esc(inp.addLabel || t().addRow)}</button>
+   ${inp.help ? `<p class="ci-help">${esc(inp.help)}</p>` : ""}
+  </fieldset>`;
+ }
+
+ function bindForm(F) {
+  const form = document.getElementById("calcForm");
+  form.addEventListener("submit", e => e.preventDefault());
+  form.addEventListener("input", e => onField(e.target, F));
+  form.addEventListener("change", e => onField(e.target, F));
+  form.addEventListener("click", e => {
+   const add = e.target.closest("[data-add]"), del = e.target.closest("[data-del]");
+   if (!add && !del) return;
+   const inp = current.inputs.find(i => i.id === (add ? add.dataset.add : del.dataset.del));
+   const rows = values[inp.id];
+   if (add) rows.push(Object.assign({}, inp.newRow ? inp.newRow(rows.length) : inp.value[0] || {}));
+   else rows.splice(Number(del.dataset.row), 1);
+   rerenderRows(inp, F);
+   persist();
+   compute();
+  });
+ }
+ function rerenderRows(inp, F) {
+  const wrap = app.querySelector(`[data-wrap="${inp.id}"]`);
+  wrap.outerHTML = rowsHtml(inp, F, "");
+ }
+ function onField(el, F) {
+  if (el.dataset.rows) {
+   const inp = current.inputs.find(i => i.id === el.dataset.rows);
+   const f = inp.fields.find(x => x.key === el.dataset.field);
+   const row = values[inp.id][Number(el.dataset.row)];
+   row[f.key] = f.type === "text" || f.type === "select" || f.type === "date" ? el.value : el.value === "" ? "" : Number(el.value);
+   if (inp.total) {
+    const total = values[inp.id].reduce((s, r) => s + (Number(r[inp.total]) || 0), 0);
+    const tEl = app.querySelector(`[data-wrap="${inp.id}"] .ci-rows-total`);
+    if (tEl) tEl.textContent = `${t().total} ${F.money(total)}`;
+   }
+  } else if (el.dataset.id) {
+   const inp = current.inputs.find(i => i.id === el.dataset.id);
+   if (inp.type === "select" || inp.type === "text") {
+    values[inp.id] = el.value;
+    // e.g. TVM: when "solve for" changes, the field that was being solved keeps the value just computed.
+    if (current.carryOn && current.carryOn.includes(inp.id) && lastCarry && el.type !== "text") {
+     Object.assign(values, lastCarry);
+     lastCarry = null;
+     const form = document.getElementById("calcForm");
+     form.innerHTML = `<h2 class="calc-panel-title">${esc(t().inputs)}</h2>${current.inputs.map(i => fieldHtml(i, F)).join("")}`;
+    }
+   }
+   else {
+    if (el.value === "") return;
+    const n = Number(el.value);
+    values[inp.id] = n;
+    const other = el.type === "range" ? document.getElementById(`ci-${inp.id}`) : app.querySelector(`.ci-range[data-id="${inp.id}"]`);
+    if (other) other.value = el.type === "range" ? n : clamp(n, inp);
+    const hint = app.querySelector(`[data-hint="${inp.id}"]`);
+    if (hint) hint.textContent = hintFor(inp, n, F);
+   }
+  } else return;
+  current.inputs.forEach(inp => {
+   if (!inp.showIf) return;
+   const w = app.querySelector(`[data-wrap="${inp.id}"]`);
+   if (w) w.hidden = !inp.showIf(values);
+  });
+  persist();
+  schedule();
+ }
+ let frame = 0;
+ function schedule() {
+  if (frame) return;
+  frame = requestAnimationFrame(() => { frame = 0; compute(); });
+ }
+ function persist() {
+  store.inputs[current.id] = values;
+  save();
+  const params = new URLSearchParams();
+  current.inputs.forEach(inp => { if (inp.type !== "rows" && values[inp.id] !== inp.value) params.set(inp.id, values[inp.id]); });
+  const q = params.toString();
+  history.replaceState(null, "", `#${current.id}${q ? "?" + q : ""}`);
+ }
+ function copyLink() {
+  const btn = document.getElementById("calcCopy"), done = () => { btn.textContent = `✓ ${t().copied}`; setTimeout(() => { btn.textContent = `⧉ ${t().copy}`; }, 1800); };
+  const url = location.href;
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => prompt(t().copy, url));
+  else prompt(t().copy, url);
+ }
+
+ // ---------- Results ----------
+ function compute() {
+  const c = current, F = formatter(currencyOf(c)), out = document.getElementById("calcResults");
+  if (!out) return;
+  let res;
+  try { res = c.compute(values, F); } catch (e) { res = { error: e.message }; }
+  lastCarry = res && res.carry ? res.carry : null;
+  if (!res || res.error) {
+   out.innerHTML = `<div class="cr-error" role="alert">${esc(res && res.error ? res.error : t().invalid)}</div>`;
+   return;
+  }
+  const u = t();
+  const stat = s => `<div class="cr-stat${s.tone ? " cr-" + s.tone : ""}"><small>${esc(s.label)}</small><strong>${esc(s.value)}</strong>${s.sub ? `<span>${esc(s.sub)}</span>` : ""}</div>`;
+  const charts = res.charts || (res.chart ? [res.chart] : []);
+  const tables = res.tables || (res.table ? [res.table] : []);
+  out.innerHTML = `
+   <h2 class="calc-panel-title">${esc(u.results)}</h2>
+   ${res.hero ? `<div class="cr-hero${res.hero.tone ? " cr-" + res.hero.tone : ""}"><small>${esc(res.hero.label)}</small><strong>${esc(res.hero.value)}</strong>${res.hero.sub ? `<p>${esc(res.hero.sub)}</p>` : ""}</div>` : ""}
+   ${res.stats && res.stats.length ? `<div class="cr-stats">${res.stats.map(stat).join("")}</div>` : ""}
+   ${res.callout ? `<p class="cr-callout cr-${res.callout.tone || "info"}">${esc(res.callout.text)}</p>` : ""}
+   ${charts.map((_, i) => `<div class="cr-chart" data-chart="${i}"></div>`).join("")}
+   ${tables.map((tb, i) => `<details class="cr-table"${tb.open ? " open" : ""}><summary>${esc(tb.title)}</summary><div class="cr-table-scroll"><table><thead><tr>${tb.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${tb.rows.map(r => `<tr>${r.map(x => `<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><button type="button" class="pp-btn cr-csv" data-csv="${i}">⤓ ${esc(u.csv)}</button></details>`).join("")}
+   ${res.notes && res.notes.length ? `<div class="cr-notes"><h3>${esc(u.notes)}</h3><ul>${res.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : ""}
+   ${c.how ? `<details class="cr-how"><summary>${esc(u.how)}</summary><ul>${c.how.map(h => `<li>${esc(h)}</li>`).join("")}</ul></details>` : ""}`;
+  charts.forEach((spec, i) => CalcCharts.mount(out.querySelector(`[data-chart="${i}"]`), spec, F));
+  out.querySelectorAll("[data-csv]").forEach(b => b.addEventListener("click", () => downloadCsv(tables[Number(b.dataset.csv)])));
+ }
+ function downloadCsv(tb) {
+  const cell = v => `"${String(v).replace(/"/g, '""')}"`;
+  const csv = [tb.head, ...tb.rows].map(r => r.map(cell).join(",")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+  a.download = `${current.id}-${(tb.file || "table")}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+ }
+
+ // ---------- Page chrome and language ----------
+ function applyChrome() {
+  MP.applyText(UI, lang);
+  const sel = document.getElementById("languageSelect");
+  if (sel) sel.value = lang;
+ }
+ const langSel = document.getElementById("languageSelect");
+ if (langSel) langSel.addEventListener("change", e => {
+  lang = e.target.value === "hi" ? "hi" : "en";
+  MP.setLang(lang);
+  applyChrome();
+  route();
+ });
  MP.setupMenu();
- placeAdSlots();
- MP.applyText(CALC_UI, cLang);
- document.title = CALC_UI[cLang].title + " — MarketPath";
- calcAll();
-});
+ const yearEl = document.getElementById("year");
+ if (yearEl) yearEl.textContent = new Date().getFullYear();
+ applyChrome();
+ route();
+ if (typeof placeAdSlots === "function") placeAdSlots(1);
+})();

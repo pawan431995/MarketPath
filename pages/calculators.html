@@ -3,10 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Investing calculators: goal-based SIP planner, lumpsum growth, CAGR, inflation-adjusted value and trade break-even cost, in English and Hindi.">
+  <meta name="description" content="Free financial calculators: SIP, step-up SIP, EMI, income tax (new vs old regime), retirement, FIRE, EPF, NPS, PPF, FD, rent vs buy, debt payoff, NPV and IRR, break-even and more.">
   <meta name="theme-color" content="#0b1220">
-  <title>Calculators — MarketPath</title>
+  <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MarketPath">
+  <meta property="og:title" content="Financial calculators — MarketPath">
+  <meta property="og:description" content="Free financial calculators: SIP, step-up SIP, EMI, income tax (new vs old regime), retirement, FIRE, EPF, NPS, PPF, FD, rent vs buy, debt payoff, NPV and IRR, break-even and more.">
+  <meta property="og:image" content="../images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Financial calculators — MarketPath</title>
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/features.css">
+  <link rel="stylesheet" href="../css/calculators.css">
+  <script src="../js/theme.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -14,9 +25,11 @@
     <a class="brand" href="../index.html" aria-label="MarketPath home"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" class="main-nav" aria-label="Main navigation">
-      <a href="../index.html#courses" data-ui="navLearn">Learn</a>
-      <a href="calculators.html" aria-current="page" data-ui="navTools">Calculators</a>
-      <a href="glossary.html" data-ui="navGlossary">Glossary</a>
+      <a href="../index.html#courses">Learn</a>
+      <a href="../index.html#paper">Paper trading</a>
+      <a href="../pages/calculators.html" aria-current="page">Calculators</a>
+      <a href="../pages/glossary.html">Glossary</a>
+      <a href="../index.html#about">About</a>
     </nav>
     <label class="language-picker"><span class="sr-only">Choose language</span>
       <select id="languageSelect" aria-label="Choose language">
@@ -26,65 +39,28 @@
     </label>
   </header>
 
-  <main id="main" class="lesson-wrap pattern-page">
-    <div class="eyebrow" data-ui="eyebrow">CALCULATORS</div>
-    <h1 class="lesson-title" data-ui="title">Investing calculators</h1>
-    <p class="lesson-summary" data-ui="intro">Explore what different amounts, returns and time periods can do. Every result is an estimate: returns are not guaranteed, and taxes, fees and inflation are excluded unless stated.</p>
-
-    <div class="res-grid calc-grid">
-
-      <section class="res-card calc-card">
-        <h2 data-ui="goalTitle">Goal SIP planner</h2>
-        <p class="res-kind" data-ui="goalDesc">How much to invest each month to reach a target amount.</p>
-        <label class="calc-field"><span data-ui="goalTarget">Target amount (₹)</span><input id="goalTarget" type="number" min="1000" value="2500000"></label>
-        <label class="calc-field"><span data-ui="years">Years</span><input id="goalYears" type="number" min="1" max="50" value="15"></label>
-        <label class="calc-field"><span data-ui="rate">Assumed annual return (%)</span><input id="goalRate" type="number" min="0" max="30" step="0.5" value="12"></label>
-        <div class="calc-out"><small data-ui="monthlyNeeded">Monthly SIP needed</small><strong id="goalOut">—</strong><p id="goalNote"></p></div>
-      </section>
-
-      <section class="res-card calc-card">
-        <h2 data-ui="lumpTitle">Lumpsum growth</h2>
-        <p class="res-kind" data-ui="lumpDesc">What a one-time investment grows to.</p>
-        <label class="calc-field"><span data-ui="amount">Amount (₹)</span><input id="lumpAmount" type="number" min="1" value="100000"></label>
-        <label class="calc-field"><span data-ui="years">Years</span><input id="lumpYears" type="number" min="1" max="50" value="10"></label>
-        <label class="calc-field"><span data-ui="rate">Assumed annual return (%)</span><input id="lumpRate" type="number" min="0" max="30" step="0.5" value="10"></label>
-        <div class="calc-out"><small data-ui="futureValue">Future value</small><strong id="lumpOut">—</strong><p id="lumpNote"></p></div>
-      </section>
-
-      <section class="res-card calc-card">
-        <h2 data-ui="cagrTitle">Return (CAGR)</h2>
-        <p class="res-kind" data-ui="cagrDesc">The steady yearly rate that turns a start value into an end value.</p>
-        <label class="calc-field"><span data-ui="startValue">Start value (₹)</span><input id="cagrStart" type="number" min="1" value="100000"></label>
-        <label class="calc-field"><span data-ui="endValue">End value (₹)</span><input id="cagrEnd" type="number" min="1" value="180000"></label>
-        <label class="calc-field"><span data-ui="years">Years</span><input id="cagrYears" type="number" min="0.1" step="0.1" value="5"></label>
-        <div class="calc-out"><small data-ui="cagrOut">Annual return (CAGR)</small><strong id="cagrOut">—</strong><p id="cagrNote"></p></div>
-      </section>
-
-      <section class="res-card calc-card">
-        <h2 data-ui="realTitle">Inflation-adjusted value</h2>
-        <p class="res-kind" data-ui="realDesc">What an amount will be worth in today's money.</p>
-        <label class="calc-field"><span data-ui="amount">Amount (₹)</span><input id="realAmount" type="number" min="1" value="1000000"></label>
-        <label class="calc-field"><span data-ui="years">Years</span><input id="realYears" type="number" min="1" max="50" value="15"></label>
-        <label class="calc-field"><span data-ui="inflation">Expected inflation (%)</span><input id="realInfl" type="number" min="0" max="20" step="0.5" value="6"></label>
-        <div class="calc-out"><small data-ui="realOut">Value in today's money</small><strong id="realOut">—</strong><p id="realNote"></p></div>
-      </section>
-
-      <section class="res-card calc-card">
-        <h2 data-ui="beTitle">Trade break-even</h2>
-        <p class="res-kind" data-ui="beDesc">How far the price must move just to cover costs.</p>
-        <label class="calc-field"><span data-ui="qty">Quantity (shares)</span><input id="beQty" type="number" min="1" value="100"></label>
-        <label class="calc-field"><span data-ui="buyPrice">Buy price (₹)</span><input id="bePrice" type="number" min="0.01" step="0.01" value="500"></label>
-        <label class="calc-field"><span data-ui="costs">Total buy and sell costs (₹)</span><input id="beCosts" type="number" min="0" value="60"></label>
-        <div class="calc-out"><small data-ui="beOut">Break-even sell price</small><strong id="beOut">—</strong><p id="beNote"></p></div>
-      </section>
+  <main id="main" class="calc-page">
+    <div id="calcApp">
+      <noscript><p class="calc-intro">The calculators need JavaScript. Please enable it to use them.</p></noscript>
     </div>
-
-    <p class="fine-print lesson-disclaimer" data-ui="disclaimer">These calculators show illustrative outcomes only. Returns are not guaranteed. Taxes, charges and inflation are excluded unless stated. Costs in the trade calculator should come from your broker's statement.</p>
+    <p class="fine-print lesson-disclaimer calc-disclaimer" data-ui="disclaimer">These calculators show illustrative outcomes only. Returns are not guaranteed. Tax rules and rates change; verify them before acting. Nothing here is financial, tax or legal advice.</p>
   </main>
 
   <footer class="site-footer"><a class="brand footer-brand" href="../index.html"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a><p data-ui="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="../index.html#about" data-ui="disclaimerLink">Disclaimer</a><a href="privacy.html" data-ui="privacyLink">Privacy policy</a><a href="contact.html" data-ui="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPath. Educational content only.</small></footer>
+  <script src="../js/site-chrome.js"></script>
+  <script src="../js/site-search.js"></script>
+  <script src="../js/index-ribbon.js"></script>
   <script src="../js/shared.js"></script>
   <script src="../js/ads.js"></script>
+  <script src="../js/calc-math.js"></script>
+  <script src="../js/calc-charts.js"></script>
+  <script src="../js/calc-defs-personal.js"></script>
+  <script src="../js/calc-defs-investing.js"></script>
+  <script src="../js/calc-defs-retirement.js"></script>
+  <script src="../js/calc-defs-loans.js"></script>
+  <script src="../js/calc-defs-property.js"></script>
+  <script src="../js/calc-defs-tax.js"></script>
+  <script src="../js/calc-defs-business.js"></script>
   <script src="../js/calculators.js"></script>
 </body>
 </html>

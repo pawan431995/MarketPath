@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Stock market glossary: searchable definitions of shares, orders, fundamentals, technical terms, derivatives, mutual funds and Indian market terms, in English and Hindi.">
   <meta name="theme-color" content="#0b1220">
+  <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MarketPath">
+  <meta property="og:title" content="Glossary — MarketPath">
+  <meta property="og:description" content="Stock market glossary: searchable definitions of shares, orders, fundamentals, technical terms, derivatives, mutual funds and Indian market terms, in English and Hindi.">
+  <meta property="og:image" content="../images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
   <title>Glossary — MarketPath</title>
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/features.css">
+  <script src="../js/theme.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -14,9 +24,11 @@
     <a class="brand" href="../index.html" aria-label="MarketPath home"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" class="main-nav" aria-label="Main navigation">
-      <a href="../index.html#courses" data-ui="navLearn">Learn</a>
-      <a href="calculators.html" data-ui="navTools">Calculators</a>
-      <a href="glossary.html" aria-current="page" data-ui="navGlossary">Glossary</a>
+      <a href="../index.html#courses">Learn</a>
+      <a href="../index.html#paper">Paper trading</a>
+      <a href="../pages/calculators.html">Calculators</a>
+      <a href="../pages/glossary.html" aria-current="page">Glossary</a>
+      <a href="../index.html#about">About</a>
     </nav>
     <label class="language-picker"><span class="sr-only">Choose language</span>
       <select id="languageSelect" aria-label="Choose language">
@@ -43,10 +55,14 @@
   </main>
 
   <footer class="site-footer"><a class="brand footer-brand" href="../index.html"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a><p data-ui="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="../index.html#about" data-ui="disclaimerLink">Disclaimer</a><a href="privacy.html" data-ui="privacyLink">Privacy policy</a><a href="contact.html" data-ui="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPath. Educational content only.</small></footer>
+  <script src="../js/site-chrome.js"></script>
+  <script src="../js/site-search.js"></script>
+  <script src="../js/index-ribbon.js"></script>
   <script src="../js/shared.js"></script>
   <script src="../js/ads.js"></script>
   <script src="../js/glossary-data.js"></script>
   <script src="../js/glossary-finance.js"></script>
+  <script src="../js/glossary-rules.js"></script>
   <script src="../js/glossary-page.js"></script>
 </body>
 </html>
