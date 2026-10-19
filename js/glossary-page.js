@@ -43,7 +43,7 @@ function glApplyUI() {
  const f = document.getElementById("glFilters");
  f.innerHTML = ["all", ...GL_CATS].map(c => `<button class="level-tab${glCat === c ? " active" : ""}" data-cat="${c}">${MP.esc(c === "all" ? GL_UI[glLang].all : GL_UI[glLang].cat[c])}</button>`).join("");
  f.querySelectorAll("[data-cat]").forEach(b => b.addEventListener("click", () => { glCat = b.dataset.cat; glApplyUI(); glRender(); }));
- document.title = GL_UI[glLang].title + " — MarketPath";
+ document.title = GL_UI[glLang].title + " — MarketPathAcademy";
 }
 
 document.addEventListener("DOMContentLoaded", () => {

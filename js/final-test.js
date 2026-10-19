@@ -1,4 +1,4 @@
-// MarketPath final test (pages/test.html). 100, 125 or 150 questions drawn from every learning module in
+// MarketPathAcademy final test (pages/test.html). 100, 125 or 150 questions drawn from every learning module in
 // proportion to its question bank (js/test-bank.js), options shuffled, one minute per question. 70% passes and
 // unlocks a downloadable certificate. The attempt is saved in this browser as you go, so a reload resumes it;
 // the timer keeps running meanwhile. Results show a per-module breakdown and every answer with its explanation.
@@ -14,7 +14,7 @@
 
  const UI = {
   en: {
-   eyebrow: "FINAL TEST", title: "MarketPath final test",
+   eyebrow: "FINAL TEST", title: "MarketPathAcademy final test",
    intro: "One test across the whole course: every learning module, from market basics, charts and fundamentals to options, risk, psychology and tax. Score 70% or more to pass and download your certificate.",
    size: "Number of questions", minutes: n => `${n} questions · ${n} minutes`, lang: "Test language",
    rules: ["Questions are drawn from all {m} modules in proportion to each module's question bank, so every topic is tested.", "Each attempt picks new questions and shuffles the answer options.", "You have one minute per question. The timer keeps running if you leave the page; your answers are saved and you can resume.", "Answers are revealed only after you submit. You can move between questions and mark any for review.", "Pass mark: 70%. Pass to get a certificate with your name, score and a certificate ID."],
@@ -28,7 +28,7 @@
    confirmTitle: "Submit the test?", confirmText: (a, n, u, m) => `You have answered ${a} of ${n} questions. ${u} unanswered${m ? `, ${m} marked for review` : ""}. Unanswered questions count as wrong.`,
    back: "Back to the test", confirm: "Submit now",
    resultTitle: "Your result", passed: "Passed", failed: "Not passed yet", score: "Score", correct: "Correct", wrong: "Wrong", skipped: "Unanswered", time: "Time taken",
-   passMsg: "Congratulations! You passed the MarketPath final test.", failMsg: n => `You need ${PASS}% to pass. ${n} more correct answer${n === 1 ? "" : "s"} would have done it. Revise the modules below and try again.`,
+   passMsg: "Congratulations! You passed the MarketPathAcademy final test.", failMsg: n => `You need ${PASS}% to pass. ${n} more correct answer${n === 1 ? "" : "s"} would have done it. Revise the modules below and try again.`,
    byModule: "Score by module", revise: "Revise", review: "Review your answers", filters: [["all", "All"], ["wrong", "Wrong"], ["skipped", "Unanswered"], ["marked", "Marked"]],
    yours: "Your answer", right: "Correct answer", none: "Not answered", why: "Why",
    getCert: "Get your certificate", retake: "Take the test again", home: "Back to the test page",
@@ -36,12 +36,12 @@
    download: "Download (PNG)", print: "Print or save as PDF", copy: "Copy verification link", copied: "Verification link copied.",
    nameErr: "Enter your name (2 to 60 characters).", verifyTitle: "Certificate check",
    verifyOk: "This certificate ID matches the details below.", verifyBad: "This verification link is not valid or has been changed.",
-   verifyNote: "The check confirms that the name, score and date match the certificate ID. Compare the ID with the one printed on the certificate. MarketPath does not store certificates on a server, so this cannot prove who took the test.",
-   disclaimer: "The MarketPath certificate shows that you passed this learning test. It is not a professional qualification or a SEBI or NISM certification.",
+   verifyNote: "The check confirms that the name, score and date match the certificate ID. Compare the ID with the one printed on the certificate. MarketPathAcademy does not store certificates on a server, so this cannot prove who took the test.",
+   disclaimer: "The MarketPathAcademy certificate shows that you passed this learning test. It is not a professional qualification or a SEBI or NISM certification.",
    leave: "Your test is saved. The timer keeps running."
   },
   hi: {
-   eyebrow: "फ़ाइनल टेस्ट", title: "MarketPath फ़ाइनल टेस्ट",
+   eyebrow: "फ़ाइनल टेस्ट", title: "MarketPathAcademy फ़ाइनल टेस्ट",
    intro: "पूरे कोर्स पर एक टेस्ट: हर लर्निंग मॉड्यूल, बाज़ार की मूल बातों, चार्ट और फंडामेंटल से लेकर ऑप्शंस, जोखिम, मनोविज्ञान और टैक्स तक। पास होने और सर्टिफ़िकेट पाने के लिए 70% या अधिक अंक लाएँ।",
    size: "प्रश्नों की संख्या", minutes: n => `${n} प्रश्न · ${n} मिनट`, lang: "टेस्ट की भाषा",
    rules: ["प्रश्न सभी {m} मॉड्यूल से, हर मॉड्यूल के प्रश्न-बैंक के अनुपात में चुने जाते हैं, ताकि हर विषय की जाँच हो।", "हर प्रयास में नए प्रश्न चुने जाते हैं और विकल्पों का क्रम बदलता है।", "हर प्रश्न के लिए एक मिनट मिलता है। पेज छोड़ने पर भी टाइमर चलता रहता है; आपके उत्तर सेव रहते हैं और आप टेस्ट फिर से शुरू कर सकते हैं।", "सही उत्तर टेस्ट जमा करने के बाद ही दिखते हैं। आप प्रश्नों के बीच जा सकते हैं और किसी को भी रिव्यू के लिए मार्क कर सकते हैं।", "पास होने के लिए 70% चाहिए। पास होने पर आपके नाम, स्कोर और सर्टिफ़िकेट ID के साथ सर्टिफ़िकेट मिलता है।"],
@@ -55,7 +55,7 @@
    confirmTitle: "टेस्ट जमा करें?", confirmText: (a, n, u, m) => `आपने ${n} में से ${a} प्रश्नों के उत्तर दिए हैं। ${u} बिना उत्तर${m ? `, ${m} रिव्यू के लिए मार्क` : ""}। बिना उत्तर वाले प्रश्न गलत गिने जाते हैं।`,
    back: "टेस्ट पर लौटें", confirm: "अभी जमा करें",
    resultTitle: "आपका परिणाम", passed: "पास", failed: "अभी पास नहीं", score: "स्कोर", correct: "सही", wrong: "गलत", skipped: "बिना उत्तर", time: "लगा समय",
-   passMsg: "बधाई हो! आपने MarketPath फ़ाइनल टेस्ट पास कर लिया।", failMsg: n => `पास होने के लिए ${PASS}% चाहिए। ${n} और सही उत्तर से आप पास हो जाते। नीचे के मॉड्यूल दोहराएँ और फिर कोशिश करें।`,
+   passMsg: "बधाई हो! आपने MarketPathAcademy फ़ाइनल टेस्ट पास कर लिया।", failMsg: n => `पास होने के लिए ${PASS}% चाहिए। ${n} और सही उत्तर से आप पास हो जाते। नीचे के मॉड्यूल दोहराएँ और फिर कोशिश करें।`,
    byModule: "मॉड्यूल के अनुसार स्कोर", revise: "दोहराएँ", review: "अपने उत्तर देखें", filters: [["all", "सभी"], ["wrong", "गलत"], ["skipped", "बिना उत्तर"], ["marked", "मार्क किए"]],
    yours: "आपका उत्तर", right: "सही उत्तर", none: "उत्तर नहीं दिया", why: "क्यों",
    getCert: "अपना सर्टिफ़िकेट पाएँ", retake: "टेस्ट फिर से दें", home: "टेस्ट पेज पर लौटें",
@@ -63,8 +63,8 @@
    download: "डाउनलोड (PNG)", print: "प्रिंट करें या PDF सेव करें", copy: "जाँच लिंक कॉपी करें", copied: "जाँच लिंक कॉपी हो गया।",
    nameErr: "अपना नाम लिखें (2 से 60 अक्षर)।", verifyTitle: "सर्टिफ़िकेट जाँच",
    verifyOk: "यह सर्टिफ़िकेट ID नीचे दी गई जानकारी से मेल खाता है।", verifyBad: "यह जाँच लिंक मान्य नहीं है या बदला गया है।",
-   verifyNote: "जाँच से पता चलता है कि नाम, स्कोर और तारीख़ सर्टिफ़िकेट ID से मेल खाते हैं। इस ID को सर्टिफ़िकेट पर छपे ID से मिलाएँ। MarketPath सर्टिफ़िकेट किसी सर्वर पर नहीं रखता, इसलिए यह साबित नहीं कर सकता कि टेस्ट किसने दिया।",
-   disclaimer: "MarketPath सर्टिफ़िकेट दिखाता है कि आपने यह लर्निंग टेस्ट पास किया है। यह कोई प्रोफ़ेशनल योग्यता या SEBI/NISM सर्टिफ़िकेशन नहीं है।",
+   verifyNote: "जाँच से पता चलता है कि नाम, स्कोर और तारीख़ सर्टिफ़िकेट ID से मेल खाते हैं। इस ID को सर्टिफ़िकेट पर छपे ID से मिलाएँ। MarketPathAcademy सर्टिफ़िकेट किसी सर्वर पर नहीं रखता, इसलिए यह साबित नहीं कर सकता कि टेस्ट किसने दिया।",
+   disclaimer: "MarketPathAcademy सर्टिफ़िकेट दिखाता है कि आपने यह लर्निंग टेस्ट पास किया है। यह कोई प्रोफ़ेशनल योग्यता या SEBI/NISM सर्टिफ़िकेशन नहीं है।",
    leave: "आपका टेस्ट सेव है। टाइमर चलता रहता है।"
   }
  };
@@ -291,23 +291,35 @@
   app._cert.data = c;
   const canvas = app.querySelector("canvas");
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
-  drawCertificate(canvas, c, BANK.modules.length);
+  drawCertificate(canvas, c, BANK.modules.length, await logoImage());
   app.querySelector("[data-certbox]").hidden = false;
   app.querySelector("[data-certbox]").scrollIntoView({ behavior: "smooth", block: "start" });
  }
- function drawCertificate(cv, c, modules) {
+ // The site logo for the certificate (drawn without it if it cannot load).
+ let logoPromise = null;
+ function logoImage() {
+  logoPromise = logoPromise || new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = "../images/logo-mark.png"; });
+  return logoPromise;
+ }
+ function drawCertificate(cv, c, modules, logo) {
   const x = cv.getContext("2d"), W = cv.width, H = cv.height, pct = ((c.c / c.t) * 100).toFixed(1);
   const serif = "Georgia, 'Times New Roman', serif", sans = "Manrope, 'DM Sans', Arial, sans-serif";
-  x.fillStyle = "#fbf9f3"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#ffffff"; x.fillRect(0, 0, W, H); // white, like the logo's own background
   // Frame
   x.strokeStyle = "#0f2a3f"; x.lineWidth = 14; x.strokeRect(36, 36, W - 72, H - 72);
   x.strokeStyle = "#1f9d7a"; x.lineWidth = 3; x.strokeRect(62, 62, W - 124, H - 124);
   const g = x.createLinearGradient(0, 0, W, 0); g.addColorStop(0, "#1f9d7a"); g.addColorStop(1, "#2f7fc1");
   x.fillStyle = g; x.fillRect(62, 62, W - 124, 16); x.fillRect(62, H - 78, W - 124, 16);
   // Logo
-  x.fillStyle = g; roundRect(x, W / 2 - 34, 118, 68, 68, 16); x.fill();
-  x.fillStyle = "#0b1220"; x.font = `800 44px ${sans}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("M", W / 2, 153);
-  x.fillStyle = "#0f2a3f"; x.font = `800 30px ${sans}`; x.fillText("MarketPath", W / 2, 222);
+  x.textAlign = "center"; x.textBaseline = "middle";
+  if (logo) x.drawImage(logo, W / 2 - 52, 96, 104, 104);
+  // Wordmark in the logo's colours: Market (navy) Path (green) Academy (slate).
+  x.font = `800 32px ${sans}`;
+  const parts = [["Market", "#0b2e5f"], ["Path", "#178a4a"], ["Academy", "#3d4f66"]], wordW = parts.reduce((a, p) => a + x.measureText(p[0]).width, 0);
+  let px = W / 2 - wordW / 2;
+  x.textAlign = "left";
+  parts.forEach(([txt, col]) => { x.fillStyle = col; x.fillText(txt, px, 228); px += x.measureText(txt).width; });
+  x.textAlign = "center";
   // Text
   x.fillStyle = "#1f9d7a"; x.font = `700 22px ${sans}`; x.fillText("C E R T I F I C A T E   O F   A C H I E V E M E N T", W / 2, 300);
   x.fillStyle = "#3d4f66"; x.font = `italic 30px ${serif}`; x.fillText("This is to certify that", W / 2, 382);
@@ -317,7 +329,7 @@
   x.fillStyle = "#0f2a3f"; x.fillText(c.n, W / 2, 470);
   x.strokeStyle = "#c9b98a"; x.lineWidth = 2; x.beginPath(); x.moveTo(W / 2 - 420, 520); x.lineTo(W / 2 + 420, 520); x.stroke();
   x.fillStyle = "#3d4f66"; x.font = `28px ${serif}`;
-  x.fillText("has successfully passed the MarketPath Stock Market Final Test,", W / 2, 578);
+  x.fillText("has successfully passed the MarketPathAcademy Stock Market Final Test,", W / 2, 578);
   x.fillText(`covering all ${modules} learning modules, from market foundations to derivatives and tax,`, W / 2, 622);
   x.fillText(`with a score of ${pct}% (${c.c} of ${c.t} questions correct; pass mark 70%).`, W / 2, 666);
   // Seal
@@ -330,14 +342,13 @@
   x.textAlign = "left"; x.fillStyle = "#0f2a3f"; x.font = `700 26px ${sans}`; x.fillText(date, 170, 840);
   x.strokeStyle = "#0f2a3f"; x.lineWidth = 1.5; x.beginPath(); x.moveTo(170, 864); x.lineTo(520, 864); x.stroke();
   x.fillStyle = "#5a6b80"; x.font = `20px ${sans}`; x.fillText("Date", 170, 892);
-  x.fillStyle = "#0f2a3f"; x.font = `italic 34px ${serif}`; x.fillText("MarketPath", 640, 836);
+  x.fillStyle = "#0f2a3f"; x.font = `italic 34px ${serif}`; x.fillText("MarketPathAcademy", 640, 836);
   x.beginPath(); x.moveTo(640, 864); x.lineTo(980, 864); x.stroke();
-  x.fillStyle = "#5a6b80"; x.font = `20px ${sans}`; x.fillText("MarketPath Learning", 640, 892);
+  x.fillStyle = "#5a6b80"; x.font = `20px ${sans}`; x.fillText("MarketPathAcademy Learning", 640, 892);
   x.fillStyle = "#5a6b80"; x.font = `18px ${sans}`;
   x.fillText(`Certificate ID: ${certId(c)}`, 170, 990);
-  x.fillText("A certificate of learning from MarketPath. Not a professional qualification or a SEBI / NISM certification.", 170, 1020);
+  x.fillText("A certificate of learning from MarketPathAcademy. Not a professional qualification or a SEBI / NISM certification.", 170, 1020);
  }
- function roundRect(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
  function renderVerify(code) {
   const u = t();
   let c = null;
@@ -365,13 +376,13 @@
   else if (act === "png") {
    const a = document.createElement("a");
    a.href = app.querySelector("canvas").toDataURL("image/png");
-   a.download = `MarketPath-certificate-${certId(app._cert.data)}.png`;
+   a.download = `MarketPathAcademy-certificate-${certId(app._cert.data)}.png`;
    document.body.appendChild(a); a.click(); a.remove();
   }
   else if (act === "print") {
    const w = window.open("", "_blank");
    if (!w) { alert("Allow pop-ups to print the certificate, or download the PNG."); return; }
-   w.document.write(`<!doctype html><title>MarketPath certificate</title><style>@page{size:A4 landscape;margin:0}html,body{margin:0}img{width:100%;height:auto;display:block}</style><img src="${app.querySelector("canvas").toDataURL("image/png")}" onload="setTimeout(function(){print()},200)">`);
+   w.document.write(`<!doctype html><title>MarketPathAcademy certificate</title><style>@page{size:A4 landscape;margin:0}html,body{margin:0}img{width:100%;height:auto;display:block}</style><img src="${app.querySelector("canvas").toDataURL("image/png")}" onload="setTimeout(function(){print()},200)">`);
    w.document.close();
   }
   else if (act === "copy") {
@@ -403,7 +414,7 @@
  // ---------- Start ----------
  function applyLang() {
   document.documentElement.lang = lang;
-  document.title = `${t().title} — MarketPath`;
+  document.title = `${lang === "hi" ? "फ़ाइनल टेस्ट" : "Final test"} — MarketPathAcademy`;
   const d = document.querySelector('[data-ui="disclaimer"]');
   if (d) d.textContent = t().disclaimer;
  }

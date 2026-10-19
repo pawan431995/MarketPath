@@ -1,4 +1,4 @@
-// Lesson content for MarketPath. Educational only, not financial advice.
+// Lesson content for MarketPathAcademy. Educational only, not financial advice.
 // Each lesson: title, level (beginner | intermediate | advanced), time, summary, sections[{h, p?, ul?}].
 // To add a language, copy an existing block, translate it, and add the language to LESSON_LANGS.
 const LESSON_ORDER = ["foundations","investing","sip-mutual-funds","reading-charts","fundamental-analysis","technical-analysis","swing-trading","risk-management","intraday-trading","futures-options","option-greeks","trading-psychology"];

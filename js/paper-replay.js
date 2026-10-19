@@ -83,7 +83,7 @@ const PaperReplay = (function () {
    bars.push({ time: d.toISOString().slice(0, 10), open: round2(o), high: round2(Math.max(o, c) * 1.008), low: round2(Math.min(o, c) * 0.992), close: c, volume: Math.round(1e5 + Math.random() * 5e5) });
    p = c;
   }
-  return { symbol: "SAMPLE", note: "MarketPath replay format: time (date, ISO time or Unix seconds), open, high, low, close, volume (optional)", bars };
+  return { symbol: "SAMPLE", note: "MarketPathAcademy replay format: time (date, ISO time or Unix seconds), open, high, low, close, volume (optional)", bars };
  }
 
  function create(api) {
@@ -508,7 +508,7 @@ const PaperReplay = (function () {
    }
    else if (b.hasAttribute("data-rexport")) {
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([JSON.stringify({ symbol: S.sym, source: "Yahoo Finance via MarketPath", bars: S.raw.map(x => ({ time: x.time, open: x.open, high: x.high, low: x.low, close: x.close, volume: x.volume })) })], { type: "application/json" }));
+    a.href = URL.createObjectURL(new Blob([JSON.stringify({ symbol: S.sym, source: "Yahoo Finance via MarketPathAcademy", bars: S.raw.map(x => ({ time: x.time, open: x.open, high: x.high, low: x.low, close: x.close, volume: x.volume })) })], { type: "application/json" }));
     a.download = `${S.sym}-${S.daily ? "daily" : "5min"}.json`;
     document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
    }

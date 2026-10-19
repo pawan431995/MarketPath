@@ -1,4 +1,4 @@
-# MarketPath: market analysis and content plan
+# MarketPathAcademy: market analysis and content plan
 
 **Basis:** written from general knowledge of these books and sites (no live research). Verify prices, features and availability before relying on them. Last reviewed for this plan: 2026.
 
@@ -41,9 +41,9 @@ Pattern: books split into **mindset** (Housel, Halan, Douglas), **investing** (G
 
 Pattern: the big sites win on **depth (glossaries, courses), tools (charts, calculators, simulators), and data (live numbers, company ratios, news)**. Free, structured Indian content is well covered by Varsity and NSE Academy.
 
-## 3. Where MarketPath stands
+## 3. Where MarketPathAcademy stands
 
-| Area | Market standard | MarketPath today | Gap |
+| Area | Market standard | MarketPathAcademy today | Gap |
 |---|---|---|---|
 | Structured lessons | Full courses with quizzes | 12 lessons, EN and HI, examples, practice Qs | Medium: no quizzes until now |
 | Glossary | 100s of terms | 12 terms | **Large** |
@@ -63,7 +63,7 @@ Learners stay on a site when it answers the next question: "what does this word 
 ## 5. Plan, in priority order
 
 1. **Glossary** (done in this round): expand to about 70 terms, EN and HI, searchable.
-2. **Reading list** (removed from the site by request). The books and sites in sections 1 and 2 are used only as background when writing lesson content. Learners should not need to leave MarketPath.
+2. **Reading list** (removed from the site by request). The books and sites in sections 1 and 2 are used only as background when writing lesson content. Learners should not need to leave MarketPathAcademy.
 3. **Quiz** (done): self-test across all topics with explanations, EN and HI.
 4. **Calculators** (done): goal SIP planner, lumpsum growth, CAGR, break-even cost for trades.
 5. **Indian market rules** (done): the Market Rules & Investor Protection module covers timings, settlement, circuit limits, KYC and nomination, IPOs, registered advice versus tips, scam signs and how to complain. Rules change, so check SEBI and exchange circulars before each update.

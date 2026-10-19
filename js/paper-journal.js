@@ -227,7 +227,7 @@ const PaperJournal = (function () {
 
   // ---------- Import and export ----------
   function exportJson() {
-   const data = { app: "MarketPath trading journal", version: 1, exportedAt: new Date().toISOString(), entries: entries.slice().sort((a, b) => a.closedAt - b.closedAt) };
+   const data = { app: "MarketPathAcademy trading journal", version: 1, exportedAt: new Date().toISOString(), entries: entries.slice().sort((a, b) => a.closedAt - b.closedAt) };
    const a = document.createElement("a");
    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 1)], { type: "application/json" }));
    a.download = `marketpath-journal-${new Date().toISOString().slice(0, 10)}.json`;

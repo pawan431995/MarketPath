@@ -322,7 +322,7 @@ function renderLesson() {
  const root = document.getElementById("lessonRoot");
  const en = LESSONS.en[slug];
  if (!en) {
-  document.title = "MarketPath — Lesson";
+  document.title = "MarketPathAcademy — Lesson";
   document.getElementById("crumbTopic").textContent = "";
   root.innerHTML = `<h1 class="lesson-title">${esc(UI[lang].notFound)}</h1>`;
   renderTopicGrid();
@@ -339,7 +339,7 @@ function renderLesson() {
  const next = idx < LESSON_ORDER.length - 1 ? LESSON_ORDER[idx + 1] : null;
  const navTitle = s => esc((LESSONS[lang] && LESSONS[lang][s] || LESSONS.en[s]).title);
 
- document.title = `${L.title} — MarketPath`;
+ document.title = `${L.title} — MarketPathAcademy`;
  document.getElementById("crumbTopic").textContent = L.title;
 
  root.innerHTML = `

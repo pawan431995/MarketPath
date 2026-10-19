@@ -12,9 +12,9 @@
   en: {
    learn: "Learn", paper: "Paper trading", test: "Final test", calcs: "Calculators", glossary: "Glossary", about: "About", search: "Search", menu: "Open navigation",
    tagline: "Learn the market, one concept at a time. Lessons, practice and tools for beginners and experienced investors, in English and Hindi.",
-   colStart: "Start learning", colTrade: "Trading & analysis", colTools: "Tools", colSite: "MarketPath",
+   colStart: "Start learning", colTrade: "Trading & analysis", colTools: "Tools", colSite: "MarketPathAcademy",
    disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top",
-   rights: "MarketPath. Educational content only — not investment advice.",
+   rights: "MarketPathAcademy. Educational content only — not investment advice.",
    lessons: {
     foundations: "Stock market foundations", "market-rules": "Market rules & investor protection", investing: "Investing & wealth building",
     "sip-mutual-funds": "SIP & mutual funds", "tax-basics": "Tax basics", "technical-analysis": "Technical analysis",
@@ -25,9 +25,9 @@
   hi: {
    learn: "सीखें", paper: "पेपर ट्रेडिंग", test: "फ़ाइनल टेस्ट", calcs: "कैलकुलेटर", glossary: "शब्दावली", about: "हमारे बारे में", search: "खोजें", menu: "नेविगेशन खोलें",
    tagline: "एक-एक अवधारणा करके बाज़ार सीखें। शुरुआती और अनुभवी निवेशकों के लिए पाठ, अभ्यास और टूल, हिंदी और अंग्रेज़ी में।",
-   colStart: "सीखना शुरू करें", colTrade: "ट्रेडिंग और विश्लेषण", colTools: "टूल", colSite: "MarketPath",
+   colStart: "सीखना शुरू करें", colTrade: "ट्रेडिंग और विश्लेषण", colTools: "टूल", colSite: "MarketPathAcademy",
    disclaimer: "अस्वीकरण", privacy: "गोपनीयता नीति", contact: "संपर्क", top: "ऊपर जाएँ",
-   rights: "MarketPath. केवल शैक्षिक सामग्री — निवेश सलाह नहीं।",
+   rights: "MarketPathAcademy. केवल शैक्षिक सामग्री — निवेश सलाह नहीं।",
    lessons: {
     foundations: "शेयर बाज़ार की मूल बातें", "market-rules": "बाज़ार के नियम और निवेशक सुरक्षा", investing: "निवेश और धन निर्माण",
     "sip-mutual-funds": "SIP और म्यूचुअल फंड", "tax-basics": "टैक्स की मूल बातें", "technical-analysis": "टेक्निकल एनालिसिस",
@@ -86,7 +86,7 @@
   footer.innerHTML = `
    <div class="ft-grid">
     <div class="ft-brand">
-     <a class="brand footer-brand" href="${url("index.html")}"><span class="brand-mark">M</span><span>Market<span class="brand-light">Path</span></span></a>
+     <a class="brand footer-brand" href="${url("index.html")}"><img class="brand-logo" src="${url("")}images/logo-mark.png" alt="" width="40" height="40"><span class="brand-name">Market<span class="brand-path">Path</span><span class="brand-light">Academy</span></span></a>
      <p>${esc(t.tagline)}</p>
     </div>
     <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>

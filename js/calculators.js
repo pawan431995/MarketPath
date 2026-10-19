@@ -132,7 +132,7 @@
   return `<a class="calc-card" href="#${esc(c.id)}"><span class="calc-card-icon" aria-hidden="true">${esc(c.icon || CAT.get(c.cat).icon)}</span><span class="calc-card-text"><strong>${esc(title(c))}</strong><small>${esc(desc(c))}</small></span></a>`;
  }
  function renderDirectory() {
-  document.title = `${t().title} — MarketPath`;
+  document.title = `${t().title} — MarketPathAcademy`;
   const u = t();
   app.innerHTML = `
    <div class="calc-dir">
@@ -215,7 +215,7 @@
 
  function renderDetail() {
   const c = current, u = t(), F = formatter(currencyOf(c));
-  document.title = `${title(c)} — MarketPath`;
+  document.title = `${title(c)} — MarketPathAcademy`;
   const options = CATS.map(cat => `<optgroup label="${esc(cat[lang])}">${CALCS.filter(x => x.cat === cat.id).map(x => `<option value="${x.id}"${x.id === c.id ? " selected" : ""}>${esc(title(x))}</option>`).join("")}</optgroup>`).join("");
   const related = CALCS.filter(x => x.cat === c.cat && x.id !== c.id);
   app.innerHTML = `

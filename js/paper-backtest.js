@@ -339,7 +339,7 @@ const PaperBacktest = (function () {
     setSaved(all); render(); api.toast(`Saved "${strat.name}".`, "ok");
    }
    else if (b.hasAttribute("data-sdelete")) { readForm(); if (confirm(`Delete the saved strategy "${strat.name}"?`)) { setSaved(saved().filter(x => x.name !== strat.name)); render(); } }
-   else if (b.hasAttribute("data-sexport")) { readForm(); download(`${strat.name.replace(/[^\w-]+/g, "-").toLowerCase()}.json`, JSON.stringify({ app: "MarketPath strategy", version: 1, strategies: [strat] }, null, 1), "application/json"); }
+   else if (b.hasAttribute("data-sexport")) { readForm(); download(`${strat.name.replace(/[^\w-]+/g, "-").toLowerCase()}.json`, JSON.stringify({ app: "MarketPathAcademy strategy", version: 1, strategies: [strat] }, null, 1), "application/json"); }
    else if (b.dataset.schart) api.onChart(b.dataset.schart);
    else if (b.hasAttribute("data-scsv")) {
     const r = root.querySelector("[data-sresults]")._single;

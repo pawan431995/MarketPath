@@ -1,4 +1,4 @@
-# MarketPath — Static Stock Market Learning Website
+# MarketPathAcademy — Static Stock Market Learning Website
 
 Responsive static website starter using HTML, CSS and vanilla JavaScript.
 
