@@ -114,4 +114,4 @@ document.getElementById("calculateSip").addEventListener("click",calcSip);["mont
 document.getElementById("year").textContent=new Date().getFullYear();
 const savedLang=readLang();
 if(translations[savedLang]){document.getElementById("languageSelect").value=savedLang;applyLanguage(savedLang)}
-renderCourses();renderGlossary();calcSip();calcRisk();placeAdSlots(2);
+renderCourses();renderGlossary();calcSip();calcRisk();/* ADS-OFF: placeAdSlots(2); */

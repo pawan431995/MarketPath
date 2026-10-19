@@ -382,7 +382,7 @@ function renderLesson() {
  const words = [...root.querySelectorAll(".lesson-section")].reduce((n, sec) => n + sec.textContent.split(/\s+/).length, 0);
  document.getElementById("readTime").textContent = `${Math.max(1, Math.round(words / 200))} ${UI[lang].minRead}`;
  if (hasProgress) MPProgress.visit(slug);
- placeAdSlots();
+ // ADS-OFF: placeAdSlots();
  // Opened from search with #sec-N: scroll to that section now that it exists.
  const target = location.hash && document.getElementById(location.hash.slice(1));
  if (target) setTimeout(() => target.scrollIntoView({ block: "start" }), 0);

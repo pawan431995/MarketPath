@@ -449,5 +449,5 @@
  if (yearEl) yearEl.textContent = new Date().getFullYear();
  applyChrome();
  route();
- if (typeof placeAdSlots === "function") placeAdSlots(1);
+ // ADS-OFF: if (typeof placeAdSlots === "function") placeAdSlots(1);
 })();

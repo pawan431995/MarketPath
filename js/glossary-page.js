@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
  const q = new URLSearchParams(location.search).get("q");
  if (q) document.getElementById("glSearch").value = q;
  MP.setupMenu();
- placeAdSlots();
+ // ADS-OFF: placeAdSlots();
  glApplyUI();
  glRender();
 });
