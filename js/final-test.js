@@ -35,6 +35,10 @@
    certTitle: "Your certificate", certIntro: "Enter your name as you want it on the certificate.", name: "Full name", make: "Create certificate",
    download: "Download (PNG)", print: "Print or save as PDF", copy: "Copy verification link", copied: "Verification link copied.",
    nameErr: "Enter your name (2 to 60 characters).", verifyTitle: "Certificate check",
+   details: "Your details", nameLabel: "Full name (for your certificate)", nameHint: "Printed on your certificate exactly as you type it.",
+   pledge: "I will take this test on my own, without help from others or reference material.", pledgeErr: "Please confirm the pledge to start the test.",
+   candidate: "Candidate", certReady: "Your certificate is ready", certReadyText: n => `Created automatically for ${n}. Download it, print it or share the verification link.`,
+   editName: "Wrong name? Change it", update: "Update certificate",
    verifyOk: "This certificate ID matches the details below.", verifyBad: "This verification link is not valid or has been changed.",
    verifyNote: "The check confirms that the name, score and date match the certificate ID. Compare the ID with the one printed on the certificate. MarketPathAcademy does not store certificates on a server, so this cannot prove who took the test.",
    disclaimer: "The MarketPathAcademy certificate shows that you passed this learning test. It is not a professional qualification or a SEBI or NISM certification.",
@@ -62,6 +66,10 @@
    certTitle: "आपका सर्टिफ़िकेट", certIntro: "सर्टिफ़िकेट पर जैसा नाम चाहिए, वैसा लिखें।", name: "पूरा नाम", make: "सर्टिफ़िकेट बनाएँ",
    download: "डाउनलोड (PNG)", print: "प्रिंट करें या PDF सेव करें", copy: "जाँच लिंक कॉपी करें", copied: "जाँच लिंक कॉपी हो गया।",
    nameErr: "अपना नाम लिखें (2 से 60 अक्षर)।", verifyTitle: "सर्टिफ़िकेट जाँच",
+   details: "आपकी जानकारी", nameLabel: "पूरा नाम (सर्टिफ़िकेट के लिए)", nameHint: "आपका नाम सर्टिफ़िकेट पर ठीक वैसा ही छपेगा जैसा आप लिखेंगे।",
+   pledge: "मैं यह टेस्ट ख़ुद दूँगा/दूँगी, किसी और की मदद या संदर्भ सामग्री के बिना।", pledgeErr: "टेस्ट शुरू करने के लिए कृपया प्रतिज्ञा की पुष्टि करें।",
+   candidate: "उम्मीदवार", certReady: "आपका सर्टिफ़िकेट तैयार है", certReadyText: n => `${n} के लिए अपने-आप बनाया गया। इसे डाउनलोड करें, प्रिंट करें या जाँच लिंक साझा करें।`,
+   editName: "नाम गलत है? बदलें", update: "सर्टिफ़िकेट अपडेट करें",
    verifyOk: "यह सर्टिफ़िकेट ID नीचे दी गई जानकारी से मेल खाता है।", verifyBad: "यह जाँच लिंक मान्य नहीं है या बदला गया है।",
    verifyNote: "जाँच से पता चलता है कि नाम, स्कोर और तारीख़ सर्टिफ़िकेट ID से मेल खाते हैं। इस ID को सर्टिफ़िकेट पर छपे ID से मिलाएँ। MarketPathAcademy सर्टिफ़िकेट किसी सर्वर पर नहीं रखता, इसलिए यह साबित नहीं कर सकता कि टेस्ट किसने दिया।",
    disclaimer: "MarketPathAcademy सर्टिफ़िकेट दिखाता है कि आपने यह लर्निंग टेस्ट पास किया है। यह कोई प्रोफ़ेशनल योग्यता या SEBI/NISM सर्टिफ़िकेशन नहीं है।",
@@ -90,7 +98,7 @@
   for (let i = 0; left < 0 && i < order.length * 3; i++) { const m = order[order.length - 1 - (i % order.length)]; if (m.k > 2) { m.k--; left++; } }
   return mods;
  }
- function newAttempt(size, testLang) {
+ function newAttempt(size, testLang, candidate) {
   const qs = [];
   allocate(size).forEach(m => {
    shuffle([...Array(m.n).keys()]).slice(0, m.k).forEach(i => {
@@ -101,7 +109,7 @@
   });
   shuffle(qs);
   const now = Date.now();
-  return { v: 1, lang: testLang, size: qs.length, qs, ans: qs.map(() => null), marked: qs.map(() => false), seen: qs.map((_, i) => i === 0), cur: 0, start: now, end: now + qs.length * SECONDS_PER_Q * 1000 };
+  return { v: 1, name: candidate, lang: testLang, size: qs.length, qs, ans: qs.map(() => null), marked: qs.map(() => false), seen: qs.map((_, i) => i === 0), cur: 0, start: now, end: now + qs.length * SECONDS_PER_Q * 1000 };
  }
  const qOf = (a, k) => { const r = a.qs[k], q = BANK[a.lang][r.s][r.i]; return { text: q[0], options: r.p.map(j => q[1][j]), correct: r.p.indexOf(q[2]), why: q[3], slug: r.s }; };
  const modTitle = slug => { const m = BANK.modules.find(x => x.slug === slug); return m ? m[lang] || m.en : slug; };
@@ -118,10 +126,16 @@
    ${pending ? `<section class="xt-card xt-resume"><p>${u.inProgress(attempt.ans.filter(x => x !== null).length, attempt.size, fmtTime(attempt.end - Date.now()))}</p><div class="xt-actions"><button type="button" class="btn btn-primary" data-act="resume">${u.resume}</button><button type="button" class="btn btn-secondary" data-act="discard">${u.discard}</button></div></section>` : ""}
    <div class="xt-intro-grid">
     <section class="xt-card">
-     <form data-start>
+     <form data-start novalidate>
+      <fieldset class="xt-details"><legend>${u.details}</legend>
+       <label class="xt-field"><span>${u.nameLabel}</span><input name="candidate" maxlength="60" autocomplete="name" required value="${esc(load("mp-test-name", ""))}" aria-describedby="xtNameHint"></label>
+       <small id="xtNameHint" class="xt-hint">${u.nameHint}</small>
+       <label class="xt-pledge"><input type="checkbox" name="pledge" required> <span>${u.pledge}</span></label>
+      </fieldset>
       <fieldset class="xt-choice"><legend>${u.size}</legend>${SIZES.map((n, i) => `<label><input type="radio" name="size" value="${n}"${i === 1 ? " checked" : ""}><span><b>${n}</b>${u.minutes(n).split(" · ")[1]}</span></label>`).join("")}</fieldset>
       <fieldset class="xt-choice xt-choice-sm"><legend>${u.lang}</legend><label><input type="radio" name="tlang" value="en"${lang === "en" ? " checked" : ""}><span>English</span></label><label><input type="radio" name="tlang" value="hi"${lang === "hi" ? " checked" : ""}><span>हिन्दी</span></label></fieldset>
       <ul class="xt-rules">${u.rules.map(r => `<li>${esc(r.replace("{m}", BANK.modules.length))}</li>`).join("")}</ul>
+      <p class="xt-err" data-starterr aria-live="polite"></p>
       <button type="submit" class="btn btn-primary xt-big" ${pending ? "disabled" : ""}>${u.start} →</button>
      </form>
     </section>
@@ -132,8 +146,11 @@
    <section class="xt-card"><h2 class="xt-h">${u.history}</h2>${hist.length ? `<div class="xt-table-wrap"><table class="xt-table"><tbody>${hist.slice().reverse().map((h, i) => `<tr><td>${new Date(h.date).toLocaleString(lang === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</td><td class="num">${h.correct} / ${h.size}</td><td class="num"><b>${h.pct.toFixed(1)}%</b></td><td><span class="xt-badge ${h.passed ? "ok" : "no"}">${h.passed ? u.pass : u.fail}</span></td><td class="num">${h.passed ? `<button type="button" class="btn btn-secondary xt-sm" data-cert="${hist.length - 1 - i}">${u.viewCert}</button>` : ""}</td></tr>`).join("")}</tbody></table></div>` : `<p class="xt-muted">${u.noHistory}</p>`}</section>`;
   app.querySelector("[data-start]").addEventListener("submit", e => {
    e.preventDefault();
-   const f = e.target;
-   attempt = newAttempt(Number(f.size.value), f.tlang.value);
+   const f = e.target, name = f.candidate.value.trim().replace(/\s+/g, " "), err = f.querySelector("[data-starterr]");
+   if (name.length < 2 || name.length > 60) { err.textContent = u.nameErr; f.candidate.focus(); return; }
+   if (!f.pledge.checked) { err.textContent = u.pledgeErr; f.pledge.focus(); return; }
+   store("mp-test-name", name);
+   attempt = newAttempt(Number(f.size.value), f.tlang.value, name);
    save();
    renderQuestion();
    window.scrollTo({ top: 0 });
@@ -159,7 +176,7 @@
   a.seen[k] = true;
   const answered = a.ans.filter(x => x !== null).length, marked = a.marked.filter(Boolean).length;
   app.innerHTML = `<div class="xt-bar" role="region" aria-label="${esc(u.title)}">
-    <div class="xt-bar-l"><strong>${u.q(k + 1, a.size)}</strong><span>${answered} ${u.answered} · ${marked} ${u.markedN}</span></div>
+    <div class="xt-bar-l"><strong>${u.q(k + 1, a.size)}</strong><span>${a.name ? `${u.candidate}: ${esc(a.name)} · ` : ""}${answered} ${u.answered} · ${marked} ${u.markedN}</span></div>
     <div class="xt-timer" aria-label="${u.timeLeft}"><span>${u.timeLeft}</span><b id="ftTimer">${fmtTime(a.end - Date.now())}</b></div>
     <button type="button" class="btn btn-primary" data-act="submit">${u.submit}</button>
    </div>
@@ -226,7 +243,7 @@
   a.done = true;
   a.finishedAt = Math.min(Date.now(), a.end);
   const hist = load(KEY_HISTORY, []);
-  hist.push({ date: a.finishedAt, size: a.size, correct: s.correct, pct: s.pct, passed: s.pct >= PASS, lang: a.lang, secs: Math.round((a.finishedAt - a.start) / 1000), per: s.per });
+  hist.push({ name: a.name || "", date: a.finishedAt, size: a.size, correct: s.correct, pct: s.pct, passed: s.pct >= PASS, lang: a.lang, secs: Math.round((a.finishedAt - a.start) / 1000), per: s.per });
   store(KEY_HISTORY, hist.slice(-50));
   store(KEY_ATTEMPT, null);
   renderResult(a, s, timeUp, hist.length - 1);
@@ -240,14 +257,20 @@
     <div class="xt-ring" style="--p:${s.pct.toFixed(1)}"><b>${s.pct.toFixed(1)}%</b><small>${u.score}</small></div>
     <div><span class="xt-badge ${passed ? "ok" : "no"}">${passed ? u.passed : u.failed}</span><h1 class="xt-result-h">${passed ? u.passMsg : u.resultTitle}</h1>${passed ? "" : `<p>${u.failMsg(need)}</p>`}
      <dl class="xt-stats"><div><dt>${u.correct}</dt><dd>${s.correct} / ${a.size}</dd></div><div><dt>${u.wrong}</dt><dd>${s.wrong}</dd></div><div><dt>${u.skipped}</dt><dd>${s.skipped}</dd></div><div><dt>${u.time}</dt><dd>${fmtTime(a.finishedAt - a.start)}</dd></div></dl>
-     <div class="xt-actions">${passed ? `<button type="button" class="btn btn-primary" data-cert="${histIndex}">🎓 ${u.getCert}</button>` : ""}<button type="button" class="btn btn-secondary" data-act="home">${u.retake}</button></div>
+     <div class="xt-actions">${passed ? `<a class="btn btn-primary" href="#xtCert">🎓 ${u.certReady} ↓</a>` : ""}<button type="button" class="btn btn-secondary" data-act="home">${u.retake}</button></div>
     </div>
    </section>
+   ${passed ? certSection(a.name || load("mp-test-name", "")) : ""}
    <section class="xt-card"><h2 class="xt-h">${u.byModule}</h2><div class="xt-table-wrap"><table class="xt-table"><tbody>${rows.map(r => `<tr class="${r.p < PASS ? "weak" : ""}"><td>${esc(modTitle(r.slug))}</td><td class="num">${r.c} / ${r.n}</td><td class="xt-barcell"><span class="xt-mbar"><i style="width:${r.p.toFixed(0)}%"></i></span>${r.p.toFixed(0)}%</td><td class="num">${r.p < PASS ? `<a href="lesson.html?topic=${encodeURIComponent(r.slug)}">${u.revise} →</a>` : "✓"}</td></tr>`).join("")}</tbody></table></div></section>
    <section class="xt-card"><h2 class="xt-h">${u.review}</h2><div class="xt-filters" role="group">${u.filters.map(([id, l]) => `<button type="button" class="xt-chip${reviewFilter === id ? " on" : ""}" data-rf="${id}" aria-pressed="${reviewFilter === id}">${l}</button>`).join("")}</div><ol class="xt-review" data-review></ol></section>`;
   app._result = { a, s, histIndex };
   renderReview();
   window.scrollTo({ top: 0 });
+  if (passed) {
+   app._cert = { histIndex };
+   const name = a.name || load("mp-test-name", "");
+   if (name) make(name, false); else { app.querySelector("[data-certbox]").hidden = true; app.querySelector("[data-certform]").hidden = false; }
+  }
  }
  function renderReview() {
   const { a } = app._result, u = t(), list = app.querySelector("[data-review]");
@@ -271,6 +294,14 @@
  const unb64 = s => decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/"))));
  // The link carries the details and the ID printed on the certificate; editing any detail makes them disagree.
  const verifyUrl = c => `${location.origin}${location.pathname}?verify=${b64(JSON.stringify(Object.assign({}, c, { id: certId(c) })))}`;
+ function certSection(name) {
+  const u = t();
+  return `<section class="xt-card xt-certbox" id="xtCert"><h2 class="xt-h">🎓 ${u.certReady}</h2><p class="xt-muted" data-certnote>${name ? esc(u.certReadyText(name)) : ""}</p>
+    <div data-certbox><canvas width="1600" height="1131" class="xt-canvas" role="img" aria-label="${esc(u.certTitle)}"></canvas>
+    <div class="xt-actions"><button type="button" class="btn btn-primary" data-act="png">⤓ ${u.download}</button><button type="button" class="btn btn-secondary" data-act="print">🖨 ${u.print}</button><button type="button" class="btn btn-secondary" data-act="copy">🔗 ${u.copy}</button><button type="button" class="btn btn-secondary" data-act="editname">✎ ${u.editName}</button></div></div>
+    <form class="xt-certform" data-certform novalidate hidden><label class="xt-field"><span>${u.name}</span><input name="name" maxlength="60" autocomplete="name" value="${esc(name)}" required></label><button type="submit" class="btn btn-primary">${u.update}</button></form>
+    <p class="xt-err" data-err aria-live="polite"></p></section>`;
+ }
  function renderCert(histIndex) {
   const u = t(), h = load(KEY_HISTORY, [])[histIndex];
   if (!h || !h.passed) { renderIntro(); return; }
@@ -282,7 +313,7 @@
   app._cert = { histIndex };
   if (h.name) make(h.name);
  }
- async function make(name) {
+ async function make(name, scroll) {
   const hist = load(KEY_HISTORY, []), h = hist[app._cert.histIndex];
   h.name = name;
   store(KEY_HISTORY, hist);
@@ -293,7 +324,11 @@
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
   drawCertificate(canvas, c, BANK.modules.length, await logoImage());
   app.querySelector("[data-certbox]").hidden = false;
-  app.querySelector("[data-certbox]").scrollIntoView({ behavior: "smooth", block: "start" });
+  const note = app.querySelector("[data-certnote]");
+  if (note) note.textContent = t().certReadyText(name);
+  const form = app.querySelector("[data-certform]");
+  if (form && app.querySelector("[data-certnote]")) form.hidden = true;
+  if (scroll !== false) app.querySelector("[data-certbox]").scrollIntoView({ behavior: "smooth", block: "start" });
  }
  // The site logo for the certificate (drawn without it if it cannot load).
  let logoPromise = null;
@@ -372,6 +407,7 @@
   else if (act === "submit") confirmSubmit();
   else if (act === "resume") { warned = {}; renderQuestion(); }
   else if (act === "discard") { if (confirm(t().discard + "?")) { attempt = null; store(KEY_ATTEMPT, null); renderIntro(); } }
+  else if (act === "editname") { const fm = app.querySelector("[data-certform]"); fm.hidden = false; fm.name.focus(); fm.name.select(); }
   else if (act === "home") { history.replaceState(null, "", location.pathname); renderIntro(); window.scrollTo({ top: 0 }); }
   else if (act === "png") {
    const a = document.createElement("a");

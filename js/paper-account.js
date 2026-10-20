@@ -3,7 +3,7 @@
 // PaperAccount.create(api) and then show(view) / render(). This file only reads the data and renders.
 // api: { account, cfg, price(sym), ref(sym), nameOf, money, signed, fmt, esc, posQty, posAvg, posCost,
 //        taxEstimate, slab, plan, plans, capital(a), available(a), blocked(a), today(ms) -> bool,
-//        onExit(key), onCancel(id), onSelect(sym), onTrade(side, sym), onGoto(view), onFunds(kind, amount) -> error,
+//        onExit(key), onCancel(id), onModify(id), onSelect(sym), onTrade(side, sym), onGoto(view), onFunds(kind, amount) -> error,
 //        onPlan(id), onSlab(pct), onReset(), indices() -> [{name, last, change, pct}], downloadCsv(name, rows) }
 const PaperAccount = (function () {
  const VIEWS = ["dashboard", "orders", "holdings", "positions", "funds", "portfolio", "history"];
@@ -229,7 +229,7 @@ const PaperAccount = (function () {
   function orders() {
    const all = orderRows(), list = all.filter(o => orderFilter === "all" || o.status === orderFilter);
    const count = f => all.filter(o => f === "all" || o.status === f).length;
-   const typeLabel = o => (o.tag ? o.tag : o.type === "limit" ? "Limit" : o.type === "amo" ? "AMO" : "Market");
+   const typeLabel = o => (o.tag ? o.tag : o.type === "limit" ? "Limit" : o.type === "amo" ? "AMO" : "Market") + (o.modified ? ` · modified${o.modified > 1 ? ` ×${o.modified}` : ""}` : "");
    const status = o => ({ open: "Open", filled: "Executed", cancelled: "Cancelled" }[o.status] || o.status);
    const when = t => new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
    return `<h3 class="ppa-title">Orders</h3><div class="ppa-toolbar">
@@ -247,7 +247,7 @@ const PaperAccount = (function () {
       <td class="num">${o.chargesTotal ? api.fmt(o.chargesTotal) : "—"}</td>
       <td class="num ${typeof o.gain === "number" ? cls(o.gain) : ""}">${typeof o.gain === "number" ? signed(o.gain) : "—"}</td>
       <td><span class="ppa-status ${o.status}">${status(o)}</span></td>
-      <td class="num">${o.status === "open" ? `<button type="button" class="pp-cancel" data-cancel="${esc(o.id)}">Cancel</button>` : ""}</td></tr>`).join("")}</tbody>
+      <td class="num">${o.status === "open" ? `<span class="ppa-acts"><button type="button" class="pt-mini-b" data-modify="${esc(o.id)}" title="Change quantity or price">Modify</button><button type="button" class="pp-cancel" data-cancel="${esc(o.id)}">Cancel</button></span>` : ""}</td></tr>`).join("")}</tbody>
     </table></div>` : `<p class="ppa-empty">No ${orderFilter === "all" ? "" : status({ status: orderFilter }).toLowerCase() + " "}orders yet. Open the order window with <b class="ppa-b">B</b> or <b class="ppa-s">S</b> on a watchlist stock.</p>`}`;
   }
 
@@ -343,6 +343,7 @@ const PaperAccount = (function () {
    if (!t || t.type === "submit") return;
    if (t.dataset.exit) api.onExit(t.dataset.exit);
    else if (t.dataset.cancel) api.onCancel(t.dataset.cancel);
+   else if (t.dataset.modify) api.onModify(t.dataset.modify);
    else if (t.dataset.trade) api.onTrade(t.dataset.trade, t.dataset.sym);
    else if (t.dataset.select) api.onSelect(t.dataset.select);
    else if (t.dataset.goto) api.onGoto(t.dataset.goto);

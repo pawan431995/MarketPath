@@ -1112,6 +1112,7 @@
  // The order window: a dialog over the terminal, coloured by side (blue to buy, orange to sell).
  let orderReturn = null;
  function openOrder(side, sym) {
+  setModifying(null);
   if (sym && sym !== state.symbol) selectSymbol(sym);
   document.querySelector(`input[name="ppSide"][value="${side === "sell" ? "sell" : "buy"}"]`).checked = true;
   // Selling something you hold: start with its product and the quantity you can sell.
@@ -1130,9 +1131,73 @@
   $("ppQty").focus();
   $("ppQty").select();
  }
+ // Modify an open order: the order window opens with its quantity and limit price. Side and product cannot change
+ // (as at a broker); switching the type to Market executes it now.
+ let modifying = null;
+ function setModifying(id) {
+  modifying = id;
+  document.querySelectorAll('input[name="ppSide"], input[name="ppProduct"]').forEach(i => { i.disabled = !!id; });
+  $("ptOrder").classList.toggle("modifying", !!id);
+ }
+ function modifyOrder(id) {
+  const o = account().pending.find(x => x.id === id);
+  if (!o) { toast("This order is no longer open. It may have been filled or cancelled.", "error"); return; }
+  if (o.sym !== state.symbol) selectSymbol(o.sym);
+  document.querySelector(`input[name="ppSide"][value="${o.side}"]`).checked = true;
+  const prod = document.querySelector(`input[name="ppProduct"][value="${o.product}"]`);
+  if (prod) prod.checked = true;
+  $("ppType").value = "limit";
+  $("ppQty").value = o.qty;
+  $("ppLimit").value = o.limit;
+  setModifying(id);
+  setMsg("");
+  updateEstimate();
+  orderReturn = document.activeElement;
+  $("ptOrder").hidden = false;
+  $("ppLimit").focus();
+  $("ppLimit").select();
+ }
+ // Applies a change to an open order. Returns an error message, or null when done.
+ function applyModify(id, t) {
+  const a = account(), idx = a.pending.findIndex(x => x.id === id);
+  if (idx < 0) return "This order is no longer open. It may have been filled or cancelled.";
+  const o = a.pending[idx];
+  if (!Number.isInteger(t.qty) || t.qty <= 0) return "Enter a whole-number quantity above zero.";
+  if (o.product === "intraday" && pastSquareOff()) return "Intraday orders cannot be changed after 3:20 pm.";
+  if (t.type === "limit") {
+   if (!(t.limit > 0)) return "Enter a limit price above zero.";
+   t.limit = Math.round(t.limit / cfg().minMove) * cfg().minMove;
+  }
+  // Check funds or shares as if this order were not there, then put it back if the change is not allowed.
+  a.pending.splice(idx, 1);
+  const restore = msg => { a.pending.splice(idx, 0, o); return msg; };
+  if (t.type === "market") {
+   const err = placeOrder({ side: o.side, sym: o.sym, product: o.product, qty: t.qty, type: "market" });
+   if (err) return restore(err);
+   a.orders.splice(1, 0, Object.assign({}, o, { status: "cancelled", time: Date.now(), tag: "Changed to market" }));
+   a.orders = a.orders.slice(0, 200);
+   save();
+   scheduleRender();
+   return null;
+  }
+  if (o.side === "buy") {
+   const need = t.qty * t.limit + charges("buy", o.product, t.qty, t.limit).total;
+   if (need > available(a)) return restore(`Not enough virtual funds: the changed order needs ${money(need)} and ${money(available(a))} is available.`);
+  } else {
+   const free = freeToSell(a, o.sym, o.product);
+   if (t.qty > free) return restore(`You can sell up to ${free} ${o.sym} (${o.product}). Short selling is not simulated.`);
+  }
+  const was = { qty: o.qty, limit: o.limit };
+  Object.assign(o, { qty: t.qty, limit: Math.round(t.limit * 100) / 100, modifiedAt: Date.now(), modified: (o.modified || 0) + 1, was });
+  a.pending.splice(idx, 0, o);
+  save();
+  scheduleRender();
+  return null;
+ }
  function closeOrder() {
   if ($("ptOrder").hidden) return;
   $("ptOrder").hidden = true;
+  setModifying(null);
   if (orderReturn && document.contains(orderReturn)) orderReturn.focus();
   orderReturn = null;
  }
@@ -1213,6 +1278,11 @@
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
  }
 
+ // Funds already reserved by the order being modified (they become free if it is changed).
+ function ownReservation() {
+  const o = modifying && account().pending.find(x => x.id === modifying);
+  return o && o.side === "buy" ? o.qty * o.limit + charges("buy", o.product, o.qty, o.limit).total : 0;
+ }
  function currentTicket() {
   return {
    side: document.querySelector('input[name="ppSide"]:checked').value,
@@ -1226,9 +1296,9 @@
  function updateEstimate() {
   const a = account(), t = currentTicket(), price = state.prices[state.symbol];
   $("ppLimitRow").hidden = t.type !== "limit";
-  $("ppSubmit").textContent = t.side === "buy" ? "Buy" : "Sell";
+  $("ppSubmit").textContent = modifying ? "Modify order" : t.side === "buy" ? "Buy" : "Sell";
   $("ptOrder").classList.toggle("sell", t.side === "sell");
-  $("ptOrderTitle").textContent = `${t.side === "buy" ? "Buy" : "Sell"} ${state.symbol || ""} × ${t.qty > 0 ? t.qty : 0} Qty`;
+  $("ptOrderTitle").textContent = `${modifying ? "Modify: " : ""}${t.side === "buy" ? "Buy" : "Sell"} ${state.symbol || ""} × ${t.qty > 0 ? t.qty : 0} Qty`;
   const ch = change(state.symbol);
   $("ptOrderSub").textContent = `${state.feed === "finnhub" ? "US" : "NSE"} ${price ? money(price) : "—"}${ch ? ` (${ch.pct >= 0 ? "+" : "−"}${Math.abs(ch.pct).toFixed(2)}%)` : ""}${practiceNote() ? " · after-hours practice price" : ""}`;
   const ref = t.type === "limit" ? t.limit : price;
@@ -1237,7 +1307,7 @@
   const px = slip ? slip.fillPrice : ref, value = t.qty * px, c = charges(t.side, t.product, t.qty, px);
   const slipHtml = slip ? `<span>Est. slippage <b>${money(slip.total)}</b> (${slip.bps.toFixed(1)} bps) <button type="button" class="pt-info-btn" data-disclose="slippage" aria-label="How slippage is estimated">ⓘ</button></span>` : "";
   setHTML($("ppEstimate"), t.side === "buy"
-   ? `<span>Required <b>${money(value + c.total)}</b></span><span>Available <b>${money(available(a))}</b></span><span>Charges <b>${money(c.total)}</b></span>${slipHtml}`
+   ? `<span>Required <b>${money(value + c.total)}</b></span><span>Available <b>${money(available(a) + ownReservation())}</b></span><span>Charges <b>${money(c.total)}</b></span>${slipHtml}`
    : `<span>You receive <b>${money(value - c.total)}</b></span><span>Can sell <b>${Math.max(0, freeToSell(a, state.symbol, t.product))} qty</b></span><span>Charges <b>${money(c.total)}</b></span>${slipHtml}`);
   const line = (label, v) => (v ? `<tr><th>${label}</th><td>${money(v)}</td></tr>` : "");
   setHTML($("ppChargeList"), `<table class="pp-pnl">${line("Brokerage", c.brokerage)}${line("STT", c.stt)}${line("Exchange transaction charge", c.exchange)}${line("SEBI fee", c.sebi)}${line("Stamp duty", c.stamp)}${line("DP charge", c.dp)}${line("GST 18%", c.gst)}<tr class="pp-strong"><th>Total charges</th><td>${money(c.total)}</td></tr></table>`);
@@ -1456,6 +1526,15 @@
  $("ppOrderForm").addEventListener("submit", e => {
   e.preventDefault();
   const t = currentTicket();
+  if (modifying) {
+   const id = modifying, before = account().pending.find(x => x.id === id), was = before ? { qty: before.qty, limit: before.limit } : null;
+   const merr = applyModify(id, t);
+   if (merr) { setMsg(merr, "error"); return; }
+   closeOrder();
+   const after = account().pending.find(x => x.id === id);
+   toast(after ? `Order modified: ${after.side} ${after.qty} ${after.sym} at ${money(after.limit)}${was ? ` (was ${was.qty} at ${money(was.limit)})` : ""}.` : `Order changed to market and executed: ${t.qty} ${state.symbol} at ${money(account().orders[0].price)}.`, "ok");
+   return;
+  }
   const err = placeOrder(Object.assign({ sym: state.symbol }, t));
   if (err) { setMsg(err, "error"); return; }
   closeOrder();
@@ -1502,7 +1581,7 @@
   slab: () => Number(store.prefs.slab) || 0, today: isToday,
   plan: () => store.prefs.plan, plans: Object.entries(PaperCharges.plans).map(([id, p]) => [id, p.label]),
   capital, available, blocked: reservedForBuys, indices,
-  onExit: exitPosition, onCancel: cancelOrder, downloadCsv, onGoto: setScreen,
+  onExit: exitPosition, onCancel: cancelOrder, onModify: modifyOrder, downloadCsv, onGoto: setScreen,
   onSelect: sym => { selectSymbol(sym); setScreen("chart"); },
   onTrade: (side, sym) => openOrder(side, sym),
   onFunds: moveFunds, onReset: resetAccount,

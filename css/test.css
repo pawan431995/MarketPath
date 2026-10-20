@@ -166,3 +166,15 @@ html[data-theme="light"] .xt-banner{background:#fff4e5;border-color:#f3cf9c;colo
 html[data-theme="light"] .xt-field input{background:#ffffff;border-color:#c5d0de;color:#13233a}
 html[data-theme="light"] .xt-markbtn.on{border-color:#f3cf9c;color:#8a4a10}
 html[data-theme="light"] .xt-modal{background:rgba(15,27,45,.35)}
+
+/* Candidate details on the start form */
+.xt-details{border:0;margin:0 0 18px;padding:0 0 16px;display:grid;gap:8px;border-bottom:1px solid #26384e}
+.xt-details legend{font-weight:700;font-size:14px;margin-bottom:10px;padding:0}
+.xt-hint{font-size:12px;color:#8fa2b8;margin-top:-2px}
+.xt-pledge{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:#c7d3e2;cursor:pointer;margin-top:6px;line-height:1.5}
+.xt-pledge input{accent-color:#48e0b0;width:17px;height:17px;flex:none;margin-top:2px}
+[data-starterr]{margin:0 0 10px}
+.xt-certbox .xt-certform{margin-top:14px}
+html[data-theme="light"] .xt-details{border-color:#e6ebf2}
+html[data-theme="light"] .xt-hint{color:#5a6b80}
+html[data-theme="light"] .xt-pledge{color:#13233a}

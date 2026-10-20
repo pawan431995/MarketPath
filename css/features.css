@@ -1005,3 +1005,5 @@ html[data-theme="light"] .pp-down{color:#b3262f}
 html[data-theme="light"] :is(.chart-change,.chart-price span){color:#0b7d5e}
 /* Light theme: indicator names in the chart legend use each line's colour, which is too pale on white; darken them. */
 html[data-theme="light"] .pp-legend i{filter:brightness(.6) saturate(1.4)}
+/* Order window while modifying an open order: side and product are locked. */
+.pt-modal.modifying :is(.pt-side-switch,.pp-product) input:disabled+span{opacity:.5;cursor:not-allowed}
