@@ -28,11 +28,11 @@ const MPCourses = (function () {
   {slug:"trading-psychology",title:"Trading Psychology",level:"Advanced",icon:"◎",time:"6 lessons",desc:"Biases, discipline, overtrading, loss aversion and process reviews.",topics:["psychology","discipline","bias","overtrading","emotions"]}
  ];
  const UI = {
-  en: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced", startLesson: "Start lesson",
+  en: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced", startLesson: "Start lesson", practice: (n, t) => `Practice ${n}/${t}`,
    newTitle: "New here? Start with the beginner path", newText: "Four short modules that take you from zero to placing your first informed investment.",
    start: "Start with module 1", cont: "Continue where you left off", done: n => `${n} of ${COURSES.length} modules completed`, next: "Next up",
    all: "You have completed every module. Revisit any topic or take the final test.", badgeDone: "Completed", badgeStarted: "Started", resume: "Resume" },
-  hi: { beginner: "शुरुआती", intermediate: "मध्यम", advanced: "उन्नत", startLesson: "पाठ शुरू करें",
+  hi: { beginner: "शुरुआती", intermediate: "मध्यम", advanced: "उन्नत", startLesson: "पाठ शुरू करें", practice: (n, t) => `अभ्यास ${n}/${t}`,
    newTitle: "नए हैं? शुरुआती रास्ते से शुरू करें", newText: "चार छोटे मॉड्यूल जो आपको शून्य से पहले सोचे-समझे निवेश तक ले जाते हैं।",
    start: "मॉड्यूल 1 से शुरू करें", cont: "जहाँ छोड़ा था वहीं से जारी रखें", done: n => `${COURSES.length} में से ${n} मॉड्यूल पूरे`, next: "आगे",
    all: "आपने सभी मॉड्यूल पूरे कर लिए हैं। कोई भी विषय दोबारा देखें या फ़ाइनल टेस्ट दें।", badgeDone: "पूरा", badgeStarted: "शुरू किया", resume: "जारी रखें" }
@@ -72,7 +72,14 @@ const MPCourses = (function () {
   if (p.visited[slug]) return `<span class="progress-badge started">${u.badgeStarted}</span>`;
   return "";
  }
- const card = (c, L, lang) => `<article class="course-card"><div class="course-card-top"><span class="course-icon">${c.icon}</span><span class="level-badge">${levelLabel(c.level, lang)}</span>${badge(c.slug, lang)}</div><h3><a class="course-title-link" href="${lessonHref(c.slug)}">${L.title}</a></h3><p>${L.summary}</p><div class="course-footer"><span>${L.time}</span><a class="course-link" href="${lessonHref(c.slug)}">${UI[lang].startLesson} ↗</a></div></article>`;
+ // Practice tasks ticked in the lesson (shown when js/lesson-practice.js is loaded and at least one is ticked).
+ const practiceTag = (slug, lang) => {
+  const tasks = (window.MP_PRACTICE || {})[slug];
+  let n = 0;
+  try { n = ((JSON.parse(localStorage.getItem("mp-practice")) || {})[slug] || []).length; } catch (e) { /* storage unavailable */ }
+  return tasks && n ? ` · <span class="practice-tag${n >= tasks.length ? " full" : ""}">${UI[lang].practice(Math.min(n, tasks.length), tasks.length)}</span>` : "";
+ };
+ const card = (c, L, lang) => `<article class="course-card"><div class="course-card-top"><span class="course-icon">${c.icon}</span><span class="level-badge">${levelLabel(c.level, lang)}</span>${badge(c.slug, lang)}</div><h3><a class="course-title-link" href="${lessonHref(c.slug)}">${L.title}</a></h3><p>${L.summary}</p><div class="course-footer"><span>${L.time}${practiceTag(c.slug, lang)}</span><a class="course-link" href="${lessonHref(c.slug)}">${UI[lang].startLesson} ↗</a></div></article>`;
  // Continue learning for returning visitors, or the suggested beginner path for new ones.
  function continueHtml(lang) {
   const p = progress(), u = UI[lang], title = s => lessonFor({ slug: s }, lang).title;

@@ -328,6 +328,21 @@ body.ss-open{overflow:hidden}
 .related-calc{display:inline-flex;align-items:center;gap:8px;border:1px solid #2b3d54;border-radius:10px;padding:9px 13px;font-size:14px;font-weight:600;background:#111b2d}
 .related-calc:hover{border-color:#2e796b}
 .related-calc span:first-child{color:#48e0b0}
+.practice-intro strong{color:#48e0b0;white-space:nowrap}
+.practice-list{list-style:none;counter-reset:pt;padding:0;margin:14px 0 0;display:grid;gap:10px}
+.practice-task{counter-increment:pt;display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #2b3d54;border-radius:12px;padding:12px 14px;background:#0f182a}
+.practice-task.is-done{border-color:#2e796b}
+.practice-task label{display:flex;align-items:flex-start;gap:10px;cursor:pointer;flex:1;line-height:1.5}
+.practice-task label::before{content:counter(pt);flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:#1b2a40;color:#9fb3cc}
+.practice-task input{flex:none;width:18px;height:18px;margin:3px 0 0;accent-color:#2fbf8f}
+.practice-task.is-done label span{color:#9fb3cc}
+.practice-open{flex:none;white-space:nowrap}
+@media (max-width:640px){.practice-task{flex-direction:column;align-items:stretch}.practice-open{align-self:flex-start}}
+html[data-theme="light"] .practice-task{background:#ffffff;border-color:#d5dde8}
+html[data-theme="light"] .practice-task.is-done{border-color:#0b7d5e}
+html[data-theme="light"] .practice-task label::before{background:#e8eef6;color:#3b4f69}
+html[data-theme="light"] .practice-task.is-done label span{color:#5b6b80}
+html[data-theme="light"] .practice-intro strong{color:#0b7d5e}
 .quiz-best{font-size:13px;color:#9aadc2;margin:4px 0}
 .quiz-saved{font-size:13px;color:#7df1c7;margin:6px 0 12px}
 
@@ -1007,3 +1022,6 @@ html[data-theme="light"] :is(.chart-change,.chart-price span){color:#0b7d5e}
 html[data-theme="light"] .pp-legend i{filter:brightness(.6) saturate(1.4)}
 /* Order window while modifying an open order: side and product are locked. */
 .pt-modal.modifying :is(.pt-side-switch,.pp-product) input:disabled+span{opacity:.5;cursor:not-allowed}
+.practice-tag{color:#48e0b0;font-weight:600}
+.practice-tag.full::before{content:"✓ "}
+html[data-theme="light"] .practice-tag{color:#0b7d5e}

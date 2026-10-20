@@ -7,7 +7,7 @@ Responsive static website starter using HTML, CSS and vanilla JavaScript.
 - Index ribbon fixed under the header on every page (stays visible while scrolling): NIFTY 50, SENSEX, NIFTY BANK, sector indices and India VIX scrolling like a ticker, with Live / Delayed / Market closed status and the data time. It refreshes every 5 minutes during market hours, pauses on hover or with its button, and stays still for people who prefer reduced motion. See "Index ribbon data" below
 - Site-wide search (header button, or press `/` or Ctrl+K): lessons and their sections, glossary terms, calculators, patterns and indicators, in English and Hindi
 - Learning progress saved in the browser: mark a module complete (or score 60%+ in its quiz), best quiz scores, "Continue where you left off" and a beginner path on the homepage, completion ticks in the module lists
-- Each lesson shows reading time, related calculators and a back-to-top button
+- Each lesson shows reading time, related calculators and a back-to-top button, and ends with "Practise it": 2–3 hands-on tasks (in English and Hindi) that open the paper-trading terminal on the right tool (chart, screener, backtesting, bar replay, journal, orders, portfolio, trade history, funds), a calculator, or the NSE option chain. Learners tick tasks as they finish them (saved in the browser), and the Learn page shows "Practice 2/3" on each course card. Tasks live in `js/lesson-practice.js`
 - English/Hindi language dropdown; the choice is remembered between pages
 - Searchable, level-filtered topic library (beginner, intermediate, advanced). Search matches every typed word, ranks title matches first and shows a result count
 - Light and dark theme toggle on every page (dark by default; the choice is remembered on the device)
@@ -43,8 +43,8 @@ Responsive static website starter using HTML, CSS and vanilla JavaScript.
   - Shareable links that carry the inputs (for example `calculators.html#emi?amount=5000000&rate=9`), inputs remembered on the device, and a currency choice (₹, $, €, £) for the non-India-specific calculators
   - Indian rules where relevant: income tax new vs old regime (Budget 2025 slabs), HRA, capital gains, GST, EPF, NPS, PPF, gratuity. Verify the rates when tax rules change
 - Every lesson has at least one diagram; F&O opens with SEBI's findings on trader losses and lists the 2024–25 rule changes
-- Glossary of 120+ terms, financial risk disclaimers, bilingual privacy and contact pages, and a 404 page
-- Favicon, social-sharing preview image and tags, web manifest, `robots.txt` and `sitemap.xml`
+- Glossary of 120+ terms, financial risk disclaimers, bilingual privacy and contact pages, and a 404 page that works at any depth on GitHub Pages (it sets a `<base>` of `/MarketPath/` there, `/` elsewhere)
+- Favicon, social-sharing preview image and tags (absolute image URL, as WhatsApp and LinkedIn require), web manifest, `robots.txt` and `sitemap.xml` pointing at https://pawan431995.github.io/MarketPath/ (change them, and the `og:image` URLs, if you move to your own domain). Images are palette-compressed PNGs; `images/logo-mark-112.png` is the small homepage copy of the logo mark
 - Google AdSense loader (`ads.js`), off until you add your IDs
 
 ## Project structure
@@ -97,6 +97,7 @@ marketpath-static-website/
 │   ├── lessons-tax.js         Tax Basics module for Indian investors and traders (verify current rules)
 │   ├── lessons-finance.js     Balance sheet, cash flow, quarterly results, annual report, shareholding pattern, valuation basics, corporate actions
 │   ├── lesson-charts.js       Which chart images each lesson shows, with bilingual captions
+│   ├── lesson-practice.js     "Practise it" tasks for each lesson, linking to the paper-trading terminal or a calculator
 │   ├── module-extras.js       Per-module key terms, tool cards and calculators
 │   ├── patterns.js            Candlestick and chart pattern library text (English and Hindi)
 │   ├── patterns-extra.js      Additional patterns (spinning top, tweezers, three inside up, wedges, pennant, ...)

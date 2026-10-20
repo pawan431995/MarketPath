@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-# Replace example.com with your domain before publishing.
-Sitemap: https://www.example.com/sitemap.xml
+# Sitemap of the GitHub Pages site (update it if you move to your own domain).
+Sitemap: https://pawan431995.github.io/MarketPath/sitemap.xml

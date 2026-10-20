@@ -19,6 +19,8 @@ const UI = {
     position: { title: "Position size", capital: "Trading capital (₹)", risk: "Risk per trade (%)", entry: "Entry price (₹)", stop: "Stop-loss price (₹)", shares: "shares", maxLoss: "maximum loss", note: "Shares you can buy so that a stop-out loses only your planned risk. Excludes costs and slippage." },
     breakeven: { title: "Trade break-even", qty: "Quantity (shares)", price: "Buy price (₹)", costs: "Total buy and sell costs (₹)", perShare: "per share", note: "The sell price needed just to cover costs, before any profit." }
    },
+   practiceTitle: "Practise it", practiceIntro: "Apply this module with virtual money in the paper-trading terminal or a calculator. Tick each task when you finish it.", practiceCount: "{n} of {t} done",
+   practiceOpen: { chart: "Open the chart", screener: "Open the screener", strategy: "Open strategy backtesting", replay: "Open bar replay", journal: "Open the journal", orders: "Open orders", portfolio: "Open portfolio", history: "Open trade history", funds: "Open funds", calc: "Open the calculator", url: "Open the website" },
    disclaimer: "Educational content only, not investment advice. Markets carry risk, including loss of capital. Examples are simplified and may exclude charges, taxes and slippage.",
    footerText: "Learn the market, one concept at a time.", disclaimerLink: "Disclaimer", privacyLink: "Privacy policy", contactLink: "Contact",
    minRead: "min read", relatedCalcs: "Plan it with a calculator", doneTitle: "Finished this module?", doneText: "Mark it complete to track your progress on the home page. Scoring 60% or more in the quiz marks it complete too.",
@@ -42,6 +44,8 @@ const UI = {
     position: { title: "पोज़िशन साइज़", capital: "ट्रेडिंग पूँजी (₹)", risk: "प्रति ट्रेड जोखिम (%)", entry: "एंट्री कीमत (₹)", stop: "स्टॉप-लॉस कीमत (₹)", shares: "शेयर", maxLoss: "अधिकतम नुकसान", note: "उतने शेयर कि स्टॉप लगने पर केवल आपका तय जोखिम जाए। शुल्क और स्लिपेज शामिल नहीं।" },
     breakeven: { title: "ट्रेड ब्रेक-ईवन", qty: "मात्रा (शेयर)", price: "ख़रीद कीमत (₹)", costs: "कुल ख़रीद और बिक्री खर्च (₹)", perShare: "प्रति शेयर", note: "खर्च निकालने के लिए ज़रूरी बिक्री कीमत, किसी लाभ से पहले।" }
    },
+   practiceTitle: "अभ्यास करें", practiceIntro: "इस मॉड्यूल को पेपर-ट्रेडिंग टर्मिनल में वर्चुअल पैसे से या कैलकुलेटर से लागू करें। हर काम पूरा होने पर उस पर टिक लगाएँ।", practiceCount: "{t} में से {n} पूरे",
+   practiceOpen: { chart: "चार्ट खोलें", screener: "स्क्रीनर खोलें", strategy: "स्ट्रैटेजी बैकटेस्टिंग खोलें", replay: "बार रीप्ले खोलें", journal: "जर्नल खोलें", orders: "ऑर्डर्स खोलें", portfolio: "पोर्टफ़ोलियो खोलें", history: "ट्रेड हिस्ट्री खोलें", funds: "फ़ंड्स खोलें", calc: "कैलकुलेटर खोलें", url: "वेबसाइट खोलें" },
    disclaimer: "केवल शैक्षिक सामग्री, निवेश सलाह नहीं। बाज़ार में जोखिम होता है, जिसमें पूँजी खोने का जोखिम भी शामिल है। उदाहरण सरल किए गए हैं और इनमें शुल्क, टैक्स या स्लिपेज शामिल नहीं हो सकते।",
    footerText: "एक-एक अवधारणा करके बाज़ार सीखें।", disclaimerLink: "अस्वीकरण", privacyLink: "गोपनीयता नीति", contactLink: "संपर्क",
    minRead: "मिनट पढ़ने का समय", relatedCalcs: "कैलकुलेटर से योजना बनाएँ", doneTitle: "यह मॉड्यूल पूरा हुआ?", doneText: "होम पेज पर अपनी प्रगति देखने के लिए इसे पूरा चिह्नित करें। क्विज़ में 60% या अधिक स्कोर करने पर भी यह पूरा चिह्नित होता है।",
@@ -272,6 +276,48 @@ function bindQuiz(items) {
  };
 }
 
+// ---- practice tasks (js/lesson-practice.js); ticks are saved per module ----
+const PRACTICE_KEY = "mp-practice";
+function practiceTicks() {
+ try { return JSON.parse(localStorage.getItem(PRACTICE_KEY)) || {}; } catch (e) { return {}; }
+}
+function practiceHref(target) {
+ if (target.startsWith("url:")) return target.slice(4);
+ if (target.startsWith("calc:")) return "calculators.html#" + encodeURIComponent(target.slice(5));
+ return "paper-trading.html" + (target === "chart" ? "" : "#" + target);
+}
+function practiceBlock(s) {
+ const list = (window.MP_PRACTICE || {})[s];
+ if (!list) return "";
+ const u = UI[lang], done = practiceTicks()[s] || [];
+ const items = list.map(([target, en, hi], i) => {
+  const kind = target.split(":")[0], ext = kind === "url", ticked = done.includes(i);
+  return `<li class="practice-task${ticked ? " is-done" : ""}"><label><input type="checkbox" data-practice="${i}"${ticked ? " checked" : ""}><span>${esc(lang === "hi" ? hi : en)}</span></label>
+   <a class="related-calc practice-open" href="${esc(practiceHref(target))}"${ext ? ' target="_blank" rel="noopener"' : ""}>${esc(u.practiceOpen[kind] || u.practiceOpen.chart)} <span aria-hidden="true">↗</span></a></li>`;
+ }).join("");
+ return `<section class="lesson-block practice-block"><h2>${esc(u.practiceTitle)}</h2><p class="practice-intro">${esc(u.practiceIntro)} <strong data-practice-count aria-live="polite"></strong></p><ol class="practice-list">${items}</ol></section>`;
+}
+function bindPractice() {
+ const box = document.querySelector(".practice-block"); // the table of contents renames section ids
+ if (!box) return;
+ const total = box.querySelectorAll("[data-practice]").length;
+ const count = () => {
+  const n = box.querySelectorAll("[data-practice]:checked").length;
+  box.querySelector("[data-practice-count]").textContent = UI[lang].practiceCount.replace("{n}", n).replace("{t}", total);
+ };
+ box.addEventListener("change", e => {
+  const cb = e.target.closest("[data-practice]");
+  if (!cb) return;
+  const all = practiceTicks(), set = new Set(all[slug] || []);
+  cb.checked ? set.add(+cb.dataset.practice) : set.delete(+cb.dataset.practice);
+  all[slug] = [...set].sort((a, b) => a - b);
+  try { localStorage.setItem(PRACTICE_KEY, JSON.stringify(all)); } catch (err) { /* storage unavailable */ }
+  cb.closest(".practice-task").classList.toggle("is-done", cb.checked);
+  count();
+ });
+ count();
+}
+
 // ---- related calculators and completion ----
 function relatedBlock(s) {
  const list = RELATED_CALCS[s];
@@ -364,6 +410,7 @@ function renderLesson() {
   ${termsBlock(meta.terms)}
   ${faqBlock(content.faq)}
   ${quizBlock(content.quiz)}
+  ${practiceBlock(slug)}
   ${relatedBlock(slug)}
   ${hasProgress ? `<section class="done-box" id="doneBox" aria-live="polite"></section>` : ""}
   <p class="fine-print lesson-disclaimer">${esc(UI[lang].disclaimer)}</p>
@@ -377,6 +424,7 @@ function renderLesson() {
  updateProgress();
  bindCalcs();
  bindQuiz(content.quiz);
+ bindPractice();
  renderDone();
  // About 200 words a minute for the lesson text (sections only, not tools or quiz).
  const words = [...root.querySelectorAll(".lesson-section")].reduce((n, sec) => n + sec.textContent.split(/\s+/).length, 0);

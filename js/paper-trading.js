@@ -1558,7 +1558,7 @@
    const why = d.intraday && isDaily() ? "VWAP restarts every day, so it is shown on intraday timeframes only." : "Needs traded volume. Real prices include volume only on the 1D, 1W and 1M timeframes.";
    return `<label class="${off ? "off" : ""}"${off ? ` title="${why}"` : ""}><input type="checkbox" value="${d.id}"${store.prefs.indicators.includes(d.id) ? " checked" : ""}${off ? " disabled" : ""}>${d.color ? `<i class="pp-swatch" style="background:${d.color}"></i>` : `<i class="pp-swatch pp-swatch-vol"></i>`}<span>${esc(d.label)}</span>${d.pane ? "<small>pane</small>" : ""}</label>`;
   }).join("")}${g === "volume" && nse && !isDaily() ? '<p class="pp-ind-note">These need traded volume. Real prices include volume only on the 1D, 1W and 1M timeframes (or use the simulated feed).</p>' : ""}</fieldset>`).join("")
-   + `<div class="pp-ind-foot"><button type="button" class="pp-mini" data-ind-clear${count ? "" : " disabled"}>Remove all</button><a href="pages/lesson.html?topic=technical-indicators">How each indicator works →</a></div>`;
+   + `<div class="pp-ind-foot"><button type="button" class="pp-mini" data-ind-clear${count ? "" : " disabled"}>Remove all</button><a href="${window.MPChrome ? MPChrome.url("pages/lesson.html?topic=technical-indicators") : "lesson.html?topic=technical-indicators"}">How each indicator works →</a></div>`;
   $("ppIndList").closest("details").querySelector("summary").innerHTML = `ƒx Indicators${count ? ` <small class="pp-ind-count">${count}</small>` : ""}`;
  }
  function syncChartControls() {
@@ -1640,8 +1640,8 @@
  let firstScreen = "chart";
  try { firstScreen = localStorage.getItem("mp-paper-tab") || "chart"; } catch (e) { /* storage unavailable */ }
  if (firstScreen === "watchlist" && !window.matchMedia("(max-width: 900px)").matches) firstScreen = "chart";
- // Links such as pages/paper-trading.html#screener (from the homepage and footer) open the terminal on that tool.
- const HASH_SCREENS = { "#screener": "screener", "#strategy": "strategy", "#replay": "replay", "#journal": "journal" };
+ // Links such as pages/paper-trading.html#screener (from the homepage, footer and lesson practice tasks) open the terminal on that tool.
+ const HASH_SCREENS = { "#screener": "screener", "#strategy": "strategy", "#replay": "replay", "#journal": "journal", "#dashboard": "dashboard", "#orders": "orders", "#holdings": "holdings", "#positions": "positions", "#funds": "funds", "#portfolio": "portfolio", "#history": "history" };
  if (HASH_SCREENS[location.hash]) firstScreen = HASH_SCREENS[location.hash];
  setScreen(SCREENS.includes(firstScreen) ? firstScreen : "chart");
  selectFeed(FEEDS[store.prefs.feed] ? store.prefs.feed : "nse");
