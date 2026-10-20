@@ -105,7 +105,8 @@ function withHead(html, m) {
 
 // ---------- structured data ----------
 const ORG = { "@type": "EducationalOrganization", "@id": SITE + "#org", name: BRAND, url: SITE, logo: SITE + "images/icon-512.png",
- description: "Free stock market education in English and Hindi: courses, quizzes, calculators, paper trading and a final test with a certificate." };
+ description: "Free stock market education in English and Hindi: courses, quizzes, calculators, paper trading and a final test with a certificate.",
+ email: "marketpathacademy@gmail.com", contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "marketpathacademy@gmail.com", availableLanguage: ["English", "Hindi"] } };
 const provider = { "@type": "Organization", name: BRAND, url: SITE };
 const crumbs = items => ({ "@context": "https://schema.org", "@type": "BreadcrumbList",
  itemListElement: items.map(([name, item], i) => ({ "@type": "ListItem", position: i + 1, name, item })) });

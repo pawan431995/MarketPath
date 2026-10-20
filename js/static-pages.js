@@ -1,5 +1,5 @@
 // Text for the contact and privacy pages, in English and Hindi. Elements carry data-ui="key".
-// Before publishing, replace the contact email and review the privacy text for your actual setup (ads, analytics, hosting).
+// Review the privacy text if the setup changes (ads, analytics, hosting). Contact email: marketpathacademy@gmail.com (in contact.html).
 const PAGE_UI = {
  en: {
   docContact: "Contact", docPrivacy: "Privacy policy",
