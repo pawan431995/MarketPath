@@ -337,6 +337,16 @@ function renderDone() {
 }
 
 // ---- lesson body ----
+// Worked table in a section: { head: [..], rows: [[..], ..] }. A first cell starting with "!" marks a total row.
+// Columns after the first are figures, so they are right-aligned unless they hold long text.
+function sectionTable(t) {
+ const cell = (c, tag) => `<${tag}${tag === "td" && c.length > 24 ? ' class="text"' : ""}>${esc(c)}</${tag}>`;
+ const rows = t.rows.map(r => {
+  const total = r[0].startsWith("!"), first = total ? r[0].slice(1) : r[0];
+  return `<tr${total ? ' class="total"' : ""}><th scope="row">${esc(first)}</th>${r.slice(1).map(c => cell(c, "td")).join("")}</tr>`;
+ }).join("");
+ return `<div class="lesson-table-wrap" tabindex="0"><table class="lesson-table"><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
 // Illustration for a strategy section: { file, en:{alt,cap}, hi:{alt,cap} } under images/strategies/.
 function sectionFigure(im) {
  const t = im[lang] || im.en;
@@ -400,6 +410,7 @@ function renderLesson() {
     <h2>${esc(sec.h)}</h2>
     ${sec.p ? `<p>${esc(sec.p)}</p>` : ""}
     ${sec.ul ? `<ul>${sec.ul.map(li => `<li>${esc(li)}</li>`).join("")}</ul>` : ""}
+    ${sec.table ? sectionTable(sec.table) : ""}
     ${sec.p2 ? `<p>${esc(sec.p2)}</p>` : ""}
     ${sec.img ? sectionFigure(sec.img) : ""}
    </section>`).join("")}

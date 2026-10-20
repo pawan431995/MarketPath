@@ -43,6 +43,7 @@ Responsive static website starter using HTML, CSS and vanilla JavaScript.
   - Shareable links that carry the inputs (for example `calculators.html#emi?amount=5000000&rate=9`), inputs remembered on the device, and a currency choice (₹, $, €, £) for the non-India-specific calculators
   - Indian rules where relevant: income tax new vs old regime (Budget 2025 slabs), HRA, capital gains, GST, EPF, NPS, PPF, gratuity. Verify the rates when tax rules change
 - Every lesson has at least one diagram; F&O opens with SEBI's findings on trader losses and lists the 2024–25 rule changes
+- The six financial-statement modules (Balance Sheet, Cash Flow, Quarterly Results, Annual Report, Shareholding Pattern, Corporate Actions) have 12–13 topics each (about 1,800–2,300 words) with worked tables: a two-year balance sheet, an indirect-method cash flow statement, seasonal quarters, reported vs underlying profit, a 60-minute annual report plan, a four-quarter shareholding trend and what each corporate action does to 100 shares. Each also has worked examples, real-life scenarios, use cases, key takeaways, four learner questions and two diagrams. Lesson sections can carry a table (`table: { head, rows }`, rows starting with `!` are totals)
 - Glossary of 120+ terms, financial risk disclaimers, bilingual privacy and contact pages, and a 404 page that works at any depth on GitHub Pages (it sets a `<base>` of `/MarketPath/` there, `/` elsewhere)
 - Favicon, social-sharing preview image and tags (absolute image URL, as WhatsApp and LinkedIn require), web manifest, `robots.txt` and `sitemap.xml` pointing at https://pawan431995.github.io/MarketPath/ (change them, and the `og:image` URLs, if you move to your own domain). Images are palette-compressed PNGs; `images/logo-mark-112.png` is the small homepage copy of the logo mark
 - Google AdSense loader (`ads.js`), off until you add your IDs
@@ -96,6 +97,8 @@ marketpath-static-website/
 │   ├── lessons-extra-en.js / lessons-extra-hi.js  Examples, scenarios, use cases, takeaways, practice
 │   ├── lessons-tax.js         Tax Basics module for Indian investors and traders (verify current rules)
 │   ├── lessons-finance.js     Balance sheet, cash flow, quarterly results, annual report, shareholding pattern, valuation basics, corporate actions
+│   ├── lessons-finance-more.js     Deeper sections, tables, examples and FAQs for six of those modules (English)
+│   ├── lessons-finance-more-hi.js  The same in Hindi, plus the code that adds both to the lessons and their second diagrams
 │   ├── lesson-charts.js       Which chart images each lesson shows, with bilingual captions
 │   ├── lesson-practice.js     "Practise it" tasks for each lesson, linking to the paper-trading terminal or a calculator
 │   ├── module-extras.js       Per-module key terms, tool cards and calculators

@@ -207,6 +207,114 @@ D["fno-loss-study.svg"] = svg(800, 330, "About 93 in 100 individual F&O traders 
  return out;
 })(), "Source: SEBI studies of individual traders in equity F&O (2024 and 2025).");
 
+// ---- Second diagrams for the financial-reading modules (js/lessons-finance-more-hi.js lists them) ----
+// Grouped bars: groups [{ label, values: [..] }], series [{ name, color }]; values can be negative.
+function groupedBars(groups, series, o) {
+ const { x0, y0, w, h, min = 0, max } = o, slot = w / groups.length, n = series.length;
+ const bw = Math.min(o.bw || 26, (slot * 0.75) / n), Y = v => y0 + h - ((v - min) / (max - min)) * h;
+ let out = (o.ticks || []).map(t => line(x0, Y(t), x0 + w, Y(t), { color: C.line, dash: t === 0 ? "" : "3 4" }) + text(x0 - 8, Y(t) + 4, String(t), { anchor: "end", size: 10.5, fill: C.muted })).join("");
+ groups.forEach((g, i) => {
+  const cx = x0 + slot * i + slot / 2, left = cx - (bw * n + 4 * (n - 1)) / 2;
+  g.values.forEach((v, k) => {
+   const x = left + k * (bw + 4), top = Y(Math.max(v, 0)), bottom = Y(Math.min(v, 0));
+   const color = v < 0 && series[k].negColor ? series[k].negColor : series[k].color;
+   out += rect(x, top, bw, Math.max(2, bottom - top), color, { rx: 3, opacity: 0.92 });
+   if (o.valueLabels) out += text(x + bw / 2, v < 0 ? bottom + 13 : top - 5, String(v), { anchor: "middle", size: 10.5, weight: 700 });
+  });
+  out += text(cx, y0 + h + 18, g.label, { anchor: "middle", size: 11.5, fill: C.muted });
+ });
+ return out;
+}
+const legend = (x, y, items) => items.map(([name, color], i) => rect(x, y + i * 22 - 10, 12, 12, color, { rx: 3 }) + text(x + 20, y + i * 22, name, { size: 12 })).join("");
+
+D["working-capital-days.svg"] = svg(800, 340, "Working-capital days over three years (Example Ltd, illustrative)", (() => {
+ const years = [["FY23", 50, 60, 76], ["FY24", 55, 65, 78], ["FY25", 75, 92, 78]];
+ let out = groupedBars(years.map(([label, ...values]) => ({ label, values })), [{ color: C.amber }, { color: C.violet }, { color: C.blue }],
+  { x0: 70, y0: 60, w: 470, h: 200, max: 100, ticks: [0, 25, 50, 75, 100], valueLabels: true, bw: 30 });
+ out += legend(580, 80, [["Receivable days", C.amber], ["Inventory days", C.violet], ["Payable days", C.blue]]);
+ out += rect(570, 160, 210, 100, C.panel, { stroke: C.line }) + text(586, 186, "Cash conversion cycle", { weight: 700, size: 12.5 });
+ years.forEach(([y, r, i, p], k) => { out += text(586, 210 + k * 18, `${y}: ${r} + ${i} − ${p} = ${r + i - p} days`, { size: 11.5, fill: k === 2 ? C.red : C.muted, weight: k === 2 ? 700 : 0 }); });
+ return out;
+})(), "Customers paying later and stock piling up lock the company's cash into operations; the gap is usually filled with debt.");
+
+D["profit-vs-cash.svg"] = svg(800, 340, "Profit versus operating cash flow over five years (₹ crore, illustrative)", (() => {
+ const yrs = ["Y1", "Y2", "Y3", "Y4", "Y5"];
+ const X = { profit: [100, 115, 130, 150, 170], ocf: [95, 118, 125, 155, 165] }, Yc = { profit: [100, 120, 140, 160, 180], ocf: [90, 70, 40, 10, -20] };
+ const series = [{ color: C.blue }, { color: C.green, negColor: C.red }], opt = { y0: 76, w: 320, h: 190, min: -40, max: 200, ticks: [0, 100, 200], bw: 20 };
+ let out = text(70, 62, "Company X: cash follows profit", { weight: 700, size: 12.5, fill: C.green }) + text(450, 62, "Company Y: profit up, cash down", { weight: 700, size: 12.5, fill: C.red });
+ out += groupedBars(yrs.map((label, i) => ({ label, values: [X.profit[i], X.ocf[i]] })), series, Object.assign({ x0: 70 }, opt));
+ out += groupedBars(yrs.map((label, i) => ({ label, values: [Yc.profit[i], Yc.ocf[i]] })), series, Object.assign({ x0: 450 }, opt));
+ out += rect(70, 296, 12, 12, C.blue, { rx: 3 }) + text(90, 306, "Net profit", { size: 12 }) + rect(180, 296, 12, 12, C.green, { rx: 3 }) + text(200, 306, "Operating cash flow", { size: 12 });
+ return out;
+})(), "Five-year cash conversion: Company X about 99%, Company Y about 27%. Y's profits are not turning into cash.");
+
+D["seasonal-quarters.svg"] = svg(800, 330, "Quarterly revenue: compare with the same quarter last year (₹ crore, illustrative)", (() => {
+ const q = [["Q3 FY25", 1200], ["Q4 FY25", 900], ["Q1 FY26", 950], ["Q2 FY26", 1000], ["Q3 FY26", 1320]];
+ const x0 = 80, y0 = 90, w = 640, h = 170, max = 1400, slot = w / q.length, bw = 64, Y = v => y0 + h - (v / max) * h;
+ let out = line(x0, Y(0), x0 + w, Y(0), { color: C.line });
+ q.forEach(([label, v], i) => {
+  const cx = x0 + slot * i + slot / 2, festive = i === 0 || i === 4;
+  out += rect(cx - bw / 2, Y(v), bw, Y(0) - Y(v), festive ? C.amber : C.blue, { rx: 4, opacity: festive ? 0.95 : 0.75 });
+  out += text(cx, Y(v) - 8, v.toLocaleString("en-IN"), { anchor: "middle", size: 12, weight: 700 }) + text(cx, y0 + h + 18, label, { anchor: "middle", size: 11.5, fill: C.muted });
+ });
+ const cx = i => x0 + slot * i + slot / 2;
+ out += arrow(cx(3) + 10, Y(1000) - 26, cx(4) - 36, Y(1320) + 8, { color: C.red }) + text(cx(3) + 46, Y(1150) - 24, "+32% QoQ", { anchor: "middle", size: 12.5, weight: 700, fill: C.red });
+ out += line(cx(0), 56, cx(4), 56, { color: C.green, w: 2 }) + line(cx(0), 56, cx(0), Y(1200) - 24, { color: C.green, w: 2 }) + line(cx(4), 56, cx(4), Y(1320) - 24, { color: C.green, w: 2 });
+ out += rect(cx(2) - 92, 44, 184, 24, C.bg, { rx: 6 }) + text(cx(2), 61, "+10% YoY: the fair comparison", { anchor: "middle", size: 12.5, weight: 700, fill: C.green });
+ return out;
+})(), "Amber bars are the festive quarter in both years. QoQ mixes the season with real growth; YoY removes it.");
+
+D["annual-report-reading-plan.svg"] = svg(800, 270, "Reading an annual report in 60 minutes", (() => {
+ const steps = [["0–10 min", "Auditor's report", ["Opinion type", "Key audit matters"], C.red], ["10–20 min", "Statements", ["Five-year trend", "Cash and debt"], C.green], ["20–35 min", "Notes", ["Related parties", "Contingent claims"], C.amber],
+  ["35–45 min", "MD&A", ["Segments, risks", "Promises vs results"], C.blue], ["45–55 min", "Governance", ["Board, auditors", "Pay vs profit"], C.violet], ["55–60 min", "Chairman's letter", ["Tone and claims", "vs last year"], C.muted]];
+ const w = 118, gap = 8, y = 80;
+ let out = "";
+ steps.forEach(([mins, title, lines, color], i) => {
+  const x = 20 + i * (w + gap);
+  out += text(x + w / 2, y - 12, mins, { anchor: "middle", size: 11, weight: 700, fill: color });
+  out += card(x, y, w, 86, title, lines, color);
+  if (i < steps.length - 1) out += arrow(x + w + 1, y + 43, x + w + gap - 1, y + 43);
+ });
+ out += rect(20, 190, 370, 40, "#2a1c20", { stroke: C.red }) + text(36, 215, "Most information per minute: start here", { size: 12, weight: 700, fill: C.red });
+ out += rect(410, 190, 370, 40, C.panel, { stroke: C.line }) + text(426, 215, "Least information per minute: read last", { size: 12, fill: C.muted });
+ return out;
+})(), "The order matters more than the speed: problems usually show up in the audit report and the notes.");
+
+D["shareholding-trend.svg"] = svg(800, 340, "Shareholding over four quarters (% of shares, illustrative)", (() => {
+ const qs = [["Dec", 55, 18, 8, 4, 15, 0], ["Mar", 55, 20, 9, 4, 12, 5], ["Jun", 52, 22, 10, 4, 12, 12], ["Sep", 50, 23, 11, 4, 12, 20]];
+ const cols = [C.blue, C.violet, C.green, C.amber, "#5b6b80"], names = ["Promoter group", "Foreign portfolio investors", "Mutual funds", "Other domestic institutions", "Individuals and others"];
+ const x0 = 60, y0 = 70, h = 210, slot = 110, bw = 62, Y = v => y0 + h - (v / 100) * h;
+ let out = "";
+ qs.forEach(([label, ...vals], i) => {
+  const pledge = vals.pop(), cx = x0 + slot * i + slot / 2;
+  let acc = 0;
+  vals.forEach((v, k) => { out += rect(cx - bw / 2, Y(acc + v) + 1, bw, (v / 100) * h - 2, cols[k], { rx: 2, opacity: 0.9 }); if (v >= 8) out += text(cx, Y(acc + v / 2) + 4, String(v), { anchor: "middle", size: 11, weight: 700, fill: C.bg }); acc += v; });
+  out += text(cx, y0 + h + 18, label, { anchor: "middle", size: 11.5, fill: C.muted });
+  out += text(cx, y0 - 10, `Pledged ${pledge}%`, { anchor: "middle", size: 11, weight: 700, fill: pledge ? C.red : C.muted });
+ });
+ out += legend(530, 90, names.map((n, k) => [n, cols[k]]));
+ out += rect(520, 210, 260, 66, C.panel, { stroke: C.red }) + text(534, 234, "Promoters sell 5 points and pledge", { size: 12, weight: 700 }) + text(534, 254, "20% of the rest, while institutions buy.", { size: 11.5, fill: C.muted });
+ return out;
+})(), "Pledged shares are shown as a % of the promoter group's holding. Read the reasons in exchange announcements.");
+
+D["corporate-actions-compare.svg"] = svg(800, 312, "What corporate actions do to 100 shares at ₹1,000 (holding ₹1,00,000)", (() => {
+ const items = [["Dividend ₹20", "100 shares", "≈ ₹980 each", ["₹98,000 in shares", "+ ₹2,000 cash"], C.green], ["Bonus 1:1", "200 shares", "≈ ₹500 each", ["₹1,00,000", "value unchanged"], C.blue],
+  ["Split 1 into 5", "500 shares", "≈ ₹200 each", ["₹1,00,000", "value unchanged"], C.violet], ["Rights 1 for 5 at ₹800", "120 shares", "≈ ₹967 each", ["₹1,16,000 in shares", "after paying ₹16,000"], C.amber]];
+ const w = 180, gap = 13, y = 70;
+ let out = "";
+ items.forEach(([title, shares, price, value, color], i) => {
+  const x = 20 + i * (w + gap);
+  out += rect(x, y, w, 170, C.panel, { stroke: C.line }) + rect(x, y, w, 4, color, { rx: 2 });
+  out += text(x + w / 2, y + 30, title, { anchor: "middle", weight: 700, size: 13 });
+  out += text(x + w / 2, y + 70, shares, { anchor: "middle", size: 20, weight: 700, fill: color });
+  out += text(x + w / 2, y + 98, price, { anchor: "middle", size: 13, fill: C.text });
+  out += line(x + 16, y + 116, x + w - 16, y + 116, { color: C.line });
+  value.forEach((part, k) => { out += text(x + w / 2, y + 138 + k * 17, part, { anchor: "middle", size: 11.5, fill: k ? C.muted : C.text, weight: k ? 0 : 700 }); });
+ });
+ out += text(400, 268, "Bonus issues and splits change the count and the price, not the value.", { anchor: "middle", size: 12.5, fill: C.text });
+ return out;
+})(), "Prices are the theoretical adjusted prices just after each action, before any market move. Dividends are taxable.");
+
 fs.mkdirSync(OUT, { recursive: true });
 Object.entries(D).forEach(([name, content]) => fs.writeFileSync(path.join(OUT, name), content));
 console.log(`Wrote ${Object.keys(D).length} diagrams to ${OUT}:`, Object.keys(D).join(", "));

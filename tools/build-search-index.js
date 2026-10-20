@@ -16,7 +16,7 @@ const load = files => files.forEach(f => vm.runInContext(fs.readFileSync(path.jo
 // Same order as pages/lesson.html (content only, no UI code).
 load(["lessons.js", "lessons-modules.js", "lessons-foundations.js", "lessons-content-a.js", "lessons-content-b.js", "lessons-content-c.js", "lessons-content-d.js", "lessons-content-e.js",
  "lessons-strategies.js", "lessons-strategy-detail.js", "lessons-extra-en.js", "lessons-extra-hi.js", "lesson-charts.js", "patterns.js", "indicators.js", "patterns-extra.js",
- "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-updates.js", "lessons-market-rules.js",
+ "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js", "lessons-updates.js", "lessons-market-rules.js",
  "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js"]);
 vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS };", ctx);
 const { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS } = ctx.__;
