@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Practise trading NSE stocks with virtual money: a broker-style terminal with real delayed prices, charts, indicators, a screener, strategy backtesting, bar replay and a trading journal.">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="icon" href="../images/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="../images/favicon-64.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MarketPathAcademy">
+  <meta property="og:title" content="Paper trading — MarketPathAcademy">
+  <meta property="og:description" content="Practise trading NSE stocks with virtual money: charts, indicators, screener, backtesting, bar replay and a trading journal.">
+  <meta property="og:image" content="../images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Paper trading — MarketPathAcademy</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/features.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="MarketPathAcademy home"><img class="brand-full brand-on-dark" src="../images/logo-horizontal-dark.png" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="../images/logo-horizontal.png" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav id="mainNav" class="main-nav" aria-label="Main navigation">
+      <a href="learn.html">Learn</a>
+      <a href="paper-trading.html">Paper trading</a>
+      <a href="../pages/calculators.html">Calculators</a>
+      <a href="../pages/glossary.html">Glossary</a>
+    </nav>
+    <label class="language-picker"><span class="sr-only">Choose language</span>
+      <select id="languageSelect" aria-label="Choose language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </label>
+  </header>
+
+  <main id="main" class="paper-page">
+    <section class="section paper-section paper-page-section" id="paper">
+      <div class="section-heading"><div><div class="eyebrow">PAPER TRADING · PRACTICE ONLY</div><h1>Your practice trading terminal</h1><p>A broker-style trading window with virtual money: build watchlists, place orders, read charts with indicators and drawings, and track holdings, positions and funds. No real money and no broker are involved.</p></div><span class="pill pill-outline" id="feedBadge">SIMULATED</span></div>
+      <div class="pt" id="paperApp" data-view="chart">
+        <header class="pt-top">
+          <div class="pt-indices" id="ptIndices" aria-label="Market indices"></div>
+          <nav class="pt-nav" id="ptNav" role="tablist" aria-label="Account sections">
+            <button type="button" role="tab" class="pt-navtab pt-mobile-only" data-view="watchlist">Watchlist</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="dashboard">Dashboard</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="orders">Orders</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="holdings">Holdings</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="positions">Positions</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="funds">Funds</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="portfolio">Portfolio</button>
+            <button type="button" role="tab" class="pt-navtab" data-view="history">Trade history</button>
+          </nav>
+          <div class="pt-tools">
+            <button type="button" class="pp-btn pt-icon" id="ppSideToggle" aria-pressed="false" title="Hide the watchlist">⇤</button>
+            <button type="button" class="pp-btn pt-icon" id="ppExpand" aria-pressed="false" title="Full screen">⤢</button>
+          </div>
+        </header>
+        <div class="pp-keyrow" id="ppKeyRow" hidden>
+          <input id="ppKey" type="password" autocomplete="off" placeholder="Finnhub API key (free at finnhub.io)" aria-label="Finnhub API key">
+          <button type="button" class="btn btn-secondary" id="ppSaveKey">Save key</button>
+        </div>
+        <div class="pt-body">
+          <aside class="pt-watch" aria-label="Watchlist">
+            <div class="pp-search pt-search">
+              <label class="sr-only" for="ppSearch">Search stocks to add</label>
+              <span class="pp-search-icon" aria-hidden="true">⌕</span>
+              <input id="ppSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search eg: infy, tcs, reliance" role="combobox" aria-expanded="false" aria-controls="ppSearchList" aria-autocomplete="list">
+              <ul id="ppSearchList" class="pp-search-list" role="listbox" aria-label="Matching stocks" hidden></ul>
+            </div>
+            <label class="pt-feed"><span>Prices</span><select id="ppFeed" class="pp-select" aria-label="Price feed"></select></label>
+            <div class="pt-watch-head"><strong id="ptWatchName">Watchlist 1</strong><small id="ptWatchCount"></small></div>
+            <ul class="pt-watch-list" id="ppWatch" aria-label="Watchlist stocks"></ul>
+            <div class="pt-watch-tabs" id="ptWatchTabs" role="tablist" aria-label="Watchlists"></div>
+          </aside>
+          <div class="pt-work">
+            <nav class="pt-toolnav" id="ptToolNav" role="tablist" aria-label="Tools">
+              <button type="button" role="tab" class="pt-navtab" data-view="chart"><span aria-hidden="true">📈</span> Chart</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="screener"><span aria-hidden="true">🔎</span> Screener</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="strategy"><span aria-hidden="true">🧪</span> Strategy &amp; backtest</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="replay"><span aria-hidden="true">⏪</span> Bar replay</button>
+              <button type="button" role="tab" class="pt-navtab" data-view="journal"><span aria-hidden="true">📓</span> Journal</button>
+            </nav>
+            <div class="pt-pane pt-chart-pane" id="ptChartPane">
+              <div class="pp-quote-row">
+                <div class="pp-sym"><h3 id="ppSymTitle">—</h3><small id="ppSymName"></small></div>
+                <button type="button" class="pp-btn pp-star" id="ppStar" aria-pressed="false">☆ Add to watchlist</button>
+                <button type="button" class="pt-src" id="ptSource" data-disclose="source" title="Where these prices come from"></button>
+                <div class="pp-quote"><strong id="ppPrice">—</strong><span id="ppChange" class="pp-change"></span></div>
+                <div class="pt-trade-btns"><button type="button" class="pt-buy" data-trade="buy">Buy</button><button type="button" class="pt-sell" data-trade="sell">Sell</button></div>
+              </div>
+              <div class="pp-chartbar">
+                <details class="pp-menu pp-tf-menu"><summary class="pp-btn" id="ppTfBtn" aria-label="Timeframe">5m</summary><div class="pp-menu-body pp-tf-list" id="ppTf" role="group" aria-label="Timeframe"></div></details>
+                <label><span class="sr-only">Chart type</span><select id="ppChartType" class="pp-select" aria-label="Chart type"><option value="candles">Candles</option><option value="ha">Heikin Ashi</option><option value="bars">OHLC bars</option><option value="line">Line</option><option value="area">Area</option></select></label>
+                <details class="pp-menu"><summary class="pp-btn">ƒx Indicators</summary><div class="pp-menu-body" id="ppIndList"></div></details>
+              </div>
+              <div class="pp-draw" id="ppDraw" role="toolbar" aria-label="Drawing tools">
+                <button type="button" data-tool="cursor" class="active" aria-pressed="true" title="Cursor: pan and zoom">↖<span>Cursor</span></button>
+                <button type="button" data-tool="trend" aria-pressed="false" title="Trend line">╱<span>Trend</span></button>
+                <button type="button" data-tool="hline" aria-pressed="false" title="Horizontal line">―<span>Level</span></button>
+                <button type="button" data-tool="rect" aria-pressed="false" title="Rectangle zone">▭<span>Zone</span></button>
+                <button type="button" data-tool="fib" aria-pressed="false" title="Fibonacci retracement">≣<span>Fib</span></button>
+                <button type="button" data-tool="rr" aria-pressed="false" title="Long or short position: entry, stop and a 1:2 target">⇅<span>Long/Short</span></button>
+                <button type="button" data-tool="erase" aria-pressed="false" title="Eraser: click a drawing to delete it">⌫<span>Erase</span></button>
+                <span class="pp-draw-sep" aria-hidden="true"></span>
+                <button type="button" data-action="undo" title="Undo last drawing">↶<span>Undo</span></button>
+                <button type="button" data-action="clear" title="Clear all drawings on this stock">✕<span>Clear</span></button>
+              </div>
+              <p class="pp-draw-hint" id="ppDrawHint" aria-live="polite"></p>
+              <div class="pp-chart-wrap" id="ppChartWrap">
+                <div class="pp-legend" id="ppLegend"></div>
+                <div id="ppChart" class="pp-chart" role="img" aria-label="Price chart for the selected stock"></div>
+                <svg id="ppDrawLayer" class="pp-draw-layer" aria-hidden="true"></svg>
+              </div>
+              <div class="pp-ranges" id="ppRanges" role="group" aria-label="Date range"></div>
+              <p class="demo-note" id="ppNote"></p>
+            </div>
+            <div class="pt-pane pt-screener-pane" id="ptScreenerPane" hidden></div>
+            <div class="pt-pane pt-strategy-pane" id="ptStrategyPane" hidden></div>
+            <div class="pt-pane pt-replay-pane" id="ptReplayPane" hidden tabindex="-1"></div>
+            <div class="pt-pane pt-journal-pane" id="ptJournalPane" hidden></div>
+            <div class="pt-pane pt-account-pane" id="ppAccount" hidden>
+              <div class="ppa-body" id="ppa-body" role="tabpanel" tabindex="0"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pt-toast" id="ptToast" role="status" aria-live="polite" hidden></div>
+        <div class="pt-modal pt-info" id="ptInfo" hidden>
+          <div class="pt-order pt-info-box" role="dialog" aria-modal="true" aria-labelledby="ptInfoTitle">
+            <header class="pt-info-head"><strong id="ptInfoTitle"></strong><button type="button" class="pp-btn pt-icon" data-close-info aria-label="Close">✕</button></header>
+            <div class="pt-info-body" id="ptInfoBody"></div>
+          </div>
+        </div>
+        <div class="pt-modal" id="ptOrder" hidden>
+          <div class="pt-order" role="dialog" aria-modal="true" aria-labelledby="ptOrderTitle">
+            <form id="ppOrderForm" class="pp-order">
+              <header class="pt-order-head">
+                <div><strong id="ptOrderTitle">Buy</strong><small id="ptOrderSub"></small></div>
+                <div class="pt-side-switch" role="radiogroup" aria-label="Order side">
+                  <label><input type="radio" name="ppSide" value="buy" checked><span>Buy</span></label>
+                  <label><input type="radio" name="ppSide" value="sell"><span>Sell</span></label>
+                </div>
+              </header>
+              <div class="pt-order-body">
+                <div class="pp-sides pp-product" id="ppProductRow" role="radiogroup" aria-label="Product">
+                  <label title="Delivery (CNC): shares go to your demat; capital gains tax applies"><input type="radio" name="ppProduct" value="delivery" checked><span>Delivery <small>CNC</small></span></label>
+                  <label title="Intraday (MIS): bought and sold the same day; taxed as business income"><input type="radio" name="ppProduct" value="intraday"><span>Intraday <small>MIS</small></span></label>
+                </div>
+                <div class="pt-order-grid">
+                  <label class="pt-field"><span>Qty.</span><input id="ppQty" type="number" min="1" step="1" value="1"></label>
+                  <label class="pt-field" id="ppLimitRow" hidden><span>Price</span><input id="ppLimit" type="number" min="0.05" step="0.05"></label>
+                  <label class="pt-field"><span>Order type</span><select id="ppType"><option value="market">Market</option><option value="limit">Limit</option></select></label>
+                </div>
+                <p class="pp-estimate" id="ppEstimate"></p>
+                <details class="pp-box pp-charges" id="ppChargesBox"><summary>Charges breakdown <button type="button" class="pt-info-btn" data-disclose="charges" aria-label="How charges are calculated">ⓘ</button></summary><div id="ppChargeList"></div></details>
+                <p class="pp-msg" id="ppMsg" aria-live="polite"></p>
+              </div>
+              <footer class="pt-order-foot">
+                <button type="submit" class="pt-submit" id="ppSubmit">Buy</button>
+                <button type="button" class="btn btn-secondary" data-close-order>Cancel</button>
+              </footer>
+            </form>
+          </div>
+        </div>
+      </div>
+      <p class="fine-print pt-fine">Virtual money only. Market orders fill at the displayed price with no slippage. No leverage or short selling is simulated. Tax is an estimate that treats all charges as deductible. Nothing here is investment or tax advice.</p>
+    </section>
+  </main>
+
+
+  <footer class="site-footer"><a class="brand footer-brand" href="../index.html"><img class="brand-full brand-on-dark" src="../images/logo-horizontal-dark.png" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="../images/logo-horizontal.png" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a><p data-ui="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="../index.html#about" data-ui="disclaimerLink">Disclaimer</a><a href="privacy.html" data-ui="privacyLink">Privacy policy</a><a href="contact.html" data-ui="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPathAcademy. Educational content only.</small></footer>
+  <script src="../js/site-chrome.js"></script>
+  <script src="../js/site-search.js"></script>
+  <script src="../js/index-ribbon.js"></script>
+  <script src="../js/shared.js"></script>
+  <!-- Loads the chart library and the paper-trading modules (js/paper-loader.js). -->
+  <script src="../js/paper-loader.js"></script>
+</body>
+</html>

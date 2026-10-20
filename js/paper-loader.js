@@ -1,36 +1,21 @@
-// Loads the paper-trading code (about 330 KB with the chart library and the NSE stock list) only when the
-// section is about to come into view, or when someone opens #paper, so the rest of the homepage loads faster.
-// Scripts are added with async = false: they download in parallel but run in this order.
+// Loads the paper-trading code (the chart library, the NSE stock list and the terminal modules) on
+// pages/paper-trading.html. Scripts are added with async = false: they download in parallel but run in this order.
+// Paths go through MPChrome.url so they resolve from the site root whichever folder the page is in.
 (function () {
  const section = document.getElementById("paper");
  if (!section) return;
+ const at = p => (window.MPChrome ? MPChrome.url(p) : p);
  const SCRIPTS = [
   "https://unpkg.com/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js",
-  "js/paper-symbols.js", "js/paper-charges.js", "js/paper-indicators.js", "js/paper-drawings.js",
-  "js/paper-costs.js", "js/paper-journal.js", "js/paper-replay.js", "js/paper-strategy.js", "js/paper-backtest.js", "js/paper-screener.js", "js/paper-account.js", "js/paper-trading.js"
+  ...["paper-symbols", "paper-charges", "paper-indicators", "paper-drawings", "paper-costs", "paper-journal", "paper-replay",
+   "paper-strategy", "paper-backtest", "paper-screener", "paper-account", "paper-trading"].map(n => at(`js/${n}.js`))
  ];
- let started = false;
- function load() {
-  if (started) return;
-  started = true;
-  if (observer) observer.disconnect();
-  window.removeEventListener("hashchange", onHash);
-  const note = document.getElementById("ppNote");
-  if (note) note.textContent = "Loading paper trading…";
-  SCRIPTS.forEach(src => {
-   const s = document.createElement("script");
-   s.src = src;
-   s.async = false;
-   document.body.appendChild(s);
-  });
- }
- // #paper opens the terminal; #screener, #strategy, #replay and #journal open it on that tool (site menu links).
- const HASHES = ["#paper", "#screener", "#strategy", "#replay", "#journal"];
- const onHash = () => { if (HASHES.includes(location.hash)) load(); };
- const observer = "IntersectionObserver" in window
-  ? new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) load(); }, { rootMargin: "800px 0px" })
-  : null;
- if (observer) observer.observe(section); else load();
- window.addEventListener("hashchange", onHash);
- onHash();
+ const note = document.getElementById("ppNote");
+ if (note) note.textContent = "Loading paper trading…";
+ SCRIPTS.forEach(src => {
+  const s = document.createElement("script");
+  s.src = src;
+  s.async = false;
+  document.body.appendChild(s);
+ });
 })();

@@ -1,0 +1,145 @@
+/* Learning-platform homepage (index.html), the Learn page (pages/learn.html) and the Paper trading page heading. */
+
+/* ---------- Hero ---------- */
+.home-hero{max-width:var(--max);margin:auto;padding:72px 24px 24px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:48px;align-items:center}
+.home-hero .eyebrow{display:flex;align-items:center;gap:8px}
+.home-hero h1{font-family:Manrope,sans-serif;font-size:clamp(40px,5vw,62px);line-height:1.05;letter-spacing:-2px;margin:0 0 20px}
+.home-hero .hero-subtitle{max-width:560px}
+.home-checks{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:#a9b8cb}
+.home-checks li::before{content:"✓";color:var(--green);font-weight:800;margin-right:7px}
+.home-path-card{background:linear-gradient(160deg,#142238,#0f1828);border:1px solid #2b3d54;border-radius:20px;padding:22px;box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.hpc-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-bottom:14px;border-bottom:1px solid #24344b}
+.hpc-head small{display:block;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#8fa2b8;margin-bottom:4px}
+.hpc-head strong{font-family:Manrope,sans-serif;font-size:17px}
+.hpc-ring{width:84px;height:84px;flex:none}
+.hpc-ring circle{fill:none;stroke-width:8}
+.hpc-track{stroke:#24344b}
+.hpc-fill{stroke:var(--green);stroke-linecap:round;transform:rotate(-90deg);transform-origin:42px 42px;transition:stroke-dashoffset .6s}
+.hpc-ring text{font-family:Manrope,sans-serif;font-size:16px;font-weight:800;fill:#e7edf5}
+.hpc-list{list-style:none;margin:8px 0 0;padding:0}
+.hpc-list li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1d2c42;font-size:14px}
+.hpc-list li:last-child{border-bottom:0}
+.hpc-list a{flex:1;min-width:0;color:#d3dce8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hpc-list a:hover{color:var(--green)}
+.hpc-dot{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;border:1px solid #31435b;color:#8fa2b8}
+.hpc-list li.done .hpc-dot{background:var(--green);border-color:var(--green);color:#071b1b}
+.hpc-list li.now .hpc-dot{border-color:var(--green);color:var(--green);box-shadow:0 0 0 4px rgba(72,224,176,.15)}
+.hpc-list li.now a{color:#fff;font-weight:700}
+.hpc-list em{flex:none;font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:2px 8px;border-radius:999px;background:#193c3b;color:#7df1c7}
+.hpc-list em.ok{background:transparent;color:#8fa2b8}
+.hpc-go{width:100%;margin-top:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;text-align:center}
+
+/* ---------- Stats ---------- */
+.home-stats{max-width:var(--max);margin:24px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.home-stats div,.learn-stats div{border:1px solid #26384e;border-radius:14px;padding:16px 18px;background:#101a2a}
+.home-stats strong,.learn-stats strong{display:block;font-family:Manrope,sans-serif;font-size:28px;color:var(--green);line-height:1.1}
+.home-stats span,.learn-stats span{font-size:13px;color:#9caec4}
+
+/* ---------- Learning paths ---------- */
+.track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.track-card{display:flex;flex-direction:column;gap:10px;background:linear-gradient(160deg,#121e30,#101a2a);border:1px solid #26384e;border-top:4px solid var(--green);border-radius:16px;padding:22px}
+.track-intermediate{border-top-color:#45a9d9}
+.track-advanced{border-top-color:#a994ff}
+.track-top{display:flex;justify-content:space-between;align-items:center}
+.track-step{font-family:Manrope,sans-serif;font-size:30px;font-weight:800;color:#2b3d54}
+.track-card h3{font-family:Manrope,sans-serif;font-size:21px;margin:0}
+.track-card p{margin:0;font-size:14px;line-height:1.6;color:#a9b8cb}
+.track-list{margin:4px 0 0;padding-left:18px;font-size:13.5px;line-height:1.9;color:#c7d3e2;flex:1}
+.track-list .more{list-style:none;margin-left:-18px;color:#8fa2b8}
+.track-progress small{display:block;font-size:12px;color:#8fa2b8;margin-top:6px}
+.track-card .btn{margin-top:6px}
+
+/* ---------- How it works ---------- */
+.how-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:none}
+.how-steps li{position:relative;background:#101a2a;border:1px solid #26384e;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.how-num{position:absolute;top:16px;right:18px;font-family:Manrope,sans-serif;font-size:13px;font-weight:800;color:#5d7088}
+.how-icon{font-size:28px}
+.how-steps h3{font-family:Manrope,sans-serif;font-size:18px;margin:4px 0 0}
+.how-steps p{margin:0;font-size:13.5px;line-height:1.6;color:#a9b8cb;flex:1}
+.how-steps a{font-size:13px;font-weight:700;color:var(--green)}
+
+/* ---------- Practice tools ---------- */
+.tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tool-card{display:flex;flex-direction:column;gap:8px;background:#101a2a;border:1px solid #26384e;border-radius:16px;padding:22px;color:inherit;transition:transform .2s,border-color .2s}
+.tool-card:hover{transform:translateY(-3px);border-color:#2e796b}
+.tool-card:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.tool-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:20px;font-weight:800}
+.tool-icon.green{background:#193c3b;color:#48e0b0}
+.tool-icon.blue{background:#152c45;color:#7ec6ee}
+.tool-icon.purple{background:#28224a;color:#c2b4ff}
+.tool-icon.amber{background:#3a2c18;color:#ffbf78}
+.tool-card h3{font-family:Manrope,sans-serif;font-size:17px;margin:6px 0 0}
+.tool-card p{margin:0;font-size:13.5px;line-height:1.6;color:#a9b8cb;flex:1}
+.tool-go{font-size:13px;font-weight:700;color:var(--green)}
+
+/* ---------- Certificate band ---------- */
+.cert-band{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:36px;align-items:center;border:1px solid #2e796b;border-radius:22px;padding:36px 40px;background:radial-gradient(circle at 85% 30%,rgba(72,224,176,.14),transparent 55%),linear-gradient(135deg,#111d31,#0f1828)}
+.cert-copy h2{font-family:Manrope,sans-serif;font-size:clamp(26px,3vw,34px);letter-spacing:-1px;margin:0 0 16px}
+.cert-points{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:10px;font-size:14.5px;color:#c7d3e2}
+.cert-points li::before{content:"✓";color:var(--green);font-weight:800;margin-right:10px}
+.cert-mock{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:#ffffff;color:#0f2a3f;border:6px double #0f2a3f;border-radius:10px;padding:22px 22px 26px;transform:rotate(-2deg);box-shadow:0 24px 50px rgba(0,0,0,.4)}
+.cert-mock img{width:56px;height:56px}
+.cert-mock small{font-size:10px;letter-spacing:2px;font-weight:800;color:#178a4a}
+.cert-mock i{font-family:Georgia,serif;font-size:13px;color:#3d4f66}
+.cert-mock strong{font-family:Georgia,serif;font-size:26px;border-bottom:1px solid #c9b98a;padding:0 18px 4px}
+.cert-mock span{font-size:11.5px;color:#3d4f66;max-width:220px}
+.cert-seal{position:absolute;right:-14px;bottom:-14px;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:11px;line-height:1.2;color:#fff;background:linear-gradient(135deg,#1f9d7a,#2f7fc1);border:3px solid #fff;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+
+/* ---------- Learn page ---------- */
+.learn-page{max-width:var(--max);margin:auto;padding:44px 24px 20px}
+.learn-hero{margin-bottom:22px}
+.learn-hero .lesson-summary{max-width:760px}
+.learn-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.learn-tools{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:6px 0 14px}
+.learn-tools .level-tabs{margin:0}
+.level-tab small{display:inline-block;margin-left:4px;padding:0 6px;border-radius:999px;background:rgba(127,148,173,.18);font-size:11px}
+
+/* ---------- Paper trading page ---------- */
+.paper-page-section{padding-top:40px}
+.paper-page-section .section-heading h1{font-family:Manrope,sans-serif;font-size:clamp(28px,3.2vw,40px);line-height:1.15;letter-spacing:-1.3px;margin:0 0 10px}
+
+/* ---------- Responsive ---------- */
+@media(max-width:1000px){
+ .home-hero{grid-template-columns:minmax(0,1fr);padding-top:48px;gap:30px}
+ .how-steps,.tool-grid{grid-template-columns:repeat(2,1fr)}
+ .cert-band{grid-template-columns:minmax(0,1fr);padding:28px}
+ .cert-mock{max-width:360px;justify-self:center}
+}
+@media(max-width:900px){.track-grid{grid-template-columns:minmax(0,1fr)}.home-stats,.learn-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){
+ .home-hero{padding:36px 18px 10px}
+ .home-hero h1{letter-spacing:-1.2px}
+ .home-stats{padding:0 18px}
+ .how-steps,.tool-grid{grid-template-columns:minmax(0,1fr)}
+ .learn-page{padding:28px 18px 10px}
+ .home-stats strong,.learn-stats strong{font-size:23px}
+ .cert-band{padding:22px 18px}
+}
+
+/* ---------- Light theme ---------- */
+html[data-theme="light"] :is(.home-path-card,.track-card,.how-steps li,.tool-card,.home-stats div,.learn-stats div){background:#ffffff;border-color:#d5dde8;box-shadow:0 10px 30px rgba(19,35,58,.06)}
+/* The level colours on top of each path card (more specific than the shared light-theme border rule above). */
+html[data-theme="light"] .track-grid .track-card{border-top-color:#0b9d74}
+html[data-theme="light"] .track-grid .track-intermediate{border-top-color:#2f7fc1}
+html[data-theme="light"] .track-grid .track-advanced{border-top-color:#6a4fd1}
+html[data-theme="light"] :is(.home-checks,.track-card p,.how-steps p,.tool-card p,.home-stats span,.learn-stats span,.track-progress small,.hpc-head small){color:#4a5b70}
+html[data-theme="light"] :is(.hpc-list a,.track-list,.cert-points){color:#13233a}
+html[data-theme="light"] .hpc-list li.now a{color:#0f1b2d}
+html[data-theme="light"] :is(.hpc-head,.hpc-list li){border-color:#e6ebf2}
+html[data-theme="light"] .hpc-track{stroke:#e1e7f0}
+html[data-theme="light"] .hpc-ring text{fill:#0f1b2d}
+html[data-theme="light"] .hpc-dot{border-color:#c5d0de;color:#5a6b80}
+html[data-theme="light"] .hpc-list em{background:#d9f5ec;color:#0b6b50}
+html[data-theme="light"] :is(.home-checks li::before,.cert-points li::before,.how-steps a,.tool-go){color:#0b7d5e}
+html[data-theme="light"] :is(.home-stats strong,.learn-stats strong){color:#0b7d5e}
+html[data-theme="light"] .track-step{color:#d5dde8}
+html[data-theme="light"] .how-num{color:#8a99ad}
+html[data-theme="light"] .tool-icon.green{background:#d9f5ec;color:#0b7d5e}
+html[data-theme="light"] .tool-icon.blue{background:#e3f1fa;color:#1d5f86}
+html[data-theme="light"] .tool-icon.purple{background:#ece8fb;color:#5b3fc4}
+html[data-theme="light"] .tool-icon.amber{background:#fff4e5;color:#8a4a10}
+html[data-theme="light"] .tool-card:hover{border-color:#8fd9bd}
+html[data-theme="light"] .cert-band{border-color:#8fd9bd;background:radial-gradient(circle at 85% 30%,rgba(11,157,116,.10),transparent 55%),linear-gradient(135deg,#f1faf6,#ffffff)}
+html[data-theme="light"] .level-tab small{background:rgba(19,35,58,.08)}
+html[data-theme="light"] .track-step{color:#6f8096}
+html[data-theme="light"] .track-list .more{color:#5a6b80}

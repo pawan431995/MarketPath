@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Learn the stock market from beginner basics to advanced investing and trading. Explore charts, SIP, technical analysis, fundamental analysis, intraday, swing trading and F&O.">
+  <meta name="description" content="MarketPathAcademy: a free stock market learning platform. Structured courses from basics to options, tax and trading psychology in English and Hindi, with quizzes, paper trading, calculators and a final test with a certificate.">
   <meta name="theme-color" content="#0b1220">
   <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="images/favicon-64.png" type="image/png" sizes="64x64">
@@ -18,6 +18,7 @@
   <title>MarketPathAcademy — Learn the Stock Market</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/features.css">
+  <link rel="stylesheet" href="css/home.css">
   <script src="js/theme.js"></script>
 </head>
 <body>
@@ -26,11 +27,10 @@
     <a class="brand" href="#" aria-label="MarketPathAcademy home"><img class="brand-full brand-on-dark" src="images/logo-horizontal-dark.png" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="images/logo-horizontal.png" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav id="mainNav" class="main-nav" aria-label="Main navigation">
-      <a href="index.html#courses">Learn</a>
-      <a href="index.html#paper">Paper trading</a>
+      <a href="pages/learn.html">Learn</a>
+      <a href="pages/paper-trading.html">Paper trading</a>
       <a href="pages/calculators.html">Calculators</a>
       <a href="pages/glossary.html">Glossary</a>
-      <a href="index.html#about">About</a>
     </nav>
     <label class="language-picker"><span class="sr-only">Choose language</span>
       <select id="languageSelect" aria-label="Choose language">
@@ -40,39 +40,26 @@
     </label>
   </header>
 
-  <main id="main">
-    <section class="hero">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <div class="eyebrow"><span class="live-dot"></span><span data-i18n="heroEyebrow">YOUR STOCK MARKET LEARNING PATH</span></div>
-          <h1 data-i18n="heroTitle">Understand the market.<br><span class="gradient-text">Build your own edge.</span></h1>
-          <p class="hero-subtitle" data-i18n="heroSubtitle">A structured, practical guide from your first investment to advanced market concepts — in plain language.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#courses" data-i18n="startLearning">Start learning <span>↗</span></a>
-            <a class="btn btn-secondary" href="#paper" data-i18n="exploreChart">Try paper trading</a>
-          </div>
-          <div class="hero-proof"><div class="avatar-stack"><span>₹</span><span>↗</span><span>∿</span></div><span data-i18n="heroFoot">Learn at your pace · Beginner to advanced</span></div>
+  <main id="main" class="home">
+    <section class="home-hero">
+      <div class="home-hero-copy">
+        <div class="eyebrow"><span class="pulse-dot"></span><span data-i18n="heroEyebrow">FREE STOCK MARKET COURSE · ENGLISH &amp; हिन्दी</span></div>
+        <h1 data-i18n="heroTitle">Learn the stock market,<br><span class="gradient-text">one step at a time.</span></h1>
+        <p class="hero-subtitle" data-i18n="heroSubtitle">Structured modules take you from your first share to options, tax and trading psychology. Practise every idea, trade with virtual money, then earn your certificate.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="pages/learn.html" data-i18n="heroStart">Start learning free →</a>
+          <a class="btn btn-secondary" href="pages/test.html" data-i18n="heroTest">Take the final test</a>
         </div>
-        <div class="hero-visual" aria-label="Illustrative market chart">
-          <div class="chart-card">
-            <div class="chart-top"><div><span class="muted-label" data-i18n="marketIllustration">MARKET SNAPSHOT · ILLUSTRATION</span><h3><span data-i18n="sampleIndex">Sample index</span> <span class="pill">DEMO</span></h3></div><span class="chart-change">↗ +1.28%</span></div>
-            <div class="chart-price">24,850.40 <span>+314.25</span></div>
-            <svg class="hero-chart" viewBox="0 0 520 210" role="img" aria-label="Illustrative upward stock price line">
-              <defs><linearGradient id="fillChart" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#39d9a7" stop-opacity=".25"/><stop offset="1" stop-color="#39d9a7" stop-opacity="0"/></linearGradient></defs>
-              <g class="grid-lines"><path d="M0 35H520 M0 80H520 M0 125H520 M0 170H520"/></g>
-              <path class="chart-fill" d="M0 160 L25 145 L48 155 L70 116 L93 130 L116 102 L140 118 L163 92 L188 106 L210 75 L235 90 L260 58 L282 82 L306 65 L330 78 L352 44 L375 56 L398 33 L420 49 L444 25 L466 43 L490 20 L520 29 L520 210 L0 210Z"/>
-              <path class="chart-line" d="M0 160 L25 145 L48 155 L70 116 L93 130 L116 102 L140 118 L163 92 L188 106 L210 75 L235 90 L260 58 L282 82 L306 65 L330 78 L352 44 L375 56 L398 33 L420 49 L444 25 L466 43 L490 20 L520 29"/>
-              <circle cx="520" cy="29" r="5" class="chart-point"/>
-            </svg>
-            <div class="chart-labels"><span>09:30</span><span>11:00</span><span>12:30</span><span>14:00</span><span>15:30</span></div>
-            <p class="demo-note" data-i18n="demoNote">Illustrative data only — not live market prices.</p>
-          </div>
-          <div class="floating-note note-one"><span class="note-icon green">↗</span><div><strong>Risk first</strong><small>Protect your capital</small></div></div>
-          <div class="floating-note note-two"><span class="note-icon purple">◎</span><div><strong>Learn by doing</strong><small>Practice the concepts</small></div></div>
-        </div>
+        <ul class="home-checks">
+          <li data-i18n="check1">No sign-up needed</li>
+          <li data-i18n="check2">Progress saved on your device</li>
+          <li data-i18n="check3">Beginner to advanced</li>
+        </ul>
       </div>
-      <div class="hero-bottom"><span><b>01</b> <span data-i18n="heroBottom1">Learn the language</span></span><span><b>02</b> <span data-i18n="heroBottom2">Understand the numbers</span></span><span><b>03</b> <span data-i18n="heroBottom3">Manage risk thoughtfully</span></span></div>
+      <aside class="home-path-card" id="heroCard" aria-live="polite"></aside>
     </section>
+
+    <section class="home-stats" aria-label="What is inside" id="homeStats"></section>
 
     <!-- ADS-OFF: ad space hidden for now. To show it again, remove this comment wrapper.
     <div class="ad-wrap" aria-label="Advertisement">
@@ -81,199 +68,56 @@
     </div>
     -->
 
-
-    <section class="section" id="courses">
-      <div class="section-heading">
-        <div><div class="eyebrow">THE LEARNING LIBRARY</div><h2 data-i18n="coursesTitle">Choose your learning path</h2><p data-i18n="coursesSubtitle">Move in order, or jump straight to the topic you need.</p></div>
-        <div class="search-box"><span>⌕</span><input id="courseSearch" type="search" placeholder="Search topics..." data-i18n-placeholder="searchPlaceholder" aria-label="Search learning topics"></div>
-      </div>
-      <div id="continueBox" class="continue-box" aria-live="polite"></div>
-      <div class="level-tabs" role="tablist" aria-label="Filter courses">
-        <button class="level-tab active" data-level="all" data-i18n="allLevels">All levels</button>
-        <button class="level-tab" data-level="Beginner" data-i18n="beginner">Beginner</button>
-        <button class="level-tab" data-level="Intermediate" data-i18n="intermediate">Intermediate</button>
-        <button class="level-tab" data-level="Advanced" data-i18n="advanced">Advanced</button>
-      </div>
-      <p id="resultCount" class="result-count" aria-live="polite"></p>
-      <div id="courseGrid" class="course-grid"></div>
-      <p id="noResults" class="no-results" hidden>No topics match your search. Try another keyword.</p>
-      <a class="test-cta" href="pages/test.html"><span class="test-cta-icon" aria-hidden="true">🎓</span><span class="test-cta-text"><strong data-i18n="testCtaTitle">Finished the course? Test yourself.</strong><span data-i18n="testCtaText">Take the final test: 100 to 150 questions from every module. Score 70% to earn your MarketPathAcademy certificate.</span></span><span class="test-cta-go" data-i18n="testCtaGo">Take the final test →</span></a>
+    <section class="section" id="paths">
+      <div class="section-heading"><div><div class="eyebrow" data-i18n="pathsEyebrow">LEARNING PATHS</div><h2 data-i18n="pathsTitle">Choose your path</h2><p data-i18n="pathsText">Each path builds on the one before it. Start at the beginning, or jump in at your level.</p></div></div>
+      <div class="track-grid" id="trackGrid"></div>
     </section>
 
-    <section class="section paper-section" id="paper">
-      <div class="section-heading"><div><div class="eyebrow">PAPER TRADING · PRACTICE ONLY</div><h2>Your practice trading terminal</h2><p>A broker-style trading window with virtual money: build watchlists, place orders, read charts with indicators and drawings, and track holdings, positions and funds. No real money and no broker are involved.</p></div><span class="pill pill-outline" id="feedBadge">SIMULATED</span></div>
-      <div class="pt" id="paperApp" data-view="chart">
-        <header class="pt-top">
-          <div class="pt-indices" id="ptIndices" aria-label="Market indices"></div>
-          <nav class="pt-nav" id="ptNav" role="tablist" aria-label="Account sections">
-            <button type="button" role="tab" class="pt-navtab pt-mobile-only" data-view="watchlist">Watchlist</button>
-            <button type="button" role="tab" class="pt-navtab" data-view="dashboard">Dashboard</button>
-            <button type="button" role="tab" class="pt-navtab" data-view="orders">Orders</button>
-            <button type="button" role="tab" class="pt-navtab" data-view="holdings">Holdings</button>
-            <button type="button" role="tab" class="pt-navtab" data-view="positions">Positions</button>
-            <button type="button" role="tab" class="pt-navtab" data-view="funds">Funds</button>
-            <button type="button" role="tab" class="pt-navtab" data-view="portfolio">Portfolio</button>
-            <button type="button" role="tab" class="pt-navtab" data-view="history">Trade history</button>
-          </nav>
-          <div class="pt-tools">
-            <button type="button" class="pp-btn pt-icon" id="ppSideToggle" aria-pressed="false" title="Hide the watchlist">⇤</button>
-            <button type="button" class="pp-btn pt-icon" id="ppExpand" aria-pressed="false" title="Full screen">⤢</button>
-          </div>
-        </header>
-        <div class="pp-keyrow" id="ppKeyRow" hidden>
-          <input id="ppKey" type="password" autocomplete="off" placeholder="Finnhub API key (free at finnhub.io)" aria-label="Finnhub API key">
-          <button type="button" class="btn btn-secondary" id="ppSaveKey">Save key</button>
-        </div>
-        <div class="pt-body">
-          <aside class="pt-watch" aria-label="Watchlist">
-            <div class="pp-search pt-search">
-              <label class="sr-only" for="ppSearch">Search stocks to add</label>
-              <span class="pp-search-icon" aria-hidden="true">⌕</span>
-              <input id="ppSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search eg: infy, tcs, reliance" role="combobox" aria-expanded="false" aria-controls="ppSearchList" aria-autocomplete="list">
-              <ul id="ppSearchList" class="pp-search-list" role="listbox" aria-label="Matching stocks" hidden></ul>
-            </div>
-            <label class="pt-feed"><span>Prices</span><select id="ppFeed" class="pp-select" aria-label="Price feed"></select></label>
-            <div class="pt-watch-head"><strong id="ptWatchName">Watchlist 1</strong><small id="ptWatchCount"></small></div>
-            <ul class="pt-watch-list" id="ppWatch" aria-label="Watchlist stocks"></ul>
-            <div class="pt-watch-tabs" id="ptWatchTabs" role="tablist" aria-label="Watchlists"></div>
-          </aside>
-          <div class="pt-work">
-            <nav class="pt-toolnav" id="ptToolNav" role="tablist" aria-label="Tools">
-              <button type="button" role="tab" class="pt-navtab" data-view="chart"><span aria-hidden="true">📈</span> Chart</button>
-              <button type="button" role="tab" class="pt-navtab" data-view="screener"><span aria-hidden="true">🔎</span> Screener</button>
-              <button type="button" role="tab" class="pt-navtab" data-view="strategy"><span aria-hidden="true">🧪</span> Strategy &amp; backtest</button>
-              <button type="button" role="tab" class="pt-navtab" data-view="replay"><span aria-hidden="true">⏪</span> Bar replay</button>
-              <button type="button" role="tab" class="pt-navtab" data-view="journal"><span aria-hidden="true">📓</span> Journal</button>
-            </nav>
-            <div class="pt-pane pt-chart-pane" id="ptChartPane">
-              <div class="pp-quote-row">
-                <div class="pp-sym"><h3 id="ppSymTitle">—</h3><small id="ppSymName"></small></div>
-                <button type="button" class="pp-btn pp-star" id="ppStar" aria-pressed="false">☆ Add to watchlist</button>
-                <button type="button" class="pt-src" id="ptSource" data-disclose="source" title="Where these prices come from"></button>
-                <div class="pp-quote"><strong id="ppPrice">—</strong><span id="ppChange" class="pp-change"></span></div>
-                <div class="pt-trade-btns"><button type="button" class="pt-buy" data-trade="buy">Buy</button><button type="button" class="pt-sell" data-trade="sell">Sell</button></div>
-              </div>
-              <div class="pp-chartbar">
-                <details class="pp-menu pp-tf-menu"><summary class="pp-btn" id="ppTfBtn" aria-label="Timeframe">5m</summary><div class="pp-menu-body pp-tf-list" id="ppTf" role="group" aria-label="Timeframe"></div></details>
-                <label><span class="sr-only">Chart type</span><select id="ppChartType" class="pp-select" aria-label="Chart type"><option value="candles">Candles</option><option value="ha">Heikin Ashi</option><option value="bars">OHLC bars</option><option value="line">Line</option><option value="area">Area</option></select></label>
-                <details class="pp-menu"><summary class="pp-btn">ƒx Indicators</summary><div class="pp-menu-body" id="ppIndList"></div></details>
-              </div>
-              <div class="pp-draw" id="ppDraw" role="toolbar" aria-label="Drawing tools">
-                <button type="button" data-tool="cursor" class="active" aria-pressed="true" title="Cursor: pan and zoom">↖<span>Cursor</span></button>
-                <button type="button" data-tool="trend" aria-pressed="false" title="Trend line">╱<span>Trend</span></button>
-                <button type="button" data-tool="hline" aria-pressed="false" title="Horizontal line">―<span>Level</span></button>
-                <button type="button" data-tool="rect" aria-pressed="false" title="Rectangle zone">▭<span>Zone</span></button>
-                <button type="button" data-tool="fib" aria-pressed="false" title="Fibonacci retracement">≣<span>Fib</span></button>
-                <button type="button" data-tool="rr" aria-pressed="false" title="Long or short position: entry, stop and a 1:2 target">⇅<span>Long/Short</span></button>
-                <button type="button" data-tool="erase" aria-pressed="false" title="Eraser: click a drawing to delete it">⌫<span>Erase</span></button>
-                <span class="pp-draw-sep" aria-hidden="true"></span>
-                <button type="button" data-action="undo" title="Undo last drawing">↶<span>Undo</span></button>
-                <button type="button" data-action="clear" title="Clear all drawings on this stock">✕<span>Clear</span></button>
-              </div>
-              <p class="pp-draw-hint" id="ppDrawHint" aria-live="polite"></p>
-              <div class="pp-chart-wrap" id="ppChartWrap">
-                <div class="pp-legend" id="ppLegend"></div>
-                <div id="ppChart" class="pp-chart" role="img" aria-label="Price chart for the selected stock"></div>
-                <svg id="ppDrawLayer" class="pp-draw-layer" aria-hidden="true"></svg>
-              </div>
-              <div class="pp-ranges" id="ppRanges" role="group" aria-label="Date range"></div>
-              <p class="demo-note" id="ppNote"></p>
-            </div>
-            <div class="pt-pane pt-screener-pane" id="ptScreenerPane" hidden></div>
-            <div class="pt-pane pt-strategy-pane" id="ptStrategyPane" hidden></div>
-            <div class="pt-pane pt-replay-pane" id="ptReplayPane" hidden tabindex="-1"></div>
-            <div class="pt-pane pt-journal-pane" id="ptJournalPane" hidden></div>
-            <div class="pt-pane pt-account-pane" id="ppAccount" hidden>
-              <div class="ppa-body" id="ppa-body" role="tabpanel" tabindex="0"></div>
-            </div>
-          </div>
-        </div>
-        <div class="pt-toast" id="ptToast" role="status" aria-live="polite" hidden></div>
-        <div class="pt-modal pt-info" id="ptInfo" hidden>
-          <div class="pt-order pt-info-box" role="dialog" aria-modal="true" aria-labelledby="ptInfoTitle">
-            <header class="pt-info-head"><strong id="ptInfoTitle"></strong><button type="button" class="pp-btn pt-icon" data-close-info aria-label="Close">✕</button></header>
-            <div class="pt-info-body" id="ptInfoBody"></div>
-          </div>
-        </div>
-        <div class="pt-modal" id="ptOrder" hidden>
-          <div class="pt-order" role="dialog" aria-modal="true" aria-labelledby="ptOrderTitle">
-            <form id="ppOrderForm" class="pp-order">
-              <header class="pt-order-head">
-                <div><strong id="ptOrderTitle">Buy</strong><small id="ptOrderSub"></small></div>
-                <div class="pt-side-switch" role="radiogroup" aria-label="Order side">
-                  <label><input type="radio" name="ppSide" value="buy" checked><span>Buy</span></label>
-                  <label><input type="radio" name="ppSide" value="sell"><span>Sell</span></label>
-                </div>
-              </header>
-              <div class="pt-order-body">
-                <div class="pp-sides pp-product" id="ppProductRow" role="radiogroup" aria-label="Product">
-                  <label title="Delivery (CNC): shares go to your demat; capital gains tax applies"><input type="radio" name="ppProduct" value="delivery" checked><span>Delivery <small>CNC</small></span></label>
-                  <label title="Intraday (MIS): bought and sold the same day; taxed as business income"><input type="radio" name="ppProduct" value="intraday"><span>Intraday <small>MIS</small></span></label>
-                </div>
-                <div class="pt-order-grid">
-                  <label class="pt-field"><span>Qty.</span><input id="ppQty" type="number" min="1" step="1" value="1"></label>
-                  <label class="pt-field" id="ppLimitRow" hidden><span>Price</span><input id="ppLimit" type="number" min="0.05" step="0.05"></label>
-                  <label class="pt-field"><span>Order type</span><select id="ppType"><option value="market">Market</option><option value="limit">Limit</option></select></label>
-                </div>
-                <p class="pp-estimate" id="ppEstimate"></p>
-                <details class="pp-box pp-charges" id="ppChargesBox"><summary>Charges breakdown <button type="button" class="pt-info-btn" data-disclose="charges" aria-label="How charges are calculated">ⓘ</button></summary><div id="ppChargeList"></div></details>
-                <p class="pp-msg" id="ppMsg" aria-live="polite"></p>
-              </div>
-              <footer class="pt-order-foot">
-                <button type="submit" class="pt-submit" id="ppSubmit">Buy</button>
-                <button type="button" class="btn btn-secondary" data-close-order>Cancel</button>
-              </footer>
-            </form>
-          </div>
-        </div>
-      </div>
-      <p class="fine-print pt-fine">Virtual money only. Market orders fill at the displayed price with no slippage. No leverage or short selling is simulated. Tax is an estimate that treats all charges as deductible. Nothing here is investment or tax advice.</p>
+    <section class="section" id="featured">
+      <div class="section-heading"><div><div class="eyebrow" data-i18n="featuredEyebrow">POPULAR COURSES</div><h2 data-i18n="featuredTitle">Start with these</h2><p data-i18n="featuredText">The modules most learners begin with.</p></div><a class="btn btn-secondary" href="pages/learn.html" id="browseAll">Browse all courses →</a></div>
+      <div class="course-grid" id="featuredGrid"></div>
     </section>
 
-    <section class="section" id="tools">
-      <div class="section-heading"><div><div class="eyebrow">LEARN WITH NUMBERS</div><h2 data-i18n="toolsTitle">Simple investing calculators</h2><p data-i18n="toolsSubtitle">Explore how contributions and compounding can affect a hypothetical outcome.</p></div></div>
-      <div class="calculator-grid">
-        <div class="calculator-card">
-          <div class="calc-title"><span class="calc-icon">₹</span><div><h3 data-i18n="sipCalc">SIP calculator</h3><p data-i18n="sipCalcDesc">Estimate a monthly investment's future value.</p></div></div>
-          <div class="field-row"><label for="monthlyInvestment" data-i18n="monthlyInvestment">Monthly investment (₹)</label><input id="monthlyInvestment" type="number" min="100" max="10000000" value="5000"></div>
-          <div class="field-row"><label for="annualReturn" data-i18n="annualReturn">Assumed annual return (%)</label><input id="annualReturn" type="number" min="0" max="30" step=".5" value="10"></div>
-          <div class="field-row"><label for="years" data-i18n="investmentYears">Duration (years)</label><input id="years" type="number" min="1" max="50" value="10"></div>
-          <button id="calculateSip" class="btn btn-primary full-btn" data-i18n="calculate">Calculate estimate</button>
-          <div class="calc-result"><small data-i18n="estimatedValue">Estimated future value</small><strong id="sipResult">₹ 10,24,000</strong><div id="sipBreakdown" class="result-detail">Invested: ₹6,00,000 · Estimated growth: ₹4,24,000</div></div>
-          <p class="fine-print" data-i18n="calcDisclaimer">Illustrative only. Returns are not guaranteed; actual market outcomes may be lower or negative. Taxes, fees and inflation are excluded.</p>
-        </div>
-        <div class="calculator-card risk-card">
-          <div class="calc-title"><span class="calc-icon purple-bg">⌁</span><div><h3 data-i18n="riskCalc">Position-size helper</h3><p data-i18n="riskCalcDesc">Learn how planned risk relates to a trade's stop distance.</p></div></div>
-          <div class="field-row"><label for="capital" data-i18n="tradingCapital">Trading capital (₹)</label><input id="capital" type="number" min="1" value="100000"></div>
-          <div class="field-row"><label for="riskPercent" data-i18n="riskPerTrade">Planned risk per trade (%)</label><input id="riskPercent" type="number" min=".1" max="5" step=".1" value="1"></div>
-          <div class="field-row"><label for="entryPrice" data-i18n="entryPrice">Entry price (₹)</label><input id="entryPrice" type="number" min=".01" value="250"></div>
-          <div class="field-row"><label for="stopPrice" data-i18n="stopPrice">Stop price (₹)</label><input id="stopPrice" type="number" min="0" value="240"></div>
-          <button id="calculateRisk" class="btn btn-secondary full-btn" data-i18n="calculatePosition">Calculate example size</button>
-          <div class="calc-result"><small data-i18n="maxPlannedLoss">Maximum planned loss</small><strong id="riskResult">₹ 1,000</strong><div id="riskBreakdown" class="result-detail">Example quantity: 100 units (before costs and slippage).</div></div>
-          <p class="fine-print" data-i18n="riskDisclaimer">A stop order may not execute at the stop price. Gaps, slippage and leverage can increase losses.</p>
-        </div>
-      </div>
-      <div class="calc-teaser">
-        <div class="calc-teaser-head"><div><h3 data-i18n="calcMoreTitle">More financial calculators</h3><p data-i18n="calcMoreText">Budgeting, investing, retirement, loans, property, tax and business: with charts, schedules and downloadable tables.</p></div><a class="btn btn-secondary" href="pages/calculators.html" data-i18n="calcBrowse">Browse all calculators ↗</a></div>
-        <div class="calc-teaser-grid">
-          <a href="pages/calculators.html#emi"><span>⇄</span>Loan EMI &amp; schedule</a>
-          <a href="pages/calculators.html#income-tax"><span>§</span>Income tax: new vs old</a>
-          <a href="pages/calculators.html#step-up-sip"><span>⇗</span>Step-up SIP</a>
-          <a href="pages/calculators.html#retirement"><span>◷</span>Retirement corpus</a>
-          <a href="pages/calculators.html#fire"><span>✺</span>FIRE number</a>
-          <a href="pages/calculators.html#rent-vs-buy"><span>⚖</span>Rent vs buy</a>
-          <a href="pages/calculators.html#debt-payoff"><span>⛓</span>Debt payoff plan</a>
-          <a href="pages/calculators.html#epf"><span>▥</span>EPF / PF</a>
-        </div>
+    <section class="section" id="how">
+      <div class="section-heading"><div><div class="eyebrow" data-i18n="howEyebrow">HOW IT WORKS</div><h2 data-i18n="howTitle">Learn it, practise it, prove it</h2><p data-i18n="howText">Every module follows the same four steps, so you always know what comes next.</p></div></div>
+      <ol class="how-steps">
+        <li><span class="how-num">1</span><span class="how-icon" aria-hidden="true">📘</span><h3 data-i18n="how1Title">Learn</h3><p data-i18n="how1Text">Short lessons with diagrams, worked examples and real-life scenarios, in plain language.</p><a href="pages/learn.html" data-i18n="how1Link">Browse courses →</a></li>
+        <li><span class="how-num">2</span><span class="how-icon" aria-hidden="true">✍️</span><h3 data-i18n="how2Title">Practise</h3><p data-i18n="how2Text">A quiz at the end of every module, and 49 calculators to try the numbers yourself.</p><a href="pages/calculators.html" data-i18n="how2Link">Open calculators →</a></li>
+        <li><span class="how-num">3</span><span class="how-icon" aria-hidden="true">📈</span><h3 data-i18n="how3Title">Trade on paper</h3><p data-i18n="how3Text">A broker-style terminal with real NSE prices and virtual money: charts, screener, backtesting and a journal.</p><a href="pages/paper-trading.html" data-i18n="how3Link">Open paper trading →</a></li>
+        <li><span class="how-num">4</span><span class="how-icon" aria-hidden="true">🎓</span><h3 data-i18n="how4Title">Get certified</h3><p data-i18n="how4Text">Pass the final test with 70% or more and download your MarketPathAcademy certificate.</p><a href="pages/test.html" data-i18n="how4Link">Take the final test →</a></li>
+      </ol>
+    </section>
+
+    <section class="section" id="practice">
+      <div class="section-heading"><div><div class="eyebrow" data-i18n="toolsEyebrow">PRACTICE TOOLS</div><h2 data-i18n="toolsTitle2">Everything you need to practise</h2><p data-i18n="toolsText2">Put each lesson to work with tools built for learners.</p></div></div>
+      <div class="tool-grid">
+        <a class="tool-card" href="pages/paper-trading.html"><span class="tool-icon green" aria-hidden="true">⇅</span><h3 data-i18n="tool1Title">Paper trading</h3><p data-i18n="tool1Text">Buy and sell NSE stocks with a virtual ₹10 lakh, real delayed prices and real charges.</p><span class="tool-go" data-i18n="toolGo">Open →</span></a>
+        <a class="tool-card" href="pages/paper-trading.html#screener"><span class="tool-icon blue" aria-hidden="true">⌕</span><h3 data-i18n="tool2Title">Screener &amp; backtesting</h3><p data-i18n="tool2Text">Find setups across the NIFTY 500 and test a strategy on two years of real data.</p><span class="tool-go" data-i18n="toolGo">Open →</span></a>
+        <a class="tool-card" href="pages/calculators.html"><span class="tool-icon purple" aria-hidden="true">₹</span><h3 data-i18n="tool3Title">49 calculators</h3><p data-i18n="tool3Text">SIP, EMI, income tax, retirement, FIRE and more, with charts and schedules.</p><span class="tool-go" data-i18n="toolGo">Open →</span></a>
+        <a class="tool-card" href="pages/glossary.html"><span class="tool-icon amber" aria-hidden="true">Aa</span><h3 data-i18n="tool4Title">Glossary</h3><p data-i18n="tool4Text">Plain-language definitions of 120+ market terms, in English and Hindi.</p><span class="tool-go" data-i18n="toolGo">Open →</span></a>
       </div>
     </section>
 
-    <section class="section roadmap-section">
-      <div class="section-heading"><div><div class="eyebrow">YOUR NEXT STEP</div><h2 data-i18n="roadmapTitle">A smarter way to learn</h2><p data-i18n="roadmapSubtitle">Build understanding before risking real money.</p></div></div>
-      <div class="roadmap">
-        <div class="roadmap-item"><span class="roadmap-number">01</span><div><h3 data-i18n="roadmap1Title">Learn the foundations</h3><p data-i18n="roadmap1Text">Understand shares, exchanges, order types, risk, and how the market works.</p></div></div>
-        <div class="roadmap-item"><span class="roadmap-number">02</span><div><h3 data-i18n="roadmap2Title">Practice without pressure</h3><p data-i18n="roadmap2Text">Read charts, keep a journal, and paper-trade strategies before using real money.</p></div></div>
-        <div class="roadmap-item"><span class="roadmap-number">03</span><div><h3 data-i18n="roadmap3Title">Create your own process</h3><p data-i18n="roadmap3Text">Define your time horizon, position size, exit rules and review routine.</p></div></div>
+    <section class="section">
+      <div class="cert-band">
+        <div class="cert-copy">
+          <div class="eyebrow" data-i18n="certEyebrow">FINAL TEST &amp; CERTIFICATE</div>
+          <h2 data-i18n="certTitle">Earn your MarketPathAcademy certificate</h2>
+          <ul class="cert-points">
+            <li data-i18n="cert1">100 to 150 questions drawn from every module</li>
+            <li data-i18n="cert2">Pass mark 70%, with a score by module to show what to revise</li>
+            <li data-i18n="cert3">Download your certificate as an image or PDF, with a verification link</li>
+          </ul>
+          <a class="btn btn-primary" href="pages/test.html" data-i18n="certGo">Take the final test →</a>
+        </div>
+        <div class="cert-mock" aria-hidden="true">
+          <img src="images/logo-mark.png" alt="" width="56" height="56">
+          <small>CERTIFICATE OF ACHIEVEMENT</small>
+          <i>This is to certify that</i>
+          <strong>Your Name</strong>
+          <span>passed the MarketPathAcademy Stock Market Final Test</span>
+          <b class="cert-seal">PASSED<br>84%</b>
+        </div>
       </div>
     </section>
 
@@ -289,16 +133,16 @@
     </section>
   </main>
 
-  <footer class="site-footer"><a class="brand footer-brand" href="#"><img class="brand-full brand-on-dark" src="images/logo-horizontal-dark.png" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="images/logo-horizontal.png" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a><p data-i18n="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="#about" data-i18n="disclaimerLink">Disclaimer</a><a href="pages/privacy.html" data-i18n="privacyLink">Privacy policy</a><a href="pages/contact.html" data-i18n="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPathAcademy. Educational content only.</small></footer>
+
+  <footer class="site-footer"><a class="brand footer-brand" href="index.html"><img class="brand-full brand-on-dark" src="images/logo-horizontal-dark.png" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="images/logo-horizontal.png" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a><p data-ui="footerText">Learn the market, one concept at a time.</p><div class="footer-links"><a href="#about" data-ui="disclaimerLink">Disclaimer</a><a href="pages/privacy.html" data-ui="privacyLink">Privacy policy</a><a href="pages/contact.html" data-ui="contactLink">Contact</a></div><small>© <span id="year"></span> MarketPathAcademy. Educational content only.</small></footer>
   <script src="js/site-chrome.js"></script>
   <script src="js/site-search.js"></script>
   <script src="js/index-ribbon.js"></script>
   <script src="js/progress.js"></script>
   <script src="js/lesson-catalog.js"></script>
+  <script src="js/course-catalog.js"></script>
   <script src="js/ads.js"></script>
   <script src="js/shared.js"></script>
-  <!-- Paper trading code loads when its section comes into view (js/paper-loader.js). -->
-  <script src="js/paper-loader.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

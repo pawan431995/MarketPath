@@ -44,8 +44,8 @@
   if (!nav) return;
   const t = T[lang()];
   const items = [
-   ["learn", url("index.html#courses")], ["paper", url("index.html#paper")], ["calcs", url("pages/calculators.html")],
-   ["glossary", url("pages/glossary.html")], ["test", url("pages/test.html")], ["about", url("index.html#about")]
+   ["learn", url("pages/learn.html")], ["paper", url("pages/paper-trading.html")], ["calcs", url("pages/calculators.html")],
+   ["glossary", url("pages/glossary.html")], ["test", url("pages/test.html")]
   ];
   nav.innerHTML = items.map(([k, href]) => {
    const current = href.split("#")[0] === here && !href.includes("#");
@@ -91,7 +91,7 @@
     </div>
     <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTrade)}"><h2>${esc(t.colTrade)}</h2>${["technical-analysis", "candlestick-patterns", "fundamental-analysis", "futures-options", "risk-management"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
-    <nav class="ft-col" aria-label="${esc(t.colTools)}"><h2>${esc(t.colTools)}</h2>${link(url("index.html#paper"), t.paper)}${link(url("index.html#screener"), t.tools.screener)}${link(url("index.html#strategy"), t.tools.strategy)}${link(url("index.html#replay"), t.tools.replay)}${link(url("pages/test.html"), t.tools.test)}${link(url("pages/calculators.html"), t.calcs)}${link(url("pages/calculators.html#sip"), t.tools.sip)}${link(url("pages/calculators.html#income-tax"), t.tools["income-tax"])}${link(url("pages/glossary.html"), t.glossary)}</nav>
+    <nav class="ft-col" aria-label="${esc(t.colTools)}"><h2>${esc(t.colTools)}</h2>${link(url("pages/paper-trading.html"), t.paper)}${link(url("pages/paper-trading.html#screener"), t.tools.screener)}${link(url("pages/paper-trading.html#strategy"), t.tools.strategy)}${link(url("pages/paper-trading.html#replay"), t.tools.replay)}${link(url("pages/test.html"), t.tools.test)}${link(url("pages/calculators.html"), t.calcs)}${link(url("pages/calculators.html#sip"), t.tools.sip)}${link(url("pages/calculators.html#income-tax"), t.tools["income-tax"])}${link(url("pages/glossary.html"), t.glossary)}</nav>
     <nav class="ft-col" aria-label="${esc(t.colSite)}"><h2>${esc(t.colSite)}</h2>${link(url("index.html#about"), t.about)}${link(url("index.html#about"), t.disclaimer)}${link(url("pages/privacy.html"), t.privacy)}${link(url("pages/contact.html"), t.contact)}</nav>
    </div>
    <div class="ft-bottom"><small>© <span id="year">${new Date().getFullYear()}</span> ${esc(t.rights)}</small></div>`;

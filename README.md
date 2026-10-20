@@ -50,7 +50,9 @@ Responsive static website starter using HTML, CSS and vanilla JavaScript.
 ## Project structure
 ```
 marketpath-static-website/
-├── index.html        Homepage: hero, topic library with progress, paper trading, calculators, glossary
+├── index.html        Homepage: learning-platform landing page (progress, learning paths, featured courses, tools, final test)
+├── pages/learn.html All courses: level tabs, search and progress (js/learn-page.js)
+├── pages/paper-trading.html The paper-trading terminal (loaded by js/paper-loader.js)
 ├── 404.html          Page-not-found page (static hosts serve it for missing URLs)
 ├── robots.txt, sitemap.xml, site.webmanifest
 ├── data/
@@ -109,7 +111,8 @@ marketpath-static-website/
 │   ├── calc-charts.js         SVG charts for the calculators (line/area, columns, donut, progress) with tooltips and table view
 │   ├── calc-defs-*.js         Calculator definitions by category: personal, investing, retirement, loans, property, tax, business
 │   ├── theme.js               Light/dark theme toggle (loaded in <head> to avoid a flash)
-│   ├── paper-loader.js        Loads the paper-trading scripts when the section is about to be seen
+│   ├── paper-loader.js        Loads the paper-trading scripts on pages/paper-trading.html
+│   ├── course-catalog.js      Course list, cards, search and progress shared by the homepage and Learn page
 │   ├── paper-trading.js       Paper trading terminal: feeds, watchlists, search, chart, order window, orders and funds
 │   ├── paper-account.js       Dashboard, Orders, Holdings, Positions, Funds, Portfolio and Trade history views
 │   ├── paper-replay.js        Bar replay and testing engine (data ingestion, playback, blind entry, stops)

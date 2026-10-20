@@ -1,4 +1,4 @@
-// Paper trading practice module (index.html#paper). Virtual money only: nothing is sent to a broker.
+// Paper trading practice module (pages/paper-trading.html). Virtual money only: nothing is sent to a broker.
 // Feeds: "nse" uses real NSE prices, delayed about 5–10 minutes (data files published by tools/fetch-quotes.js);
 // "sim" simulates any NSE-listed stock in the browser (a random walk around a per-symbol base price), for practice
 // at any hour; "finnhub" polls Finnhub's free quote and symbol-search APIs with the visitor's own API key.
@@ -1561,7 +1561,7 @@
  let firstScreen = "chart";
  try { firstScreen = localStorage.getItem("mp-paper-tab") || "chart"; } catch (e) { /* storage unavailable */ }
  if (firstScreen === "watchlist" && !window.matchMedia("(max-width: 900px)").matches) firstScreen = "chart";
- // Links such as index.html#screener (from the site menu) open the terminal on that tool.
+ // Links such as pages/paper-trading.html#screener (from the homepage and footer) open the terminal on that tool.
  const HASH_SCREENS = { "#screener": "screener", "#strategy": "strategy", "#replay": "replay", "#journal": "journal" };
  if (HASH_SCREENS[location.hash]) firstScreen = HASH_SCREENS[location.hash];
  setScreen(SCREENS.includes(firstScreen) ? firstScreen : "chart");
