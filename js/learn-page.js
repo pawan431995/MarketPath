@@ -33,7 +33,7 @@
   const u = UI[lang];
   MP.applyText(UI, lang);
   document.querySelectorAll("[data-ui-placeholder]").forEach(el => { el.placeholder = u[el.dataset.uiPlaceholder]; });
-  document.title = `${u.doc} — MarketPathAcademy`;
+  document.title = lang === "en" ? (window.MPChrome && MPChrome.docTitle) || document.title : `${u.doc} — MarketPathAcademy`;
   render();
  }
  document.addEventListener("DOMContentLoaded", () => {

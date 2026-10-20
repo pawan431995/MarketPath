@@ -37,7 +37,7 @@
   }
  };
  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
- const lessonUrl = slug => url(`pages/lesson.html?topic=${slug}`);
+ const lessonUrl = slug => url(`pages/lesson-${slug}${lang() === "hi" ? "-hi" : ""}.html`);
 
  function renderNav() {
   const nav = document.getElementById("mainNav");
@@ -131,5 +131,8 @@
   }
  });
 
- window.MPChrome = { base, url, lang, render };
+ // The page's own title from its HTML (written for search engines). Page scripts keep it in English and
+ // only replace it when the page is shown in Hindi.
+ const docTitle = document.title;
+ window.MPChrome = { base, url, lang, render, docTitle };
 })();

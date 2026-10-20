@@ -261,7 +261,7 @@
     </div>
    </section>
    ${passed ? certSection(a.name || load("mp-test-name", "")) : ""}
-   <section class="xt-card"><h2 class="xt-h">${u.byModule}</h2><div class="xt-table-wrap"><table class="xt-table"><tbody>${rows.map(r => `<tr class="${r.p < PASS ? "weak" : ""}"><td>${esc(modTitle(r.slug))}</td><td class="num">${r.c} / ${r.n}</td><td class="xt-barcell"><span class="xt-mbar"><i style="width:${r.p.toFixed(0)}%"></i></span>${r.p.toFixed(0)}%</td><td class="num">${r.p < PASS ? `<a href="lesson.html?topic=${encodeURIComponent(r.slug)}">${u.revise} →</a>` : "✓"}</td></tr>`).join("")}</tbody></table></div></section>
+   <section class="xt-card"><h2 class="xt-h">${u.byModule}</h2><div class="xt-table-wrap"><table class="xt-table"><tbody>${rows.map(r => `<tr class="${r.p < PASS ? "weak" : ""}"><td>${esc(modTitle(r.slug))}</td><td class="num">${r.c} / ${r.n}</td><td class="xt-barcell"><span class="xt-mbar"><i style="width:${r.p.toFixed(0)}%"></i></span>${r.p.toFixed(0)}%</td><td class="num">${r.p < PASS ? `<a href="lesson-${encodeURIComponent(r.slug)}${lang === "hi" ? "-hi" : ""}.html">${u.revise} →</a>` : "✓"}</td></tr>`).join("")}</tbody></table></div></section>
    <section class="xt-card"><h2 class="xt-h">${u.review}</h2><div class="xt-filters" role="group">${u.filters.map(([id, l]) => `<button type="button" class="xt-chip${reviewFilter === id ? " on" : ""}" data-rf="${id}" aria-pressed="${reviewFilter === id}">${l}</button>`).join("")}</div><ol class="xt-review" data-review></ol></section>`;
   app._result = { a, s, histIndex };
   renderReview();
@@ -450,7 +450,7 @@
  // ---------- Start ----------
  function applyLang() {
   document.documentElement.lang = lang;
-  document.title = `${lang === "hi" ? "फ़ाइनल टेस्ट" : "Final test"} — MarketPathAcademy`;
+  document.title = lang === "hi" ? "फ़ाइनल टेस्ट — MarketPathAcademy" : (window.MPChrome && MPChrome.docTitle) || document.title;
   const d = document.querySelector('[data-ui="disclaimer"]');
   if (d) d.textContent = t().disclaimer;
  }

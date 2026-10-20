@@ -19,6 +19,8 @@
  const SUGGEST = { en: ["SIP", "stop loss", "income tax", "candlestick", "P/E ratio", "options", "EMI", "demat"], hi: ["SIP", "स्टॉप लॉस", "इनकम टैक्स", "कैंडलस्टिक", "P/E", "ऑप्शन", "EMI", "डीमैट"] };
 
  const chrome = () => window.MPChrome || { url: p => p, lang: () => "en" };
+ // Lessons have a page per language: open the Hindi page (lesson-<slug>-hi.html) when Hindi is chosen.
+ const pageUrl = u => chrome().url(chrome().lang() === "hi" ? u.replace(/^pages\/lesson-([a-z0-9-]+)\.html/, "pages/lesson-$1-hi.html") : u);
  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
  const norm = s => String(s).toLowerCase().replace(/&/g, "").replace(/[^\p{L}\p{N}\p{M}\s]+/gu, " ").replace(/\s+/g, " ").trim();
 
@@ -146,7 +148,7 @@
     const i = results.length;
     results.push(e);
     const [title, text, ctx] = e[lang];
-    html += `<li role="option" id="ssOpt${i}" class="ss-item" aria-selected="false"><a href="${esc(chrome().url(e.url))}" tabindex="-1"><span class="ss-icon" aria-hidden="true">${esc(KINDS[k].icon)}</span><span class="ss-body"><strong>${mark(title, tokens)}</strong>${ctx ? `<small class="ss-ctx">${esc(ctx)}</small>` : ""}${text ? `<span class="ss-text">${mark(snippet(text, tokens), tokens)}</span>` : ""}</span></a></li>`;
+    html += `<li role="option" id="ssOpt${i}" class="ss-item" aria-selected="false"><a href="${esc(pageUrl(e.url))}" tabindex="-1"><span class="ss-icon" aria-hidden="true">${esc(KINDS[k].icon)}</span><span class="ss-body"><strong>${mark(title, tokens)}</strong>${ctx ? `<small class="ss-ctx">${esc(ctx)}</small>` : ""}${text ? `<span class="ss-text">${mark(snippet(text, tokens), tokens)}</span>` : ""}</span></a></li>`;
    });
   });
   list.innerHTML = html;
@@ -177,7 +179,7 @@
   input.setAttribute("aria-activedescendant", active >= 0 ? `ssOpt${active}` : "");
  }
  function go(e) {
-  const href = chrome().url(e.url);
+  const href = pageUrl(e.url);
   close();
   location.href = href;
   // Same page with a different #section: the hashchange does not reload, so scroll explicitly.

@@ -2,9 +2,16 @@
 //  - Directory: search, category chips, popular calculators and every calculator grouped by category.
 //  - Detail (#<id>, optionally #<id>?input=value&...): live inputs, results, chart, table and the method.
 // Definitions are registered by calc-defs-*.js into window.CALCS. Maths: calc-math.js. Charts: calc-charts.js.
+// Each calculator also has its own page, pages/<id>-calculator.html (made by tools/build-seo.js), which sets
+// window.MP_PAGE = { calc: id } and opens that calculator. Old links (calculators.html#<id>) move there.
 (function () {
  const CALCS = window.CALCS || [];
  const BY_ID = new Map(CALCS.map(c => [c.id, c]));
+ const PAGE_CALC = window.MP_PAGE && BY_ID.has(window.MP_PAGE.calc) ? window.MP_PAGE.calc : null;
+ const DOC_TITLE = document.title; // the page's own search-friendly title, kept for English
+ const calcHref = id => `${encodeURIComponent(id)}-calculator.html`;
+ // Address after an input change: the calculator's own page, with changed inputs in the hash for sharing.
+ const stateUrl = (id, q) => id === PAGE_CALC ? (q ? `#${id}?${q}` : location.pathname) : `#${id}${q ? "?" + q : ""}`;
 
  const CATS = [
   { id: "personal", icon: "◔", en: "Personal finance & budgeting", hi: "व्यक्तिगत वित्त और बजट" },
@@ -117,7 +124,8 @@
  }
  function route() {
   const { id, params } = parseHash();
-  if (id) openCalc(id, params); else renderDirectory();
+  if (id && !PAGE_CALC) { location.replace(calcHref(id) + location.hash); return; }
+  if (id) openCalc(id, params); else if (PAGE_CALC) openCalc(PAGE_CALC, params); else renderDirectory();
  }
  window.addEventListener("hashchange", route);
 
@@ -129,10 +137,10 @@
   return tokens.every(tok => hay.includes(tok));
  }
  function card(c) {
-  return `<a class="calc-card" href="#${esc(c.id)}"><span class="calc-card-icon" aria-hidden="true">${esc(c.icon || CAT.get(c.cat).icon)}</span><span class="calc-card-text"><strong>${esc(title(c))}</strong><small>${esc(desc(c))}</small></span></a>`;
+  return `<a class="calc-card" href="${esc(calcHref(c.id))}"><span class="calc-card-icon" aria-hidden="true">${esc(c.icon || CAT.get(c.cat).icon)}</span><span class="calc-card-text"><strong>${esc(title(c))}</strong><small>${esc(desc(c))}</small></span></a>`;
  }
  function renderDirectory() {
-  document.title = `${t().title} — MarketPathAcademy`;
+  document.title = lang === "en" ? DOC_TITLE : `${t().title} — MarketPathAcademy`;
   const u = t();
   app.innerHTML = `
    <div class="calc-dir">
@@ -157,7 +165,7 @@
   input.addEventListener("keydown", e => {
    if (e.key !== "Enter") return;
    const first = app.querySelector("#calcDirBody .calc-card");
-   if (first) location.hash = first.getAttribute("href");
+   if (first) location.href = first.getAttribute("href");
   });
   app.querySelectorAll(".calc-chip").forEach(b => b.addEventListener("click", () => {
    filterCat = b.dataset.cat;
@@ -215,12 +223,12 @@
 
  function renderDetail() {
   const c = current, u = t(), F = formatter(currencyOf(c));
-  document.title = `${title(c)} — MarketPathAcademy`;
+  document.title = c.id === PAGE_CALC && lang === "en" ? DOC_TITLE : `${title(c)} — MarketPathAcademy`;
   const options = CATS.map(cat => `<optgroup label="${esc(cat[lang])}">${CALCS.filter(x => x.cat === cat.id).map(x => `<option value="${x.id}"${x.id === c.id ? " selected" : ""}>${esc(title(x))}</option>`).join("")}</optgroup>`).join("");
   const related = CALCS.filter(x => x.cat === c.cat && x.id !== c.id);
   app.innerHTML = `
    <div class="calc-detail">
-    <nav class="calc-crumbs" aria-label="Breadcrumb"><a href="#">← ${esc(u.back)}</a><span aria-hidden="true">/</span><span>${esc(catName(c.cat))}</span></nav>
+    <nav class="calc-crumbs" aria-label="Breadcrumb"><a href="calculators.html">← ${esc(u.back)}</a><span aria-hidden="true">/</span><span>${esc(catName(c.cat))}</span></nav>
     <div class="calc-head">
      <span class="calc-head-icon" aria-hidden="true">${esc(c.icon || CAT.get(c.cat).icon)}</span>
      <div class="calc-head-text"><h1 class="calc-h1">${esc(title(c))}</h1><p class="calc-intro">${esc(desc(c))}</p></div>
@@ -238,15 +246,15 @@
      </form>
      <div class="calc-results" id="calcResults" aria-live="polite"></div>
     </div>
-    ${related.length ? `<section class="calc-related"><h2>${esc(u.related)}</h2><div class="calc-related-list">${related.map(x => `<a href="#${x.id}" class="calc-chip">${esc(x.icon || "")} ${esc(title(x))}</a>`).join("")}</div></section>` : ""}
+    ${related.length ? `<section class="calc-related"><h2>${esc(u.related)}</h2><div class="calc-related-list">${related.map(x => `<a href="${esc(calcHref(x.id))}" class="calc-chip">${esc(x.icon || "")} ${esc(title(x))}</a>`).join("")}</div></section>` : ""}
    </div>`;
   bindForm(F);
-  document.getElementById("calcJump").addEventListener("change", e => { location.hash = e.target.value; });
+  document.getElementById("calcJump").addEventListener("change", e => { location.href = calcHref(e.target.value); });
   document.getElementById("calcReset").addEventListener("click", () => {
    values = defaults(c);
    delete store.inputs[c.id];
    save();
-   history.replaceState(null, "", `#${c.id}`);
+   history.replaceState(null, "", stateUrl(c.id, ""));
    renderDetail();
   });
   document.getElementById("calcCopy").addEventListener("click", copyLink);
@@ -384,7 +392,7 @@
   const params = new URLSearchParams();
   current.inputs.forEach(inp => { if (inp.type !== "rows" && values[inp.id] !== inp.value) params.set(inp.id, values[inp.id]); });
   const q = params.toString();
-  history.replaceState(null, "", `#${current.id}${q ? "?" + q : ""}`);
+  history.replaceState(null, "", stateUrl(current.id, q));
  }
  function copyLink() {
   const btn = document.getElementById("calcCopy"), done = () => { btn.textContent = `✓ ${t().copied}`; setTimeout(() => { btn.textContent = `⧉ ${t().copy}`; }, 1800); };

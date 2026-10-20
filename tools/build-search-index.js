@@ -41,7 +41,7 @@ const out = [
 
 LESSON_ORDER.forEach(slug => {
  const en = LESSONS.en[slug], hi = LESSONS.hi[slug] || en;
- const url = `pages/lesson.html?topic=${slug}`;
+ const url = `pages/lesson-${slug}.html`; // site-search.js swaps in the -hi page for Hindi
  const lvl = LEVEL[en.level] || ["", ""];
  out.push(["lesson", url, en.title, clip(en.summary), `${lvl[0]} · ${en.time}`, hi.title, clip(hi.summary), `${lvl[1]} · ${hi.time}`]);
  const sEn = (LESSON_OVERRIDES.en[slug] && LESSON_OVERRIDES.en[slug].sections) || en.sections;
@@ -60,12 +60,12 @@ GLOSSARY_TERMS.forEach(t => {
 CALCS.forEach(c => {
  const cat = CAT_CALC[c.cat] || ["", ""];
  // Keywords go in a 9th field: searched, but not shown in the result snippet.
- out.push(["calc", `pages/calculators.html#${c.id}`, c.title, clip(c.desc), cat[0], c.hi ? c.hi[0] : c.title, c.hi ? c.hi[1] : c.desc, cat[1], c.keywords || ""]);
+ out.push(["calc", `pages/${c.id}-calculator.html`, c.title, clip(c.desc), cat[0], c.hi ? c.hi[0] : c.title, c.hi ? c.hi[1] : c.desc, cat[1], c.keywords || ""]);
 });
 
 const pick = (o, l) => (o && (o[l] || o.en)) || "";
-PATTERNS.forEach(p => out.push(["pattern", "pages/lesson.html?topic=candlestick-patterns", pick(p.name, "en"), clip(pick(p.what, "en")), "Candlestick and chart patterns", pick(p.name, "hi"), clip(pick(p.what, "hi")), "कैंडलस्टिक और चार्ट पैटर्न"]));
-INDICATORS.forEach(x => out.push(["indicator", "pages/lesson.html?topic=technical-indicators", pick(x.name, "en"), clip(pick(x.what, "en")), "Technical indicators", pick(x.name, "hi"), clip(pick(x.what, "hi")), "टेक्निकल इंडिकेटर"]));
+PATTERNS.forEach(p => out.push(["pattern", "pages/lesson-candlestick-patterns.html", pick(p.name, "en"), clip(pick(p.what, "en")), "Candlestick and chart patterns", pick(p.name, "hi"), clip(pick(p.what, "hi")), "कैंडलस्टिक और चार्ट पैटर्न"]));
+INDICATORS.forEach(x => out.push(["indicator", "pages/lesson-technical-indicators.html", pick(x.name, "en"), clip(pick(x.what, "en")), "Technical indicators", pick(x.name, "hi"), clip(pick(x.what, "hi")), "टेक्निकल इंडिकेटर"]));
 
 // Lesson catalogue for the homepage: only what the course cards and "continue learning" need (title,
 // summary, time, level, order), so the homepage does not load the full lesson text (about 300 KB).

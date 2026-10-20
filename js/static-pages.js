@@ -44,7 +44,7 @@ const PAGE_UI = {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-ui]").forEach(el => { const v = PAGE_UI[lang][el.dataset.ui]; if (typeof v === "string") el.textContent = v; });
   const page = document.body.dataset.page; // "contact" or "privacy"
-  if (page) document.title = `${PAGE_UI[lang][page === "contact" ? "docContact" : "docPrivacy"]} — MarketPathAcademy`;
+  if (page) document.title = lang === "en" ? (window.MPChrome && MPChrome.docTitle) || document.title : `${PAGE_UI[lang][page === "contact" ? "docContact" : "docPrivacy"]} — MarketPathAcademy`;
  };
  let lang = "en";
  try { lang = localStorage.getItem("mp-lang") === "hi" ? "hi" : "en"; } catch (e) { /* storage unavailable */ }

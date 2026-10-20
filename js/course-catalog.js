@@ -40,7 +40,9 @@ const MPCourses = (function () {
  const BEGINNER_PATH = ["foundations", "market-rules", "investing", "sip-mutual-funds"];
  const LEVELS = ["Beginner", "Intermediate", "Advanced"];
  const at = p => (window.MPChrome ? MPChrome.url(p) : p);
- const lessonHref = slug => at(`pages/lesson.html?topic=${slug}`);
+ // Each lesson has its own page per language (pages/lesson-<slug>.html, -hi.html for Hindi).
+ const curLang = () => { try { return localStorage.getItem("mp-lang") === "hi" ? "hi" : "en"; } catch (e) { return "en"; } };
+ const lessonHref = (slug, lang = curLang()) => at(`pages/lesson-${slug}${lang === "hi" ? "-hi" : ""}.html`);
  const lessonFor = (c, lang) => (LESSONS[lang] && LESSONS[lang][c.slug]) || LESSONS.en[c.slug];
  const levelLabel = (level, lang) => UI[lang][level.toLowerCase()] || level;
  const progress = () => (typeof MPProgress === "undefined" ? { done: {}, visited: {}, last: null } : MPProgress.read());

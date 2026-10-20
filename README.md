@@ -143,6 +143,7 @@ marketpath-static-website/
 │   ├── build-nse-symbols.js    Regenerates js/paper-symbols.js from NSE's EQUITY_L.csv
 │   ├── build-test-bank.js      Regenerates js/test-bank.js (run after editing any module quiz)
 │   ├── build-search-index.js   Regenerates js/search-index.js and js/lesson-catalog.js (run after editing any content)
+│   ├── build-seo.js            Generates lesson and calculator pages, SEO tags, sitemap.xml and robots.txt (see SEO below)
 │   ├── fetch-indices.js        Fetches index levels (NSE, with Yahoo for SENSEX and as fallback) into data/
 │   ├── fetch-quotes.js         Fetches delayed share prices for paper trading into data/
 │   ├── build-screener.js       Builds data/screener.js (screener metrics) from the daily candles; run by fetch-quotes.js
@@ -163,6 +164,22 @@ Open `index.html` in a browser. No build process or backend is required.
 
 Official documentation: https://docs.github.com/en/pages
 
+## Search engine optimisation (SEO)
+`node tools/build-seo.js` generates everything search engines read. The site address is the `SITE` constant at the top of that file (`https://www.marketpathacademy.com/`). It writes:
+- **A page per lesson and language**: `pages/lesson-<slug>.html` (English) and `pages/lesson-<slug>-hi.html` (Hindi), 46 pages from the template `pages/lesson.html`. Each has the full lesson text in the HTML (readable without JavaScript), its own title and description, a canonical URL, `hreflang` links between the two languages, social tags and structured data (Course, BreadcrumbList, FAQPage). The address decides the language; switching language moves to the other page. The old address `lesson.html?topic=<slug>` redirects there.
+- **A page per calculator**: `pages/<id>-calculator.html` (49 pages, for searches such as "SIP calculator" or "income tax calculator"), with WebApplication structured data. Old links like `calculators.html#emi?amount=…` redirect there and keep their inputs.
+- **The `<head>` SEO tags of the other pages** (between `<!-- seo -->` and `<!-- /seo -->`): titles and descriptions written for search, canonical URLs, Open Graph and Twitter tags, and structured data (EducationalOrganization and WebSite on the homepage, course and calculator lists). Page titles and descriptions live in the `PAGES` table in the script.
+- **`sitemap.xml`** (every page, with language alternates) and **`robots.txt`**.
+
+Run it after editing lessons, calculators or page titles, together with `node tools/build-search-index.js`. Do not edit the generated pages by hand: change the template or the content and run the script again.
+
+### Connecting the domain www.marketpathacademy.com
+1. At your domain registrar, add DNS records: four `A` records for `marketpathacademy.com` pointing to `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`, and a `CNAME` record for `www` pointing to `pawan431995.github.io`.
+2. In the repository, open **Settings → Pages → Custom domain**, enter `www.marketpathacademy.com` and save. When the DNS check passes, tick **Enforce HTTPS**. (The site is deployed by the GitHub Actions workflow, so no `CNAME` file is needed.)
+3. Open https://search.google.com/search-console, add a **Domain** property for `marketpathacademy.com` and verify it with the TXT record Google gives you at your registrar. Then submit `https://www.marketpathacademy.com/sitemap.xml` under Sitemaps.
+4. Do the same in Bing Webmaster Tools (https://www.bing.com/webmasters), which also feeds other search engines; it can import the property from Search Console.
+5. In Search Console, use URL Inspection on the homepage and a few lessons and request indexing. New sites usually take days to weeks to appear, and ranking depends mostly on content quality and links from other sites.
+
 ## Index ribbon data
 Browsers cannot read NSE or Yahoo Finance directly from a static site (they block cross-origin requests), so the data is fetched on a schedule and published with the site:
 1. `tools/fetch-indices.js` downloads the index levels and writes `data/indices.js`; `tools/fetch-quotes.js` downloads share prices for paper trading (`data/quotes.js`, `data/intraday/`, and every 12 hours two years of daily candles in `data/daily/`). Run them by hand with `node tools/fetch-indices.js` and `node tools/fetch-quotes.js` (Node 18 or newer).
@@ -182,8 +199,8 @@ Ads are **not active by default**. Google must approve the site first, and the d
 
 ## Before publishing
 - Replace the example email in `contact.html`.
-- Replace `https://www.example.com/` with your domain in `sitemap.xml` and `robots.txt`. For the best social previews, also make `og:image` an absolute URL.
-- After editing lessons, glossary terms or calculators, run `node tools/build-search-index.js` so search and the homepage course cards stay current.
+- If the site address changes, update `SITE` in `tools/build-seo.js` and run it (it rewrites canonical URLs, social tags, `sitemap.xml` and `robots.txt`).
+- After editing lessons, glossary terms or calculators, run `node tools/build-search-index.js` and `node tools/build-seo.js` so search, the course cards and the lesson and calculator pages stay current.
 - Review and customize `privacy.html` and the disclaimers for your actual site.
 - Expand the course cards into complete, original lessons with examples, diagrams, quizzes and citations.
 - Paper trading uses real NSE prices delayed by about 5–10 minutes (from Yahoo Finance), refreshed only when the scheduled workflow runs. It is for practice, not for trading decisions, and is labelled as delayed.

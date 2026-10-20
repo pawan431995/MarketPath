@@ -103,8 +103,12 @@ function readLang() {
 function saveLang(l) {
  try { localStorage.setItem("mp-lang", l); } catch (e) { /* storage unavailable */ }
 }
-function lessonHref(s) {
- return `lesson.html?topic=${encodeURIComponent(s)}`;
+// Each lesson has its own page per language, pages/lesson-<slug>.html and lesson-<slug>-hi.html (made by
+// tools/build-seo.js), which sets window.MP_PAGE = { slug, lang }. The address decides the language there, so
+// search engines can index both. lesson.html?topic=<slug> is the old address and moves to the lesson's page.
+const PAGE = window.MP_PAGE && window.MP_PAGE.slug ? window.MP_PAGE : null;
+function lessonHref(s, l = lang) {
+ return `lesson-${encodeURIComponent(s)}${l === "hi" ? "-hi" : ""}.html`;
 }
 const pick = o => (o && (o[lang] || o.en)) || "";
 
@@ -283,7 +287,7 @@ function practiceTicks() {
 }
 function practiceHref(target) {
  if (target.startsWith("url:")) return target.slice(4);
- if (target.startsWith("calc:")) return "calculators.html#" + encodeURIComponent(target.slice(5));
+ if (target.startsWith("calc:")) return encodeURIComponent(target.slice(5)) + "-calculator.html";
  return "paper-trading.html" + (target === "chart" ? "" : "#" + target);
 }
 function practiceBlock(s) {
@@ -322,7 +326,7 @@ function bindPractice() {
 function relatedBlock(s) {
  const list = RELATED_CALCS[s];
  if (!list) return "";
- return `<section class="lesson-block"><h2>${esc(UI[lang].relatedCalcs)}</h2><div class="related-calcs">${list.map(([id, en, hi]) => `<a class="related-calc" href="calculators.html#${encodeURIComponent(id)}"><span aria-hidden="true">₹</span>${esc(lang === "hi" ? hi : en)} <span aria-hidden="true">↗</span></a>`).join("")}</div></section>`;
+ return `<section class="lesson-block"><h2>${esc(UI[lang].relatedCalcs)}</h2><div class="related-calcs">${list.map(([id, en, hi]) => `<a class="related-calc" href="${encodeURIComponent(id)}-calculator.html"><span aria-hidden="true">₹</span>${esc(lang === "hi" ? hi : en)} <span aria-hidden="true">↗</span></a>`).join("")}</div></section>`;
 }
 function renderDone() {
  const box = document.getElementById("doneBox");
@@ -395,7 +399,7 @@ function renderLesson() {
  const next = idx < LESSON_ORDER.length - 1 ? LESSON_ORDER[idx + 1] : null;
  const navTitle = s => esc((LESSONS[lang] && LESSONS[lang][s] || LESSONS.en[s]).title);
 
- document.title = `${L.title} — MarketPathAcademy`;
+ document.title = `${L.title} | MarketPathAcademy`;
  document.getElementById("crumbTopic").textContent = L.title;
 
  root.innerHTML = `
@@ -448,6 +452,7 @@ function renderLesson() {
 }
 
 function setLanguage(l) {
+ if (PAGE && l !== lang) { saveLang(l); location.href = lessonHref(slug, l) + location.hash; return; }
  lang = l;
  saveLang(l);
  document.getElementById("languageSelect").value = l;
@@ -458,9 +463,14 @@ function setLanguage(l) {
 document.addEventListener("DOMContentLoaded", () => {
  applyMcq();
  const params = new URLSearchParams(location.search);
- slug = params.get("topic") || LESSON_ORDER[0];
- lang = readLang();
+ if (!PAGE) {
+  const topic = params.get("topic") || LESSON_ORDER[0];
+  if (LESSONS.en[topic]) { location.replace(lessonHref(topic, readLang() === "hi" ? "hi" : "en") + location.hash); return; }
+ }
+ slug = PAGE ? PAGE.slug : params.get("topic");
+ lang = PAGE ? PAGE.lang : readLang();
  if (!UI[lang]) lang = "en";
+ if (PAGE) saveLang(lang);
 
  document.getElementById("year").textContent = new Date().getFullYear();
  document.getElementById("languageSelect").value = lang;
