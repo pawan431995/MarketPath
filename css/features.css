@@ -1040,3 +1040,20 @@ html[data-theme="light"] .lesson-table th,html[data-theme="light"] .lesson-table
 html[data-theme="light"] .lesson-table thead th{background:#f1f5fa;color:#4a5d75}
 html[data-theme="light"] .lesson-table tbody th{color:#13233a}
 html[data-theme="light"] .lesson-table tr.total>*{background:#e6f5ef;color:#0d2a22;border-top-color:#9fd8c3}
+/* Glossary term pages (pages/glossary-<slug>.html) and links to them */
+.gl-term-hi{display:block;font-size:.55em;font-weight:600;color:#9fb3cc;margin-top:6px;letter-spacing:0}
+.gl-term .case-card p{margin:0}
+.gl-term .case-card .gl-source{margin-top:8px;font-size:13px;color:#8fa2b8}
+.gl-source a,.gl-back a,.gl-term .lesson-block li a{color:var(--green);font-weight:600}
+.gl-back{margin:26px 0 0}
+.gl-head h2 a,.term-list dt a{color:inherit;text-decoration:underline;text-decoration-color:rgba(72,224,176,.45);text-underline-offset:3px}
+.gl-head h2 a:hover,.term-list dt a:hover{color:var(--green)}
+html[data-theme="light"] .gl-term-hi{color:#4a5d75}
+html[data-theme="light"] .gl-term .case-card .gl-source{color:#5b6b80}
+html[data-theme="light"] :is(.gl-source a,.gl-back a,.gl-term .lesson-block li a){color:#0b7d5e}
+/* Articles (pages/articles.html, pages/article-<slug>.html) */
+.article-list{display:grid;gap:12px;margin-top:24px}
+.article-list h2{font-family:Manrope,sans-serif;font-size:19px;margin:0 0 6px;line-height:1.35}
+.article-list h2 a{color:inherit}.article-list h2 a:hover{color:var(--green)}
+.article-page .lesson-summary a{color:var(--green);font-weight:600}
+html[data-theme="light"] .article-page .lesson-summary a{color:#0b7d5e}

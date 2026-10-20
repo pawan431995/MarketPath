@@ -30,7 +30,7 @@ function glRender() {
  document.getElementById("glCount").textContent = `${list.length} ${ui.count}`;
  document.getElementById("glList").innerHTML = list.map(t => `
   <article class="gl-item">
-   <div class="gl-head"><h2>${MP.esc(t.term[glLang] || t.term.en)}</h2><span class="level-badge">${MP.esc(ui.cat[t.cat])}</span></div>
+   <div class="gl-head"><h2><a href="${glossaryHref(t.term.en)}">${MP.esc(t.term[glLang] || t.term.en)}</a></h2><span class="level-badge">${MP.esc(ui.cat[t.cat])}</span></div>
    <p>${MP.esc(t.def[glLang] || t.def.en)}</p>
    ${glLang === "en" ? `<p class="gl-alt">${MP.esc(t.term.hi)}</p>` : `<p class="gl-alt">${MP.esc(t.term.en)}</p>`}
   </article>`).join("");

@@ -143,7 +143,8 @@ marketpath-static-website/
 │   ├── build-nse-symbols.js    Regenerates js/paper-symbols.js from NSE's EQUITY_L.csv
 │   ├── build-test-bank.js      Regenerates js/test-bank.js (run after editing any module quiz)
 │   ├── build-search-index.js   Regenerates js/search-index.js and js/lesson-catalog.js (run after editing any content)
-│   ├── build-seo.js            Generates lesson and calculator pages, SEO tags, sitemap.xml and robots.txt (see SEO below)
+│   ├── build-seo.js            Generates lesson, calculator, glossary and article pages, per-lesson data, SEO tags, sitemap.xml and robots.txt (see SEO below)
+│   ├── indexnow.js             Sends changed pages to IndexNow search engines (run by the deploy workflow)
 │   ├── fetch-indices.js        Fetches index levels (NSE, with Yahoo for SENSEX and as fallback) into data/
 │   ├── fetch-quotes.js         Fetches delayed share prices for paper trading into data/
 │   ├── build-screener.js       Builds data/screener.js (screener metrics) from the daily candles; run by fetch-quotes.js
@@ -169,9 +170,17 @@ Official documentation: https://docs.github.com/en/pages
 - **A page per lesson and language**: `pages/lesson-<slug>.html` (English) and `pages/lesson-<slug>-hi.html` (Hindi), 46 pages from the template `pages/lesson.html`. Each has the full lesson text in the HTML (readable without JavaScript), its own title and description, a canonical URL, `hreflang` links between the two languages, social tags and structured data (Course, BreadcrumbList, FAQPage). The address decides the language; switching language moves to the other page. The old address `lesson.html?topic=<slug>` redirects there.
 - **A page per calculator**: `pages/<id>-calculator.html` (49 pages, for searches such as "SIP calculator" or "income tax calculator"), with WebApplication structured data. Old links like `calculators.html#emi?amount=…` redirect there and keep their inputs.
 - **The `<head>` SEO tags of the other pages** (between `<!-- seo -->` and `<!-- /seo -->`): titles and descriptions written for search, canonical URLs, Open Graph and Twitter tags, and structured data (EducationalOrganization and WebSite on the homepage, course and calculator lists). Page titles and descriptions live in the `PAGES` table in the script.
+- **A page per glossary term**: `pages/glossary-<slug>.html` (123 pages, for searches such as "P/E ratio meaning in Hindi"): the definition in English and Hindi, passages from the lessons that use the term, the lessons that teach it and related terms, with DefinedTerm structured data. The glossary list, the lessons' key terms and site search link to them. `glossarySlug()` in `js/glossary-data.js` makes the addresses.
+- **Articles**: `pages/articles.html` and `pages/article-<slug>.html`, from `js/articles.js` (Article and FAQ structured data). To publish an article, add it to that file (the fields are described at its top) and run the script. Linked from the footer and site search.
+- **Small data files per lesson**: `js/lesson-data/<slug>.js` holds only what one lesson page needs, so a lesson page loads 8 scripts (largest about 125 KB) instead of 42 (about 1.5 MB). The content files stay the source; the template `pages/lesson.html` lists them and still loads them all.
 - **`sitemap.xml`** (every page, with language alternates) and **`robots.txt`**.
 
 Run it after editing lessons, calculators or page titles, together with `node tools/build-search-index.js`. Do not edit the generated pages by hand: change the template or the content and run the script again.
+
+Also for search and speed:
+- **IndexNow**: after every push to `main`, the deploy workflow runs `tools/indexnow.js`, which sends the changed pages to IndexNow (Bing, and through it Yahoo and DuckDuckGo; also Yandex), so they are recrawled within hours. The key file `d1bda95094b9c7946e035dc4a2409910.txt` at the site root must stay there. Send pages by hand with `node tools/indexnow.js pages/sip-calculator.html`.
+- **Fonts** load from Google Fonts in each page's `<head>` with preconnect hints, not through a CSS `@import`, so text renders sooner.
+- **Google Analytics 4** is ready but off: set `ANALYTICS_ID` in `js/site-chrome.js` to your measurement ID (`G-…`) and update the privacy policy first.
 
 ### Connecting the domain www.marketpathacademy.com
 1. At your domain registrar, add DNS records: four `A` records for `marketpathacademy.com` pointing to `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`, and a `CNAME` record for `www` pointing to `pawan431995.github.io`.

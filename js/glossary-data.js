@@ -88,3 +88,13 @@ const GLOSSARY_TERMS = [
  { cat: "funds", term: { en: "Rupee cost averaging", hi: "रुपी कॉस्ट एवरेजिंग" }, def: { en: "Buying a fixed amount regularly, so you buy more units when prices are low and fewer when high. It does not guarantee a profit.", hi: "नियमित रूप से तय राशि निवेश करना, ताकि कीमत कम होने पर ज़्यादा और ज़्यादा होने पर कम यूनिट मिलें। यह मुनाफ़े की गारंटी नहीं।" } },
  { cat: "basics", term: { en: "Emergency fund", hi: "इमरजेंसी फ़ंड" }, def: { en: "Cash or very safe, liquid savings to cover 3 to 6 months of expenses. Keep it separate from investments.", hi: "3 से 6 महीने के खर्च के लिए नकद या बहुत सुरक्षित, तुरंत उपलब्ध बचत। इसे निवेश से अलग रखें।" } }
 ];
+
+// Each term has its own page, pages/glossary-<slug>.html (made by tools/build-seo.js). The slug comes from the
+// English term: "P/E ratio" -> "pe-ratio", "EV/EBITDA" -> "ev-ebitda", "Auditor's report" -> "auditors-report".
+function glossarySlug(en) {
+ return en.toLowerCase().replace(/&/g, " and ").replace(/\b([a-z])\/([a-z])\b/g, "$1$2").replace(/['’+.]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+// Address of a term's page, relative to the pages/ folder.
+function glossaryHref(en) {
+ return `glossary-${glossarySlug(en)}.html`;
+}

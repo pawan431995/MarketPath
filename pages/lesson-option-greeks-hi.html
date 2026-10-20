@@ -35,6 +35,9 @@
   <link rel="icon" href="../images/favicon-64.png" type="image/png" sizes="64x64">
   <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
   <link rel="manifest" href="../site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/features.css">
   <script src="../js/theme.js"></script>
@@ -88,6 +91,7 @@
    <section class="lesson-block"><h2>वास्तविक परिस्थितियाँ</h2><div class="case-card scenario"><h3>नतीजों के बाद IV का गिरना</h3><p>नतीजों से पहले जब इम्प्लाइड वोलैटिलिटी ऊँची होती है, आप कॉल ख़रीदते हैं। नतीजे अपेक्षा के अनुरूप आते हैं और IV तेज़ी से गिरता है। शेयर थोड़ा चढ़ने पर भी ऑप्शन की कीमत गिर जाती है। वेगा का नुकसान दिशा के लाभ से बड़ा हो सकता है।</p></div><div class="case-card scenario"><h3>सप्ताहांत का समय-क्षय</h3><p>बाज़ार बंद होने पर भी सप्ताहांत में ऑप्शन की टाइम वैल्यू घटती है। विक्रेता थीटा कमाते हैं, पर उन्हें बड़ी चाल के जोखिम को संभालना होता है।</p></div></section>
    <section class="lesson-block"><h2>उपयोग के मामले</h2><ul><li>नेकेड कॉल और बुल कॉल स्प्रेड के बीच चुनाव, लागत और जोखिम घटाने के लिए।</li><li>ऑप्शन पोर्टफ़ोलियो बाज़ार के साथ कैसे चलेगा, यह डेल्टा से अनुमान लगाना।</li><li>सीमित अधिकतम नुकसान के साथ रेंज-बाउंड बाज़ार में आयरन कंडोर बेचना।</li></ul></section>
    <section class="lesson-block"><h2>मुख्य बातें</h2><ul><li>डेल्टा = कीमत संवेदनशीलता; गामा = डेल्टा कैसे बदलता है; थीटा = समय क्षय; वेगा = अस्थिरता संवेदनशीलता।</li><li>ऑप्शन ख़रीदने से पहले इम्प्लाइड वोलैटिलिटी जाँचें।</li><li>परिभाषित-जोखिम स्प्रेड अधिकतम नुकसान और अधिकतम लाभ दोनों सीमित करते हैं।</li><li>ग्रीक्स मॉडल से निकले अनुमान हैं; अपने ब्रोकर के कैलकुलेटर से जाँचें।</li></ul></section>
+   <section class="lesson-block"><h2>मुख्य शब्द, समझाए गए</h2><dl class="term-list"><dt><a href="glossary-greeks-delta-theta.html">ग्रीक्स (डेल्टा, थीटा)</a></dt><dd>ऑप्शन की संवेदनशीलता के मापक। डेल्टा कीमत-संवेदनशीलता; थीटा समय-क्षय।</dd><dt><a href="glossary-implied-volatility-iv.html">इम्प्लाइड वोलैटिलिटी (IV)</a></dt><dd>ऑप्शन की कीमत से भविष्य के लिए निकली अस्थिरता। ज़्यादा IV से ऑप्शन महँगे होते हैं।</dd><dt><a href="glossary-premium.html">प्रीमियम</a></dt><dd>ऑप्शन ख़रीदार द्वारा विक्रेता को चुकाई गई कीमत।</dd><dt><a href="glossary-expiry.html">एक्सपायरी</a></dt><dd>वह तारीख़ जिस पर फ्यूचर्स या ऑप्शन अनुबंध समाप्त होता है।</dd><dt><a href="glossary-strike-price.html">स्ट्राइक प्राइस</a></dt><dd>वह कीमत जिस पर कोई ऑप्शन इस्तेमाल किया जा सकता है।</dd><dt><a href="glossary-option.html">ऑप्शन</a></dt><dd>एक अनुबंध जो ख़रीदार को एक्सपायरी से पहले तय कीमत पर ख़रीदने (कॉल) या बेचने (पुट) का अधिकार देता है, दायित्व नहीं।</dd></dl></section>
    <section class="lesson-block"><h2>सीखने वालों के सामान्य प्रश्न</h2><details class="practice"><summary>कौन सा ग्रीक सबसे ज़रूरी है?</summary><p>यह ट्रेड पर निर्भर करता है। दिशा के लिए डेल्टा, समय-क्षय के लिए थीटा, और अस्थिरता के लिए वेगा। शुरुआती को पहले डेल्टा और थीटा समझने चाहिए।</p></details><details class="practice"><summary>स्टॉक चढ़ा फिर भी मेरे ऑप्शन की कीमत क्यों गिरी?</summary><p>समय-क्षय (थीटा) या इम्प्लाइड वोलैटिलिटी का गिरना (वेगा) स्टॉक की छोटी बढ़त से ज़्यादा असर डाल सकता है। यह अक्सर नतीजों या घटनाओं के बाद होता है, जब अस्थिरता गिरती है।</p></details><details class="practice"><summary>क्या ऑप्शन ख़रीदारों के लिए समय-क्षय अच्छा है?</summary><p>नहीं। थीटा ख़रीदारों के ख़िलाफ़ काम करता है, क्योंकि ऑप्शन हर दिन समय मूल्य खोता है। यह विक्रेताओं के पक्ष में काम करता है, जो यह क्षय कमाते हैं पर बड़ा जोखिम उठाते हैं।</p></details></section>
    <p class="fine-print lesson-disclaimer">केवल शैक्षिक सामग्री, निवेश सलाह नहीं। बाज़ार में जोखिम होता है, जिसमें पूँजी खोने का जोखिम भी शामिल है। उदाहरण सरल किए गए हैं और इनमें शुल्क, टैक्स या स्लिपेज शामिल नहीं हो सकते।</p>
    <nav class="lesson-nav" aria-label="Lesson navigation"><a href="lesson-futures-options-hi.html"><small>← पिछला पाठ</small>फ्यूचर्स और ऑप्शंस (F&amp;O)</a><a class="next" href="lesson-trading-psychology-hi.html"><small>अगला पाठ →</small>ट्रेडिंग मनोविज्ञान</a></nav>
@@ -105,41 +109,7 @@
   <script src="../js/site-search.js"></script>
   <script src="../js/index-ribbon.js"></script>
   <script src="../js/progress.js"></script>
-  <script src="../js/lessons.js"></script>
-  <script src="../js/lessons-modules.js"></script>
-  <script src="../js/lessons-foundations.js"></script>
-  <script src="../js/lessons-content-a.js"></script>
-  <script src="../js/lessons-content-b.js"></script>
-  <script src="../js/lessons-content-c.js"></script>
-  <script src="../js/lessons-content-d.js"></script>
-  <script src="../js/lessons-content-e.js"></script>
-  <script src="../js/lessons-strategies.js"></script>
-  <script src="../js/lessons-strategy-detail.js"></script>
-  <script src="../js/lessons-extra-en.js"></script>
-  <script src="../js/lessons-extra-hi.js"></script>
-  <script src="../js/lesson-charts.js"></script>
-  <script src="../js/patterns.js"></script>
-  <script src="../js/indicators.js"></script>
-  <script src="../js/patterns-extra.js"></script>
-  <script src="../js/glossary-data.js"></script>
-  <script src="../js/glossary-finance.js"></script>
-  <script src="../js/glossary-rules.js"></script>
-  <script src="../js/module-extras.js"></script>
-  <script src="../js/lessons-tax.js"></script>
-  <script src="../js/lessons-finance.js"></script>
-  <script src="../js/lessons-finance-more.js"></script>
-  <script src="../js/lessons-finance-more-hi.js"></script>
-  <script src="../js/lessons-updates.js"></script>
-  <script src="../js/mcq-core.js"></script>
-  <script src="../js/mcq-1.js"></script>
-  <script src="../js/mcq-2.js"></script>
-  <script src="../js/mcq-3.js"></script>
-  <script src="../js/mcq-4.js"></script>
-  <script src="../js/mcq-5.js"></script>
-  <script src="../js/mcq-6.js"></script>
-  <script src="../js/mcq-7.js"></script>
-  <script src="../js/lessons-market-rules.js"></script>
-  <script src="../js/lesson-practice.js"></script>
+  <script src="../js/lesson-data/option-greeks.js"></script>
   <script src="../js/ads.js"></script>
   <script src="../js/lesson.js"></script>
 </body>

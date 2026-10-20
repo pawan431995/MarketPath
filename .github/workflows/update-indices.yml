@@ -61,3 +61,10 @@ jobs:
           path: .
       - id: deployment
         uses: actions/deploy-pages@v4
+      # After a push (not the 5-minute data refreshes), tell IndexNow search engines which pages changed.
+      - name: Notify search engines of changed pages (IndexNow)
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+        continue-on-error: true
+        run: |
+          git fetch --no-tags --depth=1 origin ${{ github.event.before }}
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} | node tools/indexnow.js

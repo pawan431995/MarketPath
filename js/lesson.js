@@ -229,7 +229,7 @@ function bindCalcs() {
 function termsBlock(names) {
  const items = (names || []).map(n => GLOSSARY_TERMS.find(t => t.term.en === n)).filter(Boolean);
  if (!items.length) return "";
- return `<section class="lesson-block"><h2>${esc(UI[lang].termsTitle)}</h2><dl class="term-list">${items.map(t => `<dt>${esc(pick(t.term))}</dt><dd>${esc(pick(t.def))}</dd>`).join("")}</dl></section>`;
+ return `<section class="lesson-block"><h2>${esc(UI[lang].termsTitle)}</h2><dl class="term-list">${items.map(t => `<dt><a href="${glossaryHref(t.term.en)}">${esc(pick(t.term))}</a></dt><dd>${esc(pick(t.def))}</dd>`).join("")}</dl></section>`;
 }
 function faqBlock(faq) {
  if (!faq || !faq.length) return "";

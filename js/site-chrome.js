@@ -13,7 +13,7 @@
    learn: "Learn", paper: "Paper trading", test: "Final test", calcs: "Calculators", glossary: "Glossary", about: "About", search: "Search", menu: "Open navigation",
    tagline: "Learn the market, one concept at a time. Lessons, practice and tools for beginners and experienced investors, in English and Hindi.",
    colStart: "Start learning", colTrade: "Trading & analysis", colTools: "Tools", colSite: "MarketPathAcademy",
-   disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top",
+   disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top", articles: "Articles",
    rights: "MarketPathAcademy. Educational content only — not investment advice.",
    lessons: {
     foundations: "Stock market foundations", "market-rules": "Market rules & investor protection", investing: "Investing & wealth building",
@@ -26,7 +26,7 @@
    learn: "सीखें", paper: "पेपर ट्रेडिंग", test: "फ़ाइनल टेस्ट", calcs: "कैलकुलेटर", glossary: "शब्दावली", about: "हमारे बारे में", search: "खोजें", menu: "नेविगेशन खोलें",
    tagline: "एक-एक अवधारणा करके बाज़ार सीखें। शुरुआती और अनुभवी निवेशकों के लिए पाठ, अभ्यास और टूल, हिंदी और अंग्रेज़ी में।",
    colStart: "सीखना शुरू करें", colTrade: "ट्रेडिंग और विश्लेषण", colTools: "टूल", colSite: "MarketPathAcademy",
-   disclaimer: "अस्वीकरण", privacy: "गोपनीयता नीति", contact: "संपर्क", top: "ऊपर जाएँ",
+   disclaimer: "अस्वीकरण", privacy: "गोपनीयता नीति", contact: "संपर्क", top: "ऊपर जाएँ", articles: "लेख",
    rights: "MarketPathAcademy. केवल शैक्षिक सामग्री — निवेश सलाह नहीं।",
    lessons: {
     foundations: "शेयर बाज़ार की मूल बातें", "market-rules": "बाज़ार के नियम और निवेशक सुरक्षा", investing: "निवेश और धन निर्माण",
@@ -92,7 +92,7 @@
     <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTrade)}"><h2>${esc(t.colTrade)}</h2>${["technical-analysis", "candlestick-patterns", "fundamental-analysis", "futures-options", "risk-management"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTools)}"><h2>${esc(t.colTools)}</h2>${link(url("pages/paper-trading.html"), t.paper)}${link(url("pages/paper-trading.html#screener"), t.tools.screener)}${link(url("pages/paper-trading.html#strategy"), t.tools.strategy)}${link(url("pages/paper-trading.html#replay"), t.tools.replay)}${link(url("pages/test.html"), t.tools.test)}${link(url("pages/calculators.html"), t.calcs)}${link(url("pages/calculators.html#sip"), t.tools.sip)}${link(url("pages/calculators.html#income-tax"), t.tools["income-tax"])}${link(url("pages/glossary.html"), t.glossary)}</nav>
-    <nav class="ft-col" aria-label="${esc(t.colSite)}"><h2>${esc(t.colSite)}</h2>${link(url("index.html#about"), t.about)}${link(url("index.html#about"), t.disclaimer)}${link(url("pages/privacy.html"), t.privacy)}${link(url("pages/contact.html"), t.contact)}</nav>
+    <nav class="ft-col" aria-label="${esc(t.colSite)}"><h2>${esc(t.colSite)}</h2>${link(url("pages/articles.html"), t.articles)}${link(url("pages/glossary.html"), t.glossary)}${link(url("index.html#about"), t.about)}${link(url("index.html#about"), t.disclaimer)}${link(url("pages/privacy.html"), t.privacy)}${link(url("pages/contact.html"), t.contact)}</nav>
    </div>
    <div class="ft-bottom"><small>© <span id="year">${new Date().getFullYear()}</span> ${esc(t.rights)}</small></div>`;
  }
@@ -130,6 +130,21 @@
    if (window.MPSearch) { e.preventDefault(); window.MPSearch.open(); }
   }
  });
+
+ // Google Analytics 4: off until a measurement ID ("G-" followed by letters and digits) is set here. Before turning
+ // it on, update privacy.html (and the Hindi text in static-pages.js) to say that anonymous usage statistics are
+ // collected by Google Analytics. Not loaded on local copies (file:// or localhost).
+ const ANALYTICS_ID = "";
+ if (/^G-[A-Z0-9]+$/.test(ANALYTICS_ID) && /^https?:$/.test(location.protocol) && !/^(localhost|127\.)/.test(location.hostname)) {
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = `https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_ID}`;
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag("js", new Date());
+  window.gtag("config", ANALYTICS_ID, { anonymize_ip: true });
+ }
 
  // The page's own title from its HTML (written for search engines). Page scripts keep it in English and
  // only replace it when the page is shown in Hindi.

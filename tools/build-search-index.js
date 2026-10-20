@@ -17,9 +17,9 @@ const load = files => files.forEach(f => vm.runInContext(fs.readFileSync(path.jo
 load(["lessons.js", "lessons-modules.js", "lessons-foundations.js", "lessons-content-a.js", "lessons-content-b.js", "lessons-content-c.js", "lessons-content-d.js", "lessons-content-e.js",
  "lessons-strategies.js", "lessons-strategy-detail.js", "lessons-extra-en.js", "lessons-extra-hi.js", "lesson-charts.js", "patterns.js", "indicators.js", "patterns-extra.js",
  "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js", "lessons-updates.js", "lessons-market-rules.js",
- "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js"]);
-vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS };", ctx);
-const { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS } = ctx.__;
+ "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js", "articles.js"]);
+vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS, ARTICLES };", ctx);
+const { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS, ARTICLES } = ctx.__;
 const CALCS = ctx.CALCS;
 
 const clip = (s, n = 240) => { s = String(s || "").replace(/\s+/g, " ").trim(); return s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s; };
@@ -54,8 +54,11 @@ LESSON_ORDER.forEach(slug => {
 
 GLOSSARY_TERMS.forEach(t => {
  const c = CAT_TERM[t.cat] || ["", ""];
- out.push(["term", `pages/glossary.html?q=${encodeURIComponent(t.term.en)}`, t.term.en, clip(t.def.en), c[0], t.term.hi, clip(t.def.hi), c[1]]);
+ out.push(["term", `pages/${ctx.glossaryHref(t.term.en)}`, t.term.en, clip(t.def.en), c[0], t.term.hi, clip(t.def.hi), c[1]]);
 });
+
+// Articles (English only); the Hindi fields repeat the English so Hindi searches still find them.
+ARTICLES.forEach(a => out.push(["page", `pages/article-${a.slug}.html`, a.title, clip(a.summary), "Article", a.title, clip(a.summary), "लेख", a.desc]));
 
 CALCS.forEach(c => {
  const cat = CAT_CALC[c.cat] || ["", ""];

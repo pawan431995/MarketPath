@@ -35,6 +35,9 @@
   <link rel="icon" href="../images/favicon-64.png" type="image/png" sizes="64x64">
   <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
   <link rel="manifest" href="../site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/features.css">
   <script src="../js/theme.js"></script>
@@ -130,6 +133,7 @@
    <section class="lesson-block"><h2>Real-life scenarios</h2><div class="case-card scenario"><h3>Expiry-day move</h3><p>On expiry day an option can swing sharply as its time value disappears. A buyer can lose the whole premium within hours. Sellers face the risk of a large move against them with little time to adjust.</p></div><div class="case-card scenario"><h3>Margin call on a futures position</h3><p>The index falls and your margin falls below the required level. You must add funds or the broker may close the position at a loss. Keep a buffer above the minimum margin.</p></div></section>
    <section class="lesson-block"><h2>Use cases</h2><ul><li>Hedging: buying puts to protect a stock or index portfolio from a sharp fall.</li><li>Covered call: owning shares and selling calls against them to earn premium, while capping upside.</li><li>Speculation on a view of direction or volatility, with the risk limits set in advance.</li></ul></section>
    <section class="lesson-block"><h2>Key takeaways</h2><ul><li>Futures carry obligations on both sides; options give rights to buyers and obligations to sellers.</li><li>Option buyers risk the premium; option sellers can face large losses.</li><li>Lot size, margin and expiry must be understood before trading.</li><li>Learn with paper trading and small positions first.</li></ul></section>
+   <section class="lesson-block"><h2>Key terms, explained</h2><dl class="term-list"><dt><a href="glossary-futures.html">Futures</a></dt><dd>A contract to buy or sell an asset at a set price on a future date. Both sides have obligations.</dd><dt><a href="glossary-option.html">Option</a></dt><dd>A contract giving the buyer the right, but not the obligation, to buy (call) or sell (put) at a set price before expiry.</dd><dt><a href="glossary-call-and-put.html">Call and put</a></dt><dd>A call gives the right to buy at the strike price; a put gives the right to sell at the strike price.</dd><dt><a href="glossary-strike-price.html">Strike price</a></dt><dd>The price at which an option can be exercised.</dd><dt><a href="glossary-expiry.html">Expiry</a></dt><dd>The date on which a futures or option contract ends.</dd><dt><a href="glossary-lot-size.html">Lot size</a></dt><dd>The fixed quantity in one derivatives contract. You trade in whole lots.</dd><dt><a href="glossary-premium.html">Premium</a></dt><dd>The price paid by the option buyer to the seller.</dd><dt><a href="glossary-itm-atm-otm.html">ITM, ATM, OTM</a></dt><dd>In the money (has intrinsic value), at the money (strike near price), out of the money (no intrinsic value).</dd><dt><a href="glossary-open-interest.html">Open interest</a></dt><dd>The number of outstanding derivative contracts that have not been closed or settled.</dd><dt><a href="glossary-implied-volatility-iv.html">Implied volatility (IV)</a></dt><dd>The volatility the option price implies for the future. Higher IV makes options more expensive.</dd><dt><a href="glossary-margin.html">Margin</a></dt><dd>The money you must deposit with a broker to hold a leveraged position.</dd></dl></section>
    <section class="lesson-block"><h2>Questions learners ask</h2><details class="practice"><summary>What is a lot size?</summary><p>The fixed number of units in one contract. You trade in whole lots, so a small view may need a larger position than you expect. Check the current lot size before placing an order.</p></details><details class="practice"><summary>Can an option buyer lose more than the premium?</summary><p>No. The buyer&#39;s maximum loss is the premium paid. The seller of an uncovered option can face much larger losses, including losses that grow as the price moves further.</p></details><details class="practice"><summary>What happens at expiry?</summary><p>In-the-money options are settled based on the difference from the strike. Out-of-the-money options expire worthless. Check how your broker handles assignment and exercise before expiry.</p></details></section>
    <p class="fine-print lesson-disclaimer">Educational content only, not investment advice. Markets carry risk, including loss of capital. Examples are simplified and may exclude charges, taxes and slippage.</p>
    <nav class="lesson-nav" aria-label="Lesson navigation"><a href="lesson-intraday-trading.html"><small>← Previous lesson</small>Intraday Trading</a><a class="next" href="lesson-option-greeks.html"><small>Next lesson →</small>Option Greeks &amp; Strategies</a></nav>
@@ -147,41 +151,7 @@
   <script src="../js/site-search.js"></script>
   <script src="../js/index-ribbon.js"></script>
   <script src="../js/progress.js"></script>
-  <script src="../js/lessons.js"></script>
-  <script src="../js/lessons-modules.js"></script>
-  <script src="../js/lessons-foundations.js"></script>
-  <script src="../js/lessons-content-a.js"></script>
-  <script src="../js/lessons-content-b.js"></script>
-  <script src="../js/lessons-content-c.js"></script>
-  <script src="../js/lessons-content-d.js"></script>
-  <script src="../js/lessons-content-e.js"></script>
-  <script src="../js/lessons-strategies.js"></script>
-  <script src="../js/lessons-strategy-detail.js"></script>
-  <script src="../js/lessons-extra-en.js"></script>
-  <script src="../js/lessons-extra-hi.js"></script>
-  <script src="../js/lesson-charts.js"></script>
-  <script src="../js/patterns.js"></script>
-  <script src="../js/indicators.js"></script>
-  <script src="../js/patterns-extra.js"></script>
-  <script src="../js/glossary-data.js"></script>
-  <script src="../js/glossary-finance.js"></script>
-  <script src="../js/glossary-rules.js"></script>
-  <script src="../js/module-extras.js"></script>
-  <script src="../js/lessons-tax.js"></script>
-  <script src="../js/lessons-finance.js"></script>
-  <script src="../js/lessons-finance-more.js"></script>
-  <script src="../js/lessons-finance-more-hi.js"></script>
-  <script src="../js/lessons-updates.js"></script>
-  <script src="../js/mcq-core.js"></script>
-  <script src="../js/mcq-1.js"></script>
-  <script src="../js/mcq-2.js"></script>
-  <script src="../js/mcq-3.js"></script>
-  <script src="../js/mcq-4.js"></script>
-  <script src="../js/mcq-5.js"></script>
-  <script src="../js/mcq-6.js"></script>
-  <script src="../js/mcq-7.js"></script>
-  <script src="../js/lessons-market-rules.js"></script>
-  <script src="../js/lesson-practice.js"></script>
+  <script src="../js/lesson-data/futures-options.js"></script>
   <script src="../js/ads.js"></script>
   <script src="../js/lesson.js"></script>
 </body>
