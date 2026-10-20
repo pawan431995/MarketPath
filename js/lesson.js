@@ -476,11 +476,6 @@ document.addEventListener("DOMContentLoaded", () => {
  document.getElementById("languageSelect").value = lang;
  document.getElementById("languageSelect").addEventListener("change", e => setLanguage(e.target.value));
 
- const menu = document.getElementById("menuToggle");
- menu.addEventListener("click", () => {
-  const open = document.getElementById("mainNav").classList.toggle("open");
-  menu.setAttribute("aria-expanded", String(open));
- });
 
  // Headings panel is open on wide screens and collapsed on phones.
  document.getElementById("sideMain").open = window.innerWidth > 900;

@@ -52,10 +52,5 @@ const PAGE_UI = {
   sel.value = lang;
   sel.addEventListener("change", () => { try { localStorage.setItem("mp-lang", sel.value); } catch (e) { /* storage unavailable */ } apply(sel.value); });
  }
- const menu = document.getElementById("menuToggle");
- if (menu) menu.addEventListener("click", () => {
-  const open = document.getElementById("mainNav").classList.toggle("open");
-  menu.setAttribute("aria-expanded", String(open));
- });
  apply(lang);
 })();

@@ -119,9 +119,25 @@
  function render() { renderNav(); renderSearchButton(); renderFooter(); renderBackToTop(); }
  render();
 
- // Re-render after the page's own language handler has saved the new choice.
+ // Save the language choice (pages without their own language handler, such as paper trading, rely on this) and
+ // re-render the menu and footer after the page's own handler has run.
  const sel = document.getElementById("languageSelect");
- if (sel) sel.addEventListener("change", () => setTimeout(render, 0));
+ if (sel) sel.value = lang(); // pages with their own handler set this too; pages without one need it here
+ if (sel) sel.addEventListener("change", () => {
+  try { localStorage.setItem("mp-lang", sel.value === "hi" ? "hi" : "en"); } catch (e) { /* storage unavailable */ }
+  setTimeout(render, 0);
+ });
+
+ // The menu button (phones and narrow windows) for every page. Page scripts must not add their own handler:
+ // two handlers would open and close the menu on the same tap. MP.setupMenu() checks data-wired.
+ const menuBtn = document.getElementById("menuToggle"), mainNav = document.getElementById("mainNav");
+ if (menuBtn && mainNav && !menuBtn.dataset.wired) {
+  menuBtn.dataset.wired = "1";
+  const setOpen = open => { mainNav.classList.toggle("open", open); menuBtn.setAttribute("aria-expanded", String(open)); };
+  menuBtn.addEventListener("click", e => { e.stopPropagation(); setOpen(!mainNav.classList.contains("open")); });
+  document.addEventListener("click", e => { if (mainNav.classList.contains("open") && !mainNav.contains(e.target)) setOpen(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && mainNav.classList.contains("open")) { setOpen(false); menuBtn.focus(); } });
+ }
 
  // "/" or Ctrl/Cmd+K opens search from anywhere except while typing in a field.
  document.addEventListener("keydown", e => {

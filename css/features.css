@@ -1057,3 +1057,9 @@ html[data-theme="light"] :is(.gl-source a,.gl-back a,.gl-term .lesson-block li a
 .article-list h2 a{color:inherit}.article-list h2 a:hover{color:var(--green)}
 .article-page .lesson-summary a{color:var(--green);font-weight:600}
 html[data-theme="light"] .article-page .lesson-summary a{color:#0b7d5e}
+/* Paper terminal tab strips on narrow screens: fade the edge where more tabs are hidden (paper-trading.js sets data-more) */
+.pt-nav[data-more="r"],.pt-toolnav[data-more="r"]{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent)}
+.pt-nav[data-more="l"],.pt-toolnav[data-more="l"]{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 44px),transparent)}
+.pt-nav[data-more="l r"],.pt-toolnav[data-more="l r"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 44px,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to right,transparent,#000 44px,#000 calc(100% - 44px),transparent)}
+/* Chart legend: keep clear of the price scale on the right and wrap whole items on narrow screens */
+.pp-legend{right:72px}.pp-legend span{display:inline-block;white-space:nowrap}

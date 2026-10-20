@@ -18,7 +18,8 @@ const MP = {
  },
  setupMenu() {
   const menu = document.getElementById("menuToggle");
-  if (!menu) return;
+  if (!menu || menu.dataset.wired) return; // site-chrome.js already handles it on every page
+  menu.dataset.wired = "1";
   menu.addEventListener("click", () => {
    const open = document.getElementById("mainNav").classList.toggle("open");
    menu.setAttribute("aria-expanded", String(open));

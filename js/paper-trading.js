@@ -1060,6 +1060,20 @@
  }
 
  // ---------- Terminal: sections, index strip, order window and messages ----------
+ // Tab strips that scroll sideways (phones) fade the edge where more tabs are hidden: data-more="l", "r" or "l r".
+ function markStripEdges(strip) {
+  const more = [];
+  if (strip.scrollLeft > 4) more.push("l");
+  if (strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 4) more.push("r");
+  strip.dataset.more = more.join(" ");
+ }
+ ["ptNav", "ptToolNav"].forEach(id => {
+  const strip = $(id);
+  if (!strip) return;
+  strip.addEventListener("scroll", () => markStripEdges(strip), { passive: true });
+  window.addEventListener("resize", () => markStripEdges(strip));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => markStripEdges(strip)); // web fonts change tab widths
+ });
  function setScreen(name) {
   if (!SCREENS.includes(name)) name = "chart";
   state.screen = name;
@@ -1076,6 +1090,12 @@
    b.tabIndex = on ? 0 : -1;
   });
   try { localStorage.setItem("mp-paper-tab", name); } catch (e) { /* storage unavailable */ }
+  // On narrow screens the tab strips scroll sideways: bring the chosen tab into view (without moving the page).
+  document.querySelectorAll("#paperApp .pt-navtab[aria-selected='true']").forEach(tab => {
+   const strip = tab.parentElement, left = tab.offsetLeft - strip.offsetLeft;
+   if (left < strip.scrollLeft || left + tab.offsetWidth > strip.scrollLeft + strip.clientWidth) strip.scrollLeft = left - 24;
+  });
+  ["ptNav", "ptToolNav"].forEach(id => $(id) && markStripEdges($(id)));
   if (name !== "watchlist" && !OWN_PANES[name]) accountView.show(name);
   if (name === "chart") { sizeChart(); drawings.schedule(); }
   scheduleRender();
