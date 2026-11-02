@@ -3,7 +3,7 @@
 // publisher ID (ca-pub-################) and an ad unit slot ID (digits).
 // Until then the slots show as dashed placeholder boxes. Do not click your own ads.
 const ADSENSE = {
-  client: "ca-pub-XXXXXXXXXXXXXXXX",
+  client: "ca-pub-5725904338010719",
   slot: "XXXXXXXXXX"
 };
 
@@ -12,7 +12,7 @@ function adsEnabled() {
 }
 
 function loadAdsScript() {
-  if (window.__mpAdsScript) return;
+  if (window.__mpAdsScript || document.querySelector('script[src*="adsbygoogle.js"]')) return;
   window.__mpAdsScript = true;
   const script = document.createElement("script");
   script.async = true;
