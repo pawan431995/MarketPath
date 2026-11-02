@@ -1,4 +1,1 @@
-# ads.txt for www.marketpathacademy.com
-# Replace this comment with the publisher line from your AdSense account after approval:
-# Settings > Account > Access and authorization > Authorized sellers for your ads.txt
-# Example format: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-5725904338010719, DIRECT, f08c47fec0942fa0
