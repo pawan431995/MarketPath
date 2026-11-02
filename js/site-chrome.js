@@ -10,7 +10,7 @@
 
  const T = {
   en: {
-   learn: "Learn", paper: "Paper trading", test: "Final test", calcs: "Calculators", glossary: "Glossary", about: "About", search: "Search", menu: "Open navigation",
+   learn: "Learn", paper: "Paper trading", test: "Final test", calcs: "Calculators", glossary: "Glossary", about: "About us", search: "Search", menu: "Open navigation",
    tagline: "Learn the market, one concept at a time. Lessons, practice and tools for beginners and experienced investors, in English and Hindi.",
    colStart: "Start learning", colTrade: "Trading & analysis", colTools: "Tools", colSite: "MarketPathAcademy",
    disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top", whatsapp: "Join our WhatsApp channel ↗", articles: "Articles", studyNotes: "Study notes (MBA, BBA, BBM)",
@@ -45,7 +45,7 @@
   const t = T[lang()];
   const items = [
    ["learn", url("pages/learn.html")], ["paper", url("pages/paper-trading.html")], ["calcs", url("pages/calculators.html")],
-   ["glossary", url("pages/glossary.html")], ["test", url("pages/test.html")]
+   ["glossary", url("pages/glossary.html")], ["test", url("pages/test.html")], ["about", url("pages/about.html")]
   ];
   nav.innerHTML = items.map(([k, href]) => {
    const current = href.split("#")[0] === here && !href.includes("#");
