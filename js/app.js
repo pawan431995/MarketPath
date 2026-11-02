@@ -67,11 +67,11 @@ Object.assign(translations.hi, {
  cert3: "सर्टिफ़िकेट इमेज या PDF के रूप में, जाँच लिंक के साथ डाउनलोड करें", certGo: "फ़ाइनल टेस्ट दें →"
 });
 const HOME_UI = {
- en: { card: "Your learning path", of: (d, t) => `${d} of ${t} modules completed`, start: "Start", cont: "Continue", stats: [["modules", null], ["practice questions", "467"], ["calculators", "49"], ["glossary terms", "120+"]],
-  levels: { Beginner: "How the market works, investing, SIPs and reading your first chart.", Intermediate: "Company analysis, financial statements, technical analysis, risk and tax.", Advanced: "Valuation, intraday, futures and options, option Greeks and trading psychology." },
+ en: { card: "Your learning path", of: (d, t) => `${d} of ${t} modules completed`, start: "Start", cont: "Continue", stats: [["modules", null], ["practice questions", "487"], ["calculators", "49"], ["glossary terms", "120+"]],
+  levels: { Beginner: "How the market works, personal finance, investing, SIPs and reading your first chart.", Intermediate: "Company analysis, financial statements, technical analysis, risk and tax.", Advanced: "Valuation, intraday, futures and options, option Greeks and trading psychology." },
   modules: n => `${n} modules`, more: n => `+ ${n} more`, go: l => `Start the ${l} path →`, goOn: l => `Continue the ${l} path →`, browse: n => `Browse all ${n} courses →`, upNext: "Up next", done: "Completed" },
- hi: { card: "आपका सीखने का रास्ता", of: (d, t) => `${t} में से ${d} मॉड्यूल पूरे`, start: "शुरू करें", cont: "जारी रखें", stats: [["मॉड्यूल", null], ["अभ्यास प्रश्न", "467"], ["कैलकुलेटर", "49"], ["शब्दावली के शब्द", "120+"]],
-  levels: { Beginner: "बाज़ार कैसे काम करता है, निवेश, SIP और पहला चार्ट पढ़ना।", Intermediate: "कंपनी विश्लेषण, वित्तीय विवरण, टेक्निकल एनालिसिस, जोखिम और टैक्स।", Advanced: "वैल्यूएशन, इंट्राडे, फ़्यूचर्स और ऑप्शंस, ऑप्शन ग्रीक्स और ट्रेडिंग मनोविज्ञान।" },
+ hi: { card: "आपका सीखने का रास्ता", of: (d, t) => `${t} में से ${d} मॉड्यूल पूरे`, start: "शुरू करें", cont: "जारी रखें", stats: [["मॉड्यूल", null], ["अभ्यास प्रश्न", "487"], ["कैलकुलेटर", "49"], ["शब्दावली के शब्द", "120+"]],
+  levels: { Beginner: "बाज़ार कैसे काम करता है, पर्सनल फ़ाइनेंस, निवेश, SIP और पहला चार्ट पढ़ना।", Intermediate: "कंपनी विश्लेषण, वित्तीय विवरण, टेक्निकल एनालिसिस, जोखिम और टैक्स।", Advanced: "वैल्यूएशन, इंट्राडे, फ़्यूचर्स और ऑप्शंस, ऑप्शन ग्रीक्स और ट्रेडिंग मनोविज्ञान।" },
   modules: n => `${n} मॉड्यूल`, more: n => `+ ${n} और`, go: l => `${l} रास्ता शुरू करें →`, goOn: l => `${l} रास्ता जारी रखें →`, browse: n => `सभी ${n} कोर्स देखें →`, upNext: "आगे", done: "पूरा" }
 };
 const FEATURED = ["foundations", "investing", "reading-charts", "fundamental-analysis", "technical-analysis", "risk-management"];

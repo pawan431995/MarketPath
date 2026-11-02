@@ -1,0 +1,344 @@
+// Personal Finance: budgeting, emergency fund, insurance, debt, credit score, goals, retirement, tax planning,
+// family protection and fraud, for India. English (en) and Hindi (hi). Numbers are illustrative.
+// Rates and limits change (PPF, EPF, tax rules, insurance rules): check the official sources named in the text.
+Object.assign(LESSONS.en, {
+ "personal-finance": { title: "Personal Finance: Manage Your Money", level: "beginner", time: "15 topics",
+  summary: "Budgeting, an emergency fund, insurance, loans and credit score, goals, retirement, tax planning and fraud safety: how to manage your money well before and while you invest.",
+  sections: [{ h: "Start here", p: "Personal finance is the foundation under every investment. Get these basics right and a market fall will not force you to sell." }] }
+});
+Object.assign(LESSONS.hi, {
+ "personal-finance": { title: "पर्सनल फ़ाइनेंस: अपने पैसे का प्रबंधन", level: "beginner", time: "15 विषय",
+  summary: "बजट, इमरजेंसी फ़ंड, बीमा, लोन और क्रेडिट स्कोर, लक्ष्य, रिटायरमेंट, टैक्स योजना और धोखाधड़ी से सुरक्षा: निवेश से पहले और उसके साथ अपने पैसे का सही प्रबंधन कैसे करें।",
+  sections: [{ h: "यहाँ से शुरू करें", p: "पर्सनल फ़ाइनेंस हर निवेश की नींव है। ये मूल बातें सही हों तो बाज़ार की गिरावट आपको बेचने पर मजबूर नहीं करेगी।" }] }
+});
+// A beginner module: it comes before Investing, because these steps come before investing.
+LESSON_ORDER.splice(LESSON_ORDER.indexOf("investing"), 0, "personal-finance");
+
+Object.assign(LESSON_OVERRIDES.en, {
+ "personal-finance": { sections: [
+  { h: "1. What personal finance covers", p: "Personal finance means deciding how you earn, spend, save, borrow, protect and grow your money, so that your life goals are paid for and a bad event does not ruin you. It matters more than picking good shares: a person with a modest salary and good habits often ends up wealthier than a high earner who spends everything.", ul: [
+   "Cash flow: knowing what comes in and what goes out each month.",
+   "Safety: an emergency fund and the right insurance.",
+   "Debt: borrowing only when it makes sense and repaying it on time.",
+   "Goals and investing: matching each goal with a suitable investment.",
+   "Tax and paperwork: keeping more of what you earn, and making sure your family can reach your money."
+  ] },
+  { h: "2. Know where you stand: net worth", p: "Net worth is everything you own minus everything you owe. It is the single best measure of financial progress, far better than salary. Work it out once a year.", table: { head: ["Item", "₹"], rows: [
+   ["Savings account and fixed deposits", "1,50,000"], ["Mutual funds and shares", "3,00,000"], ["EPF balance", "4,50,000"], ["Car (current resale value)", "3,00,000"],
+   ["!Total assets", "12,00,000"],
+   ["Car loan outstanding", "1,80,000"], ["Credit card balance", "20,000"],
+   ["!Total liabilities", "2,00,000"],
+   ["!Net worth", "10,00,000"]
+  ] }, p2: "Value assets at what they would sell for today, not what you paid. A car loses value every year, so a loan-funded car can lower your net worth even though it feels like an asset." },
+  { h: "3. Make a budget you can follow", p: "A budget is a plan for your money, not a punishment. A simple starting point is the 50/30/20 rule, applied to your take-home pay. Adjust the percentages to your city, family and income.", table: { head: ["Bucket", "Share", "On ₹60,000 take-home", "Examples"], rows: [
+   ["Needs", "50%", "₹30,000", "Rent, groceries, bills, school fees, minimum EMIs"],
+   ["Wants", "30%", "₹18,000", "Eating out, shopping, trips, subscriptions"],
+   ["Savings and investing", "20%", "₹12,000", "Emergency fund, SIPs, extra loan repayment"]
+  ] }, p2: "Track your spending for one month using your bank and UPI statements: most people are surprised by what they find. Then pay yourself first: set an automatic transfer to savings and SIPs on the day after your salary arrives, and spend what is left. If EMIs and rent already take most of your income, make increasing that 20% your first goal." },
+  { h: "4. Build an emergency fund", p: "An emergency fund is money set aside for job loss, medical bills or urgent repairs. It stops you from breaking investments or borrowing at high interest when something goes wrong. It comes before investing in shares.", ul: [
+   "Size: 3 to 6 months of essential expenses; 6 to 12 months if your income is irregular or you are the only earner.",
+   "Where: a savings account, a sweep-in fixed deposit or a liquid fund. It should be safe and available within a day or two.",
+   "Not in: shares, equity funds, gold, or a long lock-in product. These can be down or locked exactly when you need the money.",
+   "Example: essential expenses of ₹35,000 a month × 6 = ₹2,10,000. Saving ₹10,000 a month gets you there in 21 months.",
+   "Use it only for real emergencies, and refill it afterwards."
+  ] },
+  { h: "5. Protect yourself with insurance", p: "Insurance exists to protect you from losses you could not pay for yourself. It is a cost for protection, not an investment. Buy these two before you start investing seriously.", ul: [
+   "Term life insurance: if you have dependants, it pays them a large sum if you die during the policy term. A common rule of thumb is cover of 10 to 15 times your annual income, plus your outstanding loans. It is the cheapest way to buy life cover.",
+   "Health insurance: a hospital stay can wipe out years of savings. Buy your own policy even if your employer covers you, because employer cover usually ends with the job. Check the sum insured, room-rent limits, waiting periods, co-payment and network hospitals.",
+   "Personal accident cover and vehicle insurance: useful, and third-party motor insurance is mandatory by law.",
+   "Be careful with products that mix insurance and investing (endowment, money-back and many ULIP plans). They usually give low cover and modest returns. Keeping term insurance and investments separate is normally cheaper and clearer.",
+   "Disclose your health and habits honestly in the proposal form, and tell your family about the policy. Undisclosed facts are a common reason for rejected claims."
+  ] },
+  { h: "6. Borrow wisely", p: "A loan lets you buy today and pay later, with interest. Some loans can build your future, such as a sensible home or education loan. Others only pay for things that lose value. High-interest debt usually costs more than investments can reliably earn, so repay it before you invest.", ul: [
+   "Keep total EMIs below about 40% of your take-home pay. Lower is safer.",
+   "Compare the total cost, not just the EMI: a longer tenure lowers the EMI but raises the total interest.",
+   "Example: ₹10 lakh at 9% for 5 years has an EMI of about ₹20,760, so you repay about ₹12.46 lakh in all. The interest is about ₹2.46 lakh.",
+   "Repay the costliest debt first (the avalanche method), or the smallest first if quick wins keep you motivated (the snowball method).",
+   "Lenders cannot charge prepayment penalties on floating-rate loans taken by individuals for non-business purposes, under RBI rules. Prepaying early in a loan saves the most interest.",
+   "Avoid borrowing to invest, and be careful with instant-loan apps. Check that the lender is an RBI-regulated bank or NBFC.",
+   "If you stand guarantor for someone, their loan can become your responsibility and can affect your credit score."
+  ] },
+  { h: "7. Credit cards and your credit score", p: "A credit card is useful if you pay the full bill every month: you get interest-free days and rewards. It becomes dangerous when you carry a balance, because interest is often 3% to 4% a month, or roughly 36% to 48% a year.", ul: [
+   "Always pay the total amount due, not the minimum amount due. Set up auto-pay.",
+   "Example: a ₹50,000 balance at 3.5% a month costs about ₹1,750 in the first month, or about ₹21,000 over a year if the balance stays there, before GST and fees.",
+   "Your credit score (300 to 900, from bureaus such as CIBIL) tells lenders how you handle credit. Above 750 is generally considered good and can win you lower interest rates.",
+   "What helps: paying every EMI and card bill on time, using a small share of your card limit (under about 30%), and keeping a long record.",
+   "What hurts: late payments, settling a loan for less than you owe, and applying for many loans in a short time.",
+   "You are entitled to a free full credit report once a year from each bureau. Check it for errors and for loans you did not take."
+  ] },
+  { h: "8. Set goals with numbers and dates", p: "'I want to save more' is a wish. 'I need ₹20 lakh in 10 years for my child's education' is a goal you can plan for. Write down each goal, its date and its cost in future money, because prices rise.", table: { head: ["When you need the money", "Examples", "Usually suitable"], rows: [
+   ["Within 3 years", "Emergency fund, vehicle, wedding soon", "Savings account, fixed or recurring deposit, liquid fund"],
+   ["3 to 5 years", "House down payment", "Debt funds, fixed deposits, conservative hybrid funds"],
+   ["More than 5 years", "Child's education, retirement", "Mostly diversified equity funds, along with PPF, EPF or NPS"]
+  ] }, p2: "Allow for inflation. At 6% a year, ₹10 lakh of costs today becomes about ₹17.9 lakh in 10 years. And ₹1 lakh kept idle for 20 years buys only what about ₹31,000 buys today. The nearer a goal gets, the more of the money should move to safer options." },
+  { h: "9. Why starting early matters so much", p: "Compounding means your returns earn returns of their own. Time is the most powerful part of it, more powerful than the amount or a slightly better return.", table: { head: ["₹10,000 a month at 12% a year (illustrative)", "You invest", "Value at the end"], rows: [
+   ["For 10 years", "₹12 lakh", "About ₹23 lakh"],
+   ["For 20 years", "₹24 lakh", "About ₹1 crore"],
+   ["For 30 years", "₹36 lakh", "About ₹3.5 crore"]
+  ] }, p2: "Starting 10 years later does not cost you 10 years of savings: it can cost you most of the final amount. Equity returns are not fixed and 12% is not guaranteed, but the pattern holds for any positive return. Start small now, and increase the amount each time your income rises." },
+  { h: "10. Where your money can go", p: "No single product is best. Each one trades off safety, return, access and tax. Rates change, so check the current figures before you decide.", table: { head: ["Option", "Risk", "Access", "Good for"], rows: [
+   ["Savings account", "Very low", "Any time", "Daily money, part of the emergency fund"],
+   ["Fixed or recurring deposit", "Low", "Early withdrawal may cost a penalty", "Goals within about 3 years"],
+   ["PPF", "Very low (government-backed)", "15-year lock-in, partial withdrawal later", "Long-term safe savings"],
+   ["EPF", "Very low", "Mainly for retirement; partial withdrawals allowed", "Salaried employees' retirement"],
+   ["NPS", "Depends on your equity share", "Mostly locked until age 60", "Low-cost retirement saving"],
+   ["Debt mutual funds", "Low to moderate", "Usually within days", "3 to 5 year goals"],
+   ["Equity mutual funds and shares", "High in the short term", "Usually within days", "Goals more than 5 years away"],
+   ["Gold", "Moderate", "Varies by form", "A small share for diversification"]
+  ] }, p2: "Bank deposits are insured by the DICGC up to ₹5 lakh per depositor per bank, which includes interest. Be wary of anyone who offers high returns with no risk: return and risk go together." },
+  { h: "11. Plan for retirement", p: "Retirement is the largest goal most people have, and no one will lend you money for it. Your expenses will continue for decades with no salary, and they will rise with inflation.", ul: [
+   "Estimate the amount: ₹50,000 a month of expenses today becomes about ₹2.15 lakh a month in 25 years at 6% inflation, or about ₹25.8 lakh a year.",
+   "A common rule of thumb is a corpus of 25 to 30 times your annual expenses at retirement: here, about ₹6.4 crore to ₹7.7 crore. Treat it as a rough guide and review it regularly.",
+   "Use the building blocks: EPF if you are salaried, NPS and PPF for steady saving, and equity funds for long-term growth.",
+   "Do not withdraw your EPF when you change jobs: transfer it, so it keeps compounding.",
+   "Do not stop retirement saving to fund children's goals. Education can be funded with loans, retirement cannot.",
+   "Move part of the money to safer options as you approach retirement, so that a market fall just before you stop working does less damage."
+  ] },
+  { h: "12. Plan your taxes without letting tax lead", p: "Good tax planning means using the rules correctly, not buying a poor product to save tax. Tax rules change often, so verify them each year on incometax.gov.in or with a tax professional.", ul: [
+   "Compare the two regimes every year. The new regime has lower slab rates but allows few deductions; the old regime allows deductions such as those for PPF, EPF, ELSS, life insurance premiums, health insurance and home loan interest. Under Budget 2025 rules, the new regime has no tax on income up to ₹12 lakh after rebate (₹12.75 lakh for salaried people, with the standard deduction).",
+   "Deductions only help if you use the old regime and they are investments you wanted anyway. Do not buy a poor insurance policy in March just to save tax.",
+   "File your return on time, even with no tax due. It helps with loans and visas, and is needed to carry forward losses.",
+   "Check Form 26AS and the Annual Information Statement (AIS) to see what income and TDS are reported in your name.",
+   "See the Tax Basics module for how gains from shares and mutual funds are taxed."
+  ] },
+  { h: "13. Protect your family's access to your money", p: "Many families in India lose track of money because nobody knew it existed or the paperwork was missing. A little organisation now spares them great difficulty later.", ul: [
+   "Add nominees on every bank account, demat account, mutual fund folio, insurance policy and EPF account.",
+   "A nominee receives the money, but legal heirs can still claim it under the law. Write a will, especially if you own property or have a complicated family situation.",
+   "Hold key assets jointly with your spouse where that makes sense.",
+   "Keep one list of all accounts, policies and loans, and of where passwords are kept, and tell a trusted family member where it is. Never write down actual passwords or OTPs on it.",
+   "Make sure your spouse or an adult family member knows how to run the household finances."
+  ] },
+  { h: "14. Stay safe from fraud", p: "Fraudsters rely on fear, greed and hurry. Slow down: no genuine bank, police officer or government agency needs you to act in the next five minutes.", ul: [
+   "Never share an OTP, PIN, CVV or password with anyone, including people claiming to be from your bank.",
+   "You never need to enter your UPI PIN or scan a QR code to receive money. Those actions only send money.",
+   "'Digital arrest' calls are a scam. Police and agencies do not arrest people over video calls or ask for money to clear your name.",
+   "Avoid guaranteed-return schemes, stock tips in WhatsApp or Telegram groups, and fake trading apps. Check that an adviser is registered on the SEBI website.",
+   "Do not install screen-sharing apps or open APK files at a stranger's request.",
+   "If you lose money, act at once: call the cybercrime helpline 1930, report at cybercrime.gov.in, and tell your bank. Speed improves the chance of stopping the transfer.",
+   "For unresolved bank complaints, go to the RBI Ombudsman at cms.rbi.org.in."
+  ] },
+  { h: "15. The order to do things in, and a yearly check-up", p: "If it all feels like too much, follow these steps in order. Each step makes the next one safer.", ul: [
+   "1. Track your spending and set a budget.",
+   "2. Build a small starter emergency fund of about one month's expenses.",
+   "3. Get health insurance, and term insurance if anyone depends on you.",
+   "4. Pay off high-interest debt such as credit cards and personal loans.",
+   "5. Complete your emergency fund of 3 to 6 months.",
+   "6. Invest for your goals with SIPs, starting with retirement.",
+   "7. Once a year: recalculate net worth, review goals and insurance cover, check your credit report and nominees, compare tax regimes, and increase your SIPs along with your income."
+  ] }
+ ] }
+});
+
+Object.assign(LESSON_OVERRIDES.hi, {
+ "personal-finance": { sections: [
+  { h: "1. पर्सनल फ़ाइनेंस में क्या आता है", p: "पर्सनल फ़ाइनेंस का मतलब है यह तय करना कि आप पैसा कैसे कमाते, ख़र्च करते, बचाते, उधार लेते, सुरक्षित रखते और बढ़ाते हैं, ताकि जीवन के लक्ष्य पूरे हों और कोई बुरी घटना आपको बर्बाद न करे। यह अच्छे शेयर चुनने से भी ज़्यादा अहम है: सामान्य वेतन और अच्छी आदतों वाला व्यक्ति अक्सर सब कुछ ख़र्च कर देने वाले ऊँची कमाई वाले से ज़्यादा संपन्न होता है।", ul: [
+   "कैश फ़्लो: यह जानना कि हर महीने क्या आता है और क्या जाता है।",
+   "सुरक्षा: इमरजेंसी फ़ंड और सही बीमा।",
+   "क़र्ज़: तभी उधार लेना जब समझदारी हो, और समय पर चुकाना।",
+   "लक्ष्य और निवेश: हर लक्ष्य के लिए उपयुक्त निवेश चुनना।",
+   "टैक्स और काग़ज़ात: अपनी कमाई का ज़्यादा हिस्सा बचाना, और यह पक्का करना कि परिवार आपके पैसे तक पहुँच सके।"
+  ] },
+  { h: "2. जानें कि आप कहाँ खड़े हैं: नेट वर्थ", p: "नेट वर्थ यानी आपके पास जो कुछ है, उसमें से आप पर जो बकाया है उसे घटाना। यह वित्तीय प्रगति का सबसे अच्छा पैमाना है, वेतन से कहीं बेहतर। इसे साल में एक बार निकालें।", table: { head: ["मद", "₹"], rows: [
+   ["बचत खाता और फ़िक्स्ड डिपॉज़िट", "1,50,000"], ["म्यूचुअल फ़ंड और शेयर", "3,00,000"], ["EPF बैलेंस", "4,50,000"], ["कार (आज की बिक्री क़ीमत)", "3,00,000"],
+   ["!कुल संपत्ति", "12,00,000"],
+   ["बकाया कार लोन", "1,80,000"], ["क्रेडिट कार्ड बकाया", "20,000"],
+   ["!कुल देनदारी", "2,00,000"],
+   ["!नेट वर्थ", "10,00,000"]
+  ] }, p2: "संपत्ति का मूल्य वह रखें जिस पर वह आज बिकेगी, न कि जो आपने चुकाया था। कार की क़ीमत हर साल घटती है, इसलिए लोन पर ली गई कार संपत्ति जैसी लगने के बावजूद आपकी नेट वर्थ घटा सकती है।" },
+  { h: "3. ऐसा बजट बनाएँ जिसे निभा सकें", p: "बजट आपके पैसे की योजना है, सज़ा नहीं। शुरुआत के लिए आसान तरीक़ा है 50/30/20 नियम, जो हाथ में आने वाले वेतन पर लगता है। प्रतिशत को अपने शहर, परिवार और आय के हिसाब से बदलें।", table: { head: ["हिस्सा", "प्रतिशत", "₹60,000 वेतन पर", "उदाहरण"], rows: [
+   ["ज़रूरतें", "50%", "₹30,000", "किराया, राशन, बिल, स्कूल फ़ीस, न्यूनतम EMI"],
+   ["इच्छाएँ", "30%", "₹18,000", "बाहर खाना, शॉपिंग, यात्रा, सब्सक्रिप्शन"],
+   ["बचत और निवेश", "20%", "₹12,000", "इमरजेंसी फ़ंड, SIP, लोन की अतिरिक्त अदायगी"]
+  ] }, p2: "बैंक और UPI स्टेटमेंट से एक महीने का ख़र्च देखें: ज़्यादातर लोग नतीजे देखकर चौंक जाते हैं। फिर पहले ख़ुद को भुगतान करें: वेतन आने के अगले दिन बचत और SIP का ऑटोमैटिक ट्रांसफ़र लगाएँ, और जो बचे उसे ख़र्च करें। अगर EMI और किराया ही आय का बड़ा हिस्सा ले रहे हैं, तो उस 20% को बढ़ाना आपका पहला लक्ष्य है।" },
+  { h: "4. इमरजेंसी फ़ंड बनाएँ", p: "इमरजेंसी फ़ंड नौकरी छूटने, इलाज के बिल या ज़रूरी मरम्मत के लिए अलग रखा पैसा है। यह मुश्किल समय में निवेश तोड़ने या ऊँचे ब्याज पर उधार लेने से बचाता है। यह शेयरों में निवेश से पहले आता है।", ul: [
+   "आकार: 3 से 6 महीने के ज़रूरी ख़र्च; आय अनियमित हो या आप अकेले कमाने वाले हों तो 6 से 12 महीने।",
+   "कहाँ रखें: बचत खाता, स्वीप-इन फ़िक्स्ड डिपॉज़िट या लिक्विड फ़ंड। यह सुरक्षित हो और एक-दो दिन में मिल जाए।",
+   "कहाँ नहीं: शेयर, इक्विटी फ़ंड, सोना या लंबे लॉक-इन वाले उत्पाद। ज़रूरत के समय ये गिरे हुए या बंद हो सकते हैं।",
+   "उदाहरण: ₹35,000 महीने के ज़रूरी ख़र्च × 6 = ₹2,10,000। हर महीने ₹10,000 बचाकर आप 21 महीने में वहाँ पहुँच जाते हैं।",
+   "इसे केवल असली आपात स्थिति में इस्तेमाल करें, और बाद में फिर से भरें।"
+  ] },
+  { h: "5. बीमा से ख़ुद को सुरक्षित करें", p: "बीमा उन नुक़सानों से बचाने के लिए है जिन्हें आप ख़ुद नहीं उठा सकते। यह सुरक्षा की लागत है, निवेश नहीं। गंभीरता से निवेश शुरू करने से पहले ये दो बीमा लें।", ul: [
+   "टर्म लाइफ़ इंश्योरेंस: अगर आप पर कोई निर्भर है, तो पॉलिसी अवधि में आपकी मृत्यु होने पर यह उन्हें बड़ी राशि देता है। आम नियम है सालाना आय का 10 से 15 गुना कवर, और बकाया लोन जोड़कर। जीवन बीमा का यह सबसे सस्ता तरीक़ा है।",
+   "हेल्थ इंश्योरेंस: एक बार अस्पताल में भर्ती होना सालों की बचत ख़त्म कर सकता है। नियोक्ता का कवर होने पर भी अपनी पॉलिसी लें, क्योंकि वह आमतौर पर नौकरी के साथ ख़त्म हो जाता है। बीमा राशि, कमरे के किराए की सीमा, वेटिंग पीरियड, को-पेमेंट और नेटवर्क अस्पताल जाँचें।",
+   "पर्सनल एक्सीडेंट कवर और वाहन बीमा: उपयोगी हैं, और थर्ड-पार्टी मोटर बीमा क़ानूनन ज़रूरी है।",
+   "बीमा और निवेश को मिलाने वाले उत्पादों (एंडोमेंट, मनी-बैक और कई ULIP) से सावधान रहें। इनमें आमतौर पर कवर कम और रिटर्न साधारण होता है। टर्म बीमा और निवेश को अलग रखना आमतौर पर सस्ता और साफ़ है।",
+   "प्रपोज़ल फ़ॉर्म में स्वास्थ्य और आदतों की सही जानकारी दें, और परिवार को पॉलिसी के बारे में बताएँ। छिपाई गई जानकारी दावा ख़ारिज होने का आम कारण है।"
+  ] },
+  { h: "6. समझदारी से उधार लें", p: "लोन से आप आज ख़रीदते हैं और बाद में ब्याज के साथ चुकाते हैं। कुछ लोन भविष्य बना सकते हैं, जैसे समझदारी से लिया होम या एजुकेशन लोन। कुछ केवल उन चीज़ों पर ख़र्च होते हैं जिनकी क़ीमत घटती है। ऊँचे ब्याज का क़र्ज़ आमतौर पर निवेश की भरोसेमंद कमाई से ज़्यादा महँगा होता है, इसलिए निवेश से पहले उसे चुकाएँ।", ul: [
+   "कुल EMI हाथ में आने वाले वेतन के लगभग 40% से कम रखें। जितनी कम, उतना सुरक्षित।",
+   "केवल EMI नहीं, कुल लागत की तुलना करें: लंबी अवधि से EMI घटती है पर कुल ब्याज बढ़ता है।",
+   "उदाहरण: ₹10 लाख, 9% पर, 5 साल के लिए: EMI लगभग ₹20,760, यानी कुल लगभग ₹12.46 लाख चुकाते हैं। ब्याज लगभग ₹2.46 लाख है।",
+   "पहले सबसे महँगा क़र्ज़ चुकाएँ (एवलांच तरीक़ा), या जल्दी जीत से प्रेरणा मिलती हो तो सबसे छोटा (स्नोबॉल तरीक़ा)।",
+   "RBI के नियमों के तहत, व्यक्तियों द्वारा ग़ैर-व्यावसायिक काम के लिए लिए गए फ़्लोटिंग रेट लोन पर प्रीपेमेंट पेनल्टी नहीं ली जा सकती। लोन की शुरुआत में प्रीपेमेंट से सबसे ज़्यादा ब्याज बचता है।",
+   "निवेश के लिए उधार लेने से बचें, और इंस्टेंट लोन ऐप से सावधान रहें। जाँचें कि क़र्ज़दाता RBI से नियंत्रित बैंक या NBFC है।",
+   "किसी के गारंटर बनने पर उसका लोन आपकी ज़िम्मेदारी बन सकता है और आपके क्रेडिट स्कोर पर असर डाल सकता है।"
+  ] },
+  { h: "7. क्रेडिट कार्ड और आपका क्रेडिट स्कोर", p: "अगर आप हर महीने पूरा बिल चुकाते हैं तो क्रेडिट कार्ड उपयोगी है: बिना ब्याज के दिन और रिवॉर्ड मिलते हैं। बकाया रखने पर यह ख़तरनाक हो जाता है, क्योंकि ब्याज अक्सर 3% से 4% महीना, यानी लगभग 36% से 48% सालाना होता है।", ul: [
+   "हमेशा पूरी बकाया राशि चुकाएँ, न्यूनतम राशि नहीं। ऑटो-पे लगाएँ।",
+   "उदाहरण: 3.5% महीने पर ₹50,000 बकाया का पहले महीने ब्याज लगभग ₹1,750, और बकाया बना रहे तो साल भर में लगभग ₹21,000, GST और शुल्क अलग।",
+   "क्रेडिट स्कोर (300 से 900, CIBIL जैसे ब्यूरो से) क़र्ज़दाताओं को बताता है कि आप उधार कैसे सँभालते हैं। 750 से ऊपर आमतौर पर अच्छा माना जाता है और इससे कम ब्याज मिल सकता है।",
+   "क्या मदद करता है: हर EMI और कार्ड बिल समय पर चुकाना, कार्ड सीमा का छोटा हिस्सा (लगभग 30% से कम) इस्तेमाल करना, और लंबा रिकॉर्ड।",
+   "क्या नुक़सान करता है: देर से भुगतान, बकाया से कम में लोन सेटल करना, और थोड़े समय में कई लोन के लिए आवेदन।",
+   "आप हर ब्यूरो से साल में एक बार मुफ़्त पूरी क्रेडिट रिपोर्ट के हक़दार हैं। उसमें ग़लतियाँ और ऐसे लोन जाँचें जो आपने नहीं लिए।"
+  ] },
+  { h: "8. संख्या और तारीख़ के साथ लक्ष्य बनाएँ", p: "'मुझे ज़्यादा बचाना है' एक इच्छा है। 'मुझे बच्चे की पढ़ाई के लिए 10 साल में ₹20 लाख चाहिए' ऐसा लक्ष्य है जिसकी योजना बन सकती है। हर लक्ष्य, उसकी तारीख़ और भविष्य की क़ीमत लिखें, क्योंकि दाम बढ़ते हैं।", table: { head: ["पैसा कब चाहिए", "उदाहरण", "आमतौर पर उपयुक्त"], rows: [
+   ["3 साल के भीतर", "इमरजेंसी फ़ंड, वाहन, जल्द शादी", "बचत खाता, फ़िक्स्ड या रेकरिंग डिपॉज़िट, लिक्विड फ़ंड"],
+   ["3 से 5 साल", "घर का डाउन पेमेंट", "डेट फ़ंड, फ़िक्स्ड डिपॉज़िट, कंज़र्वेटिव हाइब्रिड फ़ंड"],
+   ["5 साल से ज़्यादा", "बच्चे की पढ़ाई, रिटायरमेंट", "मुख्यतः विविध इक्विटी फ़ंड, साथ में PPF, EPF या NPS"]
+  ] }, p2: "महँगाई का हिसाब रखें। 6% सालाना पर आज का ₹10 लाख का ख़र्च 10 साल में लगभग ₹17.9 लाख हो जाता है। और 20 साल तक बेकार पड़ा ₹1 लाख उतना ही ख़रीदेगा जितना आज लगभग ₹31,000 ख़रीदता है। लक्ष्य जितना पास आए, पैसे का उतना बड़ा हिस्सा सुरक्षित विकल्पों में ले जाएँ।" },
+  { h: "9. जल्दी शुरू करना इतना अहम क्यों है", p: "कंपाउंडिंग का मतलब है कि आपके रिटर्न पर भी रिटर्न मिलता है। इसका सबसे ताक़तवर हिस्सा समय है, राशि या थोड़े बेहतर रिटर्न से भी ज़्यादा।", table: { head: ["₹10,000 महीना, 12% सालाना पर (उदाहरण)", "आप लगाते हैं", "अंत में मूल्य"], rows: [
+   ["10 साल के लिए", "₹12 लाख", "लगभग ₹23 लाख"],
+   ["20 साल के लिए", "₹24 लाख", "लगभग ₹1 करोड़"],
+   ["30 साल के लिए", "₹36 लाख", "लगभग ₹3.5 करोड़"]
+  ] }, p2: "10 साल देर से शुरू करने की क़ीमत केवल 10 साल की बचत नहीं है: अंतिम राशि का बड़ा हिस्सा जा सकता है। इक्विटी रिटर्न तय नहीं होते और 12% की गारंटी नहीं है, पर हर सकारात्मक रिटर्न पर यही पैटर्न रहता है। अभी छोटी राशि से शुरू करें, और आय बढ़ने पर राशि बढ़ाते जाएँ।" },
+  { h: "10. आपका पैसा कहाँ जा सकता है", p: "कोई एक उत्पाद सबसे अच्छा नहीं। हर एक में सुरक्षा, रिटर्न, पहुँच और टैक्स का अलग संतुलन है। दरें बदलती हैं, इसलिए फ़ैसले से पहले मौजूदा आँकड़े देखें।", table: { head: ["विकल्प", "जोखिम", "पहुँच", "किसके लिए अच्छा"], rows: [
+   ["बचत खाता", "बहुत कम", "कभी भी", "रोज़ का पैसा, इमरजेंसी फ़ंड का हिस्सा"],
+   ["फ़िक्स्ड या रेकरिंग डिपॉज़िट", "कम", "जल्दी निकालने पर जुर्माना हो सकता है", "लगभग 3 साल के भीतर के लक्ष्य"],
+   ["PPF", "बहुत कम (सरकारी समर्थन)", "15 साल का लॉक-इन, बाद में आंशिक निकासी", "लंबी अवधि की सुरक्षित बचत"],
+   ["EPF", "बहुत कम", "मुख्यतः रिटायरमेंट के लिए; आंशिक निकासी संभव", "वेतनभोगियों का रिटायरमेंट"],
+   ["NPS", "इक्विटी के हिस्से पर निर्भर", "ज़्यादातर 60 साल की उम्र तक बंद", "कम लागत की रिटायरमेंट बचत"],
+   ["डेट म्यूचुअल फ़ंड", "कम से मध्यम", "आमतौर पर कुछ दिनों में", "3 से 5 साल के लक्ष्य"],
+   ["इक्विटी म्यूचुअल फ़ंड और शेयर", "छोटी अवधि में ज़्यादा", "आमतौर पर कुछ दिनों में", "5 साल से ज़्यादा दूर के लक्ष्य"],
+   ["सोना", "मध्यम", "रूप पर निर्भर", "विविधता के लिए छोटा हिस्सा"]
+  ] }, p2: "बैंक जमा DICGC से प्रति जमाकर्ता प्रति बैंक ₹5 लाख तक बीमित हैं, ब्याज समेत। बिना जोखिम ऊँचे रिटर्न का वादा करने वाले से सावधान रहें: रिटर्न और जोखिम साथ चलते हैं।" },
+  { h: "11. रिटायरमेंट की योजना बनाएँ", p: "रिटायरमेंट ज़्यादातर लोगों का सबसे बड़ा लक्ष्य है, और इसके लिए कोई लोन नहीं देगा। बिना वेतन के ख़र्च दशकों तक चलेंगे और महँगाई के साथ बढ़ेंगे।", ul: [
+   "राशि का अनुमान: आज ₹50,000 महीने का ख़र्च 6% महँगाई पर 25 साल में लगभग ₹2.15 लाख महीना, यानी लगभग ₹25.8 लाख सालाना हो जाता है।",
+   "आम नियम है रिटायरमेंट के समय सालाना ख़र्च का 25 से 30 गुना कोष: यहाँ लगभग ₹6.4 करोड़ से ₹7.7 करोड़। इसे मोटा अनुमान मानें और नियमित रूप से जाँचें।",
+   "बुनियादी साधन: वेतनभोगी हों तो EPF, स्थिर बचत के लिए NPS और PPF, और लंबी अवधि की बढ़त के लिए इक्विटी फ़ंड।",
+   "नौकरी बदलने पर EPF न निकालें: ट्रांसफ़र करें, ताकि वह बढ़ता रहे।",
+   "बच्चों के लक्ष्यों के लिए रिटायरमेंट की बचत न रोकें। पढ़ाई के लिए लोन मिल सकता है, रिटायरमेंट के लिए नहीं।",
+   "रिटायरमेंट पास आने पर पैसे का कुछ हिस्सा सुरक्षित विकल्पों में ले जाएँ, ताकि काम छोड़ने से ठीक पहले की गिरावट कम नुक़सान करे।"
+  ] },
+  { h: "12. टैक्स की योजना बनाएँ, पर टैक्स को हावी न होने दें", p: "अच्छी टैक्स योजना का मतलब है नियमों का सही इस्तेमाल, न कि टैक्स बचाने के लिए ख़राब उत्पाद ख़रीदना। टैक्स नियम अक्सर बदलते हैं, इसलिए हर साल incometax.gov.in पर या टैक्स पेशेवर से जाँचें।", ul: [
+   "हर साल दोनों रेजीम की तुलना करें। नई रेजीम में स्लैब दरें कम हैं पर कटौतियाँ कम मिलती हैं; पुरानी रेजीम में PPF, EPF, ELSS, जीवन बीमा प्रीमियम, हेल्थ इंश्योरेंस और होम लोन ब्याज जैसी कटौतियाँ मिलती हैं। बजट 2025 के नियमों के तहत नई रेजीम में रिबेट के बाद ₹12 लाख तक की आय पर टैक्स नहीं है (वेतनभोगियों के लिए स्टैंडर्ड डिडक्शन के साथ ₹12.75 लाख)।",
+   "कटौतियाँ तभी काम की हैं जब आप पुरानी रेजीम में हों और वह निवेश आप वैसे भी करना चाहते हों। मार्च में टैक्स बचाने के लिए ख़राब बीमा पॉलिसी न ख़रीदें।",
+   "टैक्स बकाया न होने पर भी रिटर्न समय पर भरें। यह लोन और वीज़ा में मदद करता है, और घाटा आगे ले जाने के लिए ज़रूरी है।",
+   "Form 26AS और एनुअल इन्फ़ॉर्मेशन स्टेटमेंट (AIS) देखें कि आपके नाम पर कौन-सी आय और TDS दर्ज है।",
+   "शेयरों और म्यूचुअल फ़ंड के लाभ पर टैक्स के लिए टैक्स बेसिक्स मॉड्यूल देखें।"
+  ] },
+  { h: "13. परिवार के लिए अपने पैसे तक पहुँच सुरक्षित करें", p: "भारत में कई परिवारों का पैसा इसलिए खो जाता है क्योंकि किसी को उसकी जानकारी नहीं थी या काग़ज़ात नहीं थे। आज थोड़ी व्यवस्था बाद में बड़ी परेशानी से बचाती है।", ul: [
+   "हर बैंक खाते, डीमैट खाते, म्यूचुअल फ़ंड फ़ोलियो, बीमा पॉलिसी और EPF खाते में नॉमिनी जोड़ें।",
+   "नॉमिनी को पैसा मिलता है, पर क़ानूनी वारिस फिर भी उस पर दावा कर सकते हैं। वसीयत लिखें, ख़ासकर अगर संपत्ति हो या पारिवारिक स्थिति जटिल हो।",
+   "जहाँ समझदारी हो, मुख्य संपत्ति जीवनसाथी के साथ संयुक्त रखें।",
+   "सभी खातों, पॉलिसियों, लोन और पासवर्ड कहाँ रखे हैं इसकी एक सूची रखें, और किसी भरोसेमंद सदस्य को बताएँ कि वह कहाँ है। उसमें असली पासवर्ड या OTP कभी न लिखें।",
+   "पक्का करें कि जीवनसाथी या परिवार का कोई वयस्क घर के वित्त को सँभालना जानता हो।"
+  ] },
+  { h: "14. धोखाधड़ी से बचें", p: "ठग डर, लालच और जल्दबाज़ी का फ़ायदा उठाते हैं। धीरे चलें: किसी असली बैंक, पुलिस अधिकारी या सरकारी एजेंसी को आपसे अगले पाँच मिनट में कुछ नहीं करवाना होता।", ul: [
+   "OTP, PIN, CVV या पासवर्ड किसी को न बताएँ, बैंक से बोलने का दावा करने वालों को भी नहीं।",
+   "पैसा पाने के लिए कभी UPI PIN डालने या QR कोड स्कैन करने की ज़रूरत नहीं होती। इनसे केवल पैसा जाता है।",
+   "'डिजिटल अरेस्ट' कॉल धोखा हैं। पुलिस और एजेंसियाँ वीडियो कॉल पर गिरफ़्तार नहीं करतीं, न नाम साफ़ करने के लिए पैसे माँगती हैं।",
+   "गारंटीड रिटर्न की योजनाओं, WhatsApp या Telegram ग्रुप की स्टॉक टिप्स और नक़ली ट्रेडिंग ऐप से बचें। जाँचें कि सलाहकार SEBI की वेबसाइट पर पंजीकृत है।",
+   "अजनबी के कहने पर स्क्रीन-शेयरिंग ऐप इंस्टॉल न करें, न APK फ़ाइल खोलें।",
+   "पैसा गया हो तो तुरंत: साइबर क्राइम हेल्पलाइन 1930 पर कॉल करें, cybercrime.gov.in पर रिपोर्ट करें, और बैंक को बताएँ। जल्दी करने से ट्रांसफ़र रुकने की संभावना बढ़ती है।",
+   "बैंक की अनसुलझी शिकायत के लिए cms.rbi.org.in पर RBI ओम्बड्समैन के पास जाएँ।"
+  ] },
+  { h: "15. काम का क्रम, और सालाना जाँच", p: "अगर सब बहुत ज़्यादा लगे, तो इन क़दमों को क्रम से करें। हर क़दम अगले को सुरक्षित बनाता है।", ul: [
+   "1. ख़र्च देखें और बजट बनाएँ।",
+   "2. लगभग एक महीने के ख़र्च का छोटा शुरुआती इमरजेंसी फ़ंड बनाएँ।",
+   "3. हेल्थ इंश्योरेंस लें, और कोई निर्भर हो तो टर्म इंश्योरेंस।",
+   "4. क्रेडिट कार्ड और पर्सनल लोन जैसा ऊँचे ब्याज का क़र्ज़ चुकाएँ।",
+   "5. 3 से 6 महीने का इमरजेंसी फ़ंड पूरा करें।",
+   "6. रिटायरमेंट से शुरू करके, अपने लक्ष्यों के लिए SIP से निवेश करें।",
+   "7. साल में एक बार: नेट वर्थ निकालें, लक्ष्य और बीमा कवर देखें, क्रेडिट रिपोर्ट और नॉमिनी जाँचें, टैक्स रेजीम की तुलना करें, और आय के साथ SIP बढ़ाएँ।"
+  ] }
+ ] }
+});
+
+Object.assign(MODULE_META, {
+ "personal-finance": { terms: ["Net worth", "Emergency fund", "Term insurance", "Health insurance", "EMI", "Credit score", "Compounding", "Inflation", "Asset allocation", "Diversification", "SIP", "PPF", "EPF", "NPS"], tools: [], calc: ["goal"] }
+});
+
+Object.assign(LESSON_EXTRAS_EN, {
+ "personal-finance": {
+  examples: [
+   { title: "A first budget on ₹40,000", text: "Take-home pay is ₹40,000. Rent, food and bills take ₹24,000 (60%), which is above the 50% guide but common in a big city. Wants are cut to ₹8,000 (20%), leaving ₹8,000 (20%) for saving: ₹4,000 to the emergency fund and a ₹4,000 SIP, both set to run automatically on the 2nd of each month." },
+   { title: "How much term cover?", text: "Annual income is ₹8 lakh, and there is a ₹15 lakh home loan. At 10 to 15 times income, cover of ₹80 lakh to ₹1.2 crore, plus the ₹15 lakh loan, suggests about ₹1 crore to ₹1.35 crore. Existing investments that the family could use can reduce the figure." },
+   { title: "Prepay the loan or invest?", text: "A personal loan at 14% should usually be prepaid first: paying it off is like a guaranteed 14% return, which no safe investment offers. A home loan at 8.5% is a closer choice: many people keep their SIPs running and prepay a little each year, especially if the loan is still in its early years." }
+  ],
+  scenarios: [
+   { title: "Job loss without a cushion", text: "A software engineer with ₹6 lakh in equity funds and no emergency fund loses a job during a market fall of 25%. Needing cash for EMIs, they sell ₹3 lakh of funds at the low. With six months' expenses set aside, they could have left the funds alone until the market recovered." },
+   { title: "Employer health cover ends", text: "A 45-year-old relies only on a company health plan. After leaving the job and developing diabetes, a new policy has waiting periods, higher premiums and possible exclusions. Buying a basic personal policy at 30 would have kept cover continuous." },
+   { title: "The minimum-due trap", text: "A card user pays only the minimum on a ₹1 lakh balance for a year and keeps spending small amounts. The bill barely falls while interest at about 40% a year adds up. Moving the balance to a cheaper personal loan and stopping card use breaks the cycle." },
+   { title: "A call from the 'bank'", text: "A caller knows your name and says your card will be blocked unless you share an OTP. Banks never ask for it. You hang up, call the number on the back of your card, and find nothing wrong. If you had shared it and lost money, the first steps would be 1930 and your bank, immediately." }
+  ],
+  useCases: [
+   "Working out your net worth once a year and tracking the trend.",
+   "Setting automatic transfers for savings and SIPs on the day after salary day.",
+   "Deciding between prepaying a loan and investing by comparing the interest rate with a realistic after-tax return.",
+   "Reviewing insurance cover after marriage, a child or a new home loan.",
+   "Choosing the tax regime each year with real numbers instead of assumptions."
+  ],
+  takeaways: [
+   "Spend less than you earn, and automate the difference.",
+   "Emergency fund and insurance come before investing in shares.",
+   "Clear high-interest debt first; pay credit cards in full every month.",
+   "Give every goal an amount and a date, and match the investment to the time you have.",
+   "Start early: time does more for your wealth than almost anything else.",
+   "Keep nominations and records up to date, and never share an OTP or PIN."
+  ]
+ }
+});
+Object.assign(LESSON_EXTRAS_HI, {
+ "personal-finance": {
+  examples: [
+   { title: "₹40,000 पर पहला बजट", text: "हाथ में वेतन ₹40,000 है। किराया, खाना और बिल ₹24,000 (60%) लेते हैं, जो 50% के नियम से ज़्यादा है पर बड़े शहर में आम है। इच्छाएँ घटाकर ₹8,000 (20%) करने पर ₹8,000 (20%) बचत के लिए बचते हैं: ₹4,000 इमरजेंसी फ़ंड में और ₹4,000 की SIP, दोनों हर महीने की 2 तारीख़ को ऑटोमैटिक।" },
+   { title: "कितना टर्म कवर चाहिए?", text: "सालाना आय ₹8 लाख है और ₹15 लाख का होम लोन है। आय का 10 से 15 गुना यानी ₹80 लाख से ₹1.2 करोड़, और ₹15 लाख का लोन जोड़कर लगभग ₹1 करोड़ से ₹1.35 करोड़। परिवार के काम आ सकने वाले मौजूदा निवेश से यह आँकड़ा घट सकता है।" },
+   { title: "लोन चुकाएँ या निवेश करें?", text: "14% का पर्सनल लोन आमतौर पर पहले चुकाना चाहिए: इसे चुकाना 14% के पक्के रिटर्न जैसा है, जो कोई सुरक्षित निवेश नहीं देता। 8.5% का होम लोन कड़ा फ़ैसला है: कई लोग SIP जारी रखते हुए हर साल थोड़ा प्रीपेमेंट करते हैं, ख़ासकर जब लोन शुरुआती सालों में हो।" }
+  ],
+  scenarios: [
+   { title: "बिना सहारे के नौकरी जाना", text: "एक सॉफ़्टवेयर इंजीनियर के पास इक्विटी फ़ंड में ₹6 लाख हैं पर इमरजेंसी फ़ंड नहीं, और बाज़ार की 25% गिरावट के दौरान नौकरी चली जाती है। EMI के लिए नकद चाहिए, तो वे निचले भाव पर ₹3 लाख के फ़ंड बेचते हैं। छह महीने का ख़र्च अलग होता तो फ़ंड बाज़ार सँभलने तक छोड़े जा सकते थे।" },
+   { title: "नियोक्ता का हेल्थ कवर ख़त्म", text: "45 साल के एक व्यक्ति केवल कंपनी के हेल्थ प्लान पर निर्भर हैं। नौकरी छोड़ने और डायबिटीज़ होने के बाद नई पॉलिसी में वेटिंग पीरियड, ज़्यादा प्रीमियम और संभावित अपवाद हैं। 30 की उम्र में बुनियादी निजी पॉलिसी लेने से कवर लगातार बना रहता।" },
+   { title: "मिनिमम ड्यू का जाल", text: "एक कार्ड धारक साल भर ₹1 लाख के बकाया पर केवल न्यूनतम राशि चुकाता है और छोटे ख़र्च करता रहता है। बिल मुश्किल से घटता है जबकि लगभग 40% सालाना ब्याज जुड़ता जाता है। बकाया को सस्ते पर्सनल लोन में ले जाकर और कार्ड का इस्तेमाल रोककर यह चक्र टूटता है।" },
+   { title: "'बैंक' से आया कॉल", text: "कॉल करने वाला आपका नाम जानता है और कहता है कि OTP न देने पर कार्ड बंद हो जाएगा। बैंक इसे कभी नहीं माँगते। आप फ़ोन रखते हैं, कार्ड के पीछे लिखे नंबर पर कॉल करते हैं, और कोई समस्या नहीं मिलती। OTP देकर पैसा गया होता तो पहला क़दम तुरंत 1930 और बैंक होता।" }
+  ],
+  useCases: [
+   "साल में एक बार नेट वर्थ निकालना और उसका रुझान देखना।",
+   "वेतन के अगले दिन बचत और SIP के ऑटोमैटिक ट्रांसफ़र लगाना।",
+   "ब्याज दर की तुलना टैक्स के बाद के यथार्थवादी रिटर्न से करके लोन चुकाने या निवेश का फ़ैसला करना।",
+   "शादी, बच्चे या नए होम लोन के बाद बीमा कवर की समीक्षा।",
+   "अनुमान की जगह असली आँकड़ों से हर साल टैक्स रेजीम चुनना।"
+  ],
+  takeaways: [
+   "कमाई से कम ख़र्च करें, और बचे हुए को ऑटोमैटिक करें।",
+   "इमरजेंसी फ़ंड और बीमा शेयरों में निवेश से पहले आते हैं।",
+   "पहले ऊँचे ब्याज का क़र्ज़ चुकाएँ; क्रेडिट कार्ड का पूरा बिल हर महीने भरें।",
+   "हर लक्ष्य की राशि और तारीख़ तय करें, और निवेश को उपलब्ध समय से मिलाएँ।",
+   "जल्दी शुरू करें: संपत्ति के लिए समय लगभग हर चीज़ से ज़्यादा काम करता है।",
+   "नॉमिनी और रिकॉर्ड अपडेट रखें, और OTP या PIN कभी साझा न करें।"
+  ]
+ }
+});
+
+MODULE_CONTENT.en = MODULE_CONTENT.en || {};
+MODULE_CONTENT.hi = MODULE_CONTENT.hi || {};
+MODULE_CONTENT.en["personal-finance"] = { quiz: [], faq: [
+ { q: "How much of my salary should I save?", a: "Twenty percent of take-home pay is a good target, and more if you started late. If that is not possible yet, start with what you can, even 5%, and raise it with every increment. The habit matters more than the first amount." },
+ { q: "Should I invest or clear my loan first?", a: "Clear high-interest debt such as credit cards and personal loans first, since no safe investment reliably beats those rates. For low-interest loans such as a home loan, you can do both, as long as you have an emergency fund and insurance." },
+ { q: "Is my employer's health insurance enough?", a: "Usually not. It ends when the job does, and its cover may be small for a family. Buying your own policy while you are young and healthy keeps you covered and reduces the risk of waiting periods or rejection later." },
+ { q: "Does checking my own credit score lower it?", a: "No. Checking your own score is a soft enquiry and has no effect. Many hard enquiries from lenders in a short time, when you apply for loans or cards, can lower it." },
+ { q: "Are LIC or other endowment policies a good investment?", a: "They provide some guaranteed value, but returns are usually modest and the life cover is often small for the premium. If you are buying a new policy, compare it with a term plan plus a separate investment. If you already hold one, check its surrender value and terms before deciding, since exiting early can be costly." },
+ { q: "I earn very little. Does this apply to me?", a: "Yes, and the order of steps matters even more: a small emergency fund and basic health cover protect you from debt. Start with whatever you can save regularly, even ₹500 a month, and avoid high-interest loans." }
+] };
+MODULE_CONTENT.hi["personal-finance"] = { quiz: [], faq: [
+ { q: "वेतन का कितना हिस्सा बचाना चाहिए?", a: "हाथ में आने वाले वेतन का 20% अच्छा लक्ष्य है, और देर से शुरू किया हो तो ज़्यादा। अभी संभव न हो तो जो हो सके, 5% भी, उससे शुरू करें और हर वेतन वृद्धि पर बढ़ाएँ। पहली राशि से ज़्यादा आदत मायने रखती है।" },
+ { q: "पहले निवेश करूँ या लोन चुकाऊँ?", a: "पहले क्रेडिट कार्ड और पर्सनल लोन जैसा ऊँचे ब्याज का क़र्ज़ चुकाएँ, क्योंकि कोई सुरक्षित निवेश भरोसे से उन दरों को नहीं हराता। होम लोन जैसे कम ब्याज वाले लोन के साथ दोनों कर सकते हैं, बशर्ते इमरजेंसी फ़ंड और बीमा हो।" },
+ { q: "क्या नियोक्ता का हेल्थ इंश्योरेंस काफ़ी है?", a: "आमतौर पर नहीं। यह नौकरी के साथ ख़त्म होता है और परिवार के लिए इसका कवर कम हो सकता है। जवान और स्वस्थ रहते अपनी पॉलिसी लेने से कवर बना रहता है और बाद में वेटिंग पीरियड या अस्वीकृति का जोखिम घटता है।" },
+ { q: "क्या अपना क्रेडिट स्कोर देखने से वह घटता है?", a: "नहीं। अपना स्कोर देखना सॉफ़्ट इन्क्वायरी है और इसका कोई असर नहीं होता। थोड़े समय में लोन या कार्ड के आवेदन पर क़र्ज़दाताओं की कई हार्ड इन्क्वायरी इसे घटा सकती हैं।" },
+ { q: "क्या LIC या दूसरी एंडोमेंट पॉलिसियाँ अच्छा निवेश हैं?", a: "इनमें कुछ पक्का मूल्य मिलता है, पर रिटर्न आमतौर पर साधारण होता है और प्रीमियम के मुक़ाबले जीवन कवर अक्सर कम। नई पॉलिसी ले रहे हों तो टर्म प्लान और अलग निवेश से तुलना करें। पहले से हो तो फ़ैसले से पहले सरेंडर वैल्यू और शर्तें देखें, क्योंकि जल्दी निकलना महँगा हो सकता है।" },
+ { q: "मेरी कमाई बहुत कम है। क्या यह मुझ पर लागू होता है?", a: "हाँ, और क़दमों का क्रम और भी अहम है: छोटा इमरजेंसी फ़ंड और बुनियादी हेल्थ कवर आपको क़र्ज़ से बचाते हैं। जो नियमित बचा सकें, ₹500 महीना भी, उससे शुरू करें और ऊँचे ब्याज के लोन से बचें।" }
+] };
+
+LESSON_CHARTS["personal-finance"] = [
+ fig("money-priority-ladder.svg", "Six steps from bottom to top: budget, starter emergency fund, insurance, clear costly debt, full emergency fund, invest for goals",
+  "Do things in this order. Each step protects the next, so that a job loss or hospital bill does not force you to sell your investments.",
+  "नीचे से ऊपर छह क़दम: बजट, शुरुआती इमरजेंसी फ़ंड, बीमा, महँगा क़र्ज़ चुकाना, पूरा इमरजेंसी फ़ंड, लक्ष्यों के लिए निवेश",
+  "काम इसी क्रम में करें। हर क़दम अगले की रक्षा करता है, ताकि नौकरी जाने या अस्पताल के बिल से आपको निवेश न बेचना पड़े।"),
+ fig("budget-50-30-20.svg", "A ₹60,000 take-home salary split into needs ₹30,000, wants ₹18,000, and savings and investing ₹12,000",
+  "The 50/30/20 rule is a starting point. Automate the 20% on the day after your salary arrives, then adjust the split to your own city and family.",
+  "₹60,000 वेतन का बँटवारा: ज़रूरतें ₹30,000, इच्छाएँ ₹18,000, बचत और निवेश ₹12,000",
+  "50/30/20 नियम एक शुरुआत है। वेतन आने के अगले दिन 20% को ऑटोमैटिक करें, फिर अपने शहर और परिवार के अनुसार बँटवारा बदलें।"),
+ fig("start-early-compounding.svg", "₹10,000 a month at 12% a year: ₹12 lakh invested over 10 years becomes about ₹23 lakh, ₹24 lakh over 20 years about ₹1 crore, ₹36 lakh over 30 years about ₹3.5 crore",
+  "The longer the money stays invested, the larger the share of the final value that comes from returns rather than from your own contributions. Returns are illustrative, not guaranteed.",
+  "₹10,000 महीना, 12% सालाना: 10 साल में ₹12 लाख से लगभग ₹23 लाख, 20 साल में ₹24 लाख से लगभग ₹1 करोड़, 30 साल में ₹36 लाख से लगभग ₹3.5 करोड़",
+  "पैसा जितना लंबा निवेशित रहे, अंतिम मूल्य का उतना बड़ा हिस्सा आपके योगदान की जगह रिटर्न से आता है। रिटर्न उदाहरण हैं, गारंटी नहीं।")
+];

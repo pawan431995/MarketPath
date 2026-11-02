@@ -315,6 +315,55 @@ D["corporate-actions-compare.svg"] = svg(800, 312, "What corporate actions do to
  return out;
 })(), "Prices are the theoretical adjusted prices just after each action, before any market move. Dividends are taxable.");
 
+// ---- Personal Finance module (js/lessons-personal-finance.js lists them) ----
+D["money-priority-ladder.svg"] = svg(800, 410, "The order to manage your money: start at the bottom", (() => {
+ const steps = [["1", "Budget", "Know what comes in and goes out; automate saving", C.blue], ["2", "Starter emergency fund", "About one month of expenses", C.green], ["3", "Insurance", "Health cover, and term cover if anyone depends on you", C.violet],
+  ["4", "Clear costly debt", "Credit cards and personal loans first", C.red], ["5", "Full emergency fund", "3 to 6 months of essential expenses", C.green], ["6", "Invest for your goals", "SIPs for retirement and long-term goals", C.amber]];
+ const h = 44, gap = 8, bottom = 360, left = 60, full = 680, inset = 44;
+ let out = "";
+ steps.forEach(([n, t, d, c], i) => {
+  const y = bottom - (i + 1) * h - i * gap, x = left + i * inset / 2, w = full - i * inset;
+  out += rect(x, y, w, h, C.panel, { stroke: C.line }) + rect(x, y, 6, h, c, { rx: 3 });
+  out += text(x + 22, y + 28, n, { weight: 700, size: 15, fill: c }) + text(x + 44, y + 20, t, { weight: 700, size: 13 }) + text(x + 44, y + 36, d, { size: 11, fill: C.muted });
+ });
+ return out;
+})(), "Each step protects the one above it, so a job loss or hospital bill does not force you to sell investments.");
+
+D["budget-50-30-20.svg"] = svg(800, 290, "The 50/30/20 budget on a take-home salary of ₹60,000", (() => {
+ const parts = [["Needs", "50%", "₹30,000", ["Rent, groceries, bills,", "school fees, minimum EMIs"], C.blue, 50], ["Wants", "30%", "₹18,000", ["Eating out, shopping,", "trips, subscriptions"], C.violet, 30], ["Savings and investing", "20%", "₹12,000", ["Emergency fund, SIPs,", "extra loan repayment"], C.green, 20]];
+ const x0 = 40, total = 720, y = 62, barH = 44;
+ let x = x0, out = "";
+ parts.forEach(([, pct, , , c, share]) => {
+  const w = total * share / 100;
+  out += rect(x + 1, y, w - 2, barH, c, { rx: 6, opacity: 0.9 }) + text(x + w / 2, y + 28, pct, { anchor: "middle", weight: 700, size: 15, fill: C.bg });
+  x += w;
+ });
+ const cw = 228, cgap = 18;
+ parts.forEach(([name, , amount, lines, c], i) => {
+  const cx = x0 + i * (cw + cgap), cy = 128;
+  out += rect(cx, cy, cw, 112, C.panel, { stroke: C.line }) + rect(cx, cy, cw, 4, c, { rx: 2 });
+  out += text(cx + 14, cy + 28, name, { weight: 700, size: 13 }) + text(cx + 14, cy + 54, amount, { weight: 700, size: 18, fill: c });
+  lines.forEach((l, k) => { out += text(cx + 14, cy + 78 + k * 16, l, { size: 11, fill: C.muted }); });
+ });
+ return out;
+})(), "A starting point: adjust the split for your city and family, and automate the savings on the day after your salary arrives.");
+
+D["start-early-compounding.svg"] = svg(800, 340, "₹10,000 a month at 12% a year (illustrative): time does most of the work", (() => {
+ const rows = [["10 years", 12, 23.2], ["20 years", 24, 99.9], ["30 years", 36, 353]];
+ const x0 = 110, w = 560, max = 360, X = v => (v / max) * w, barH = 34, y0 = 72, step = 72;
+ let out = "";
+ rows.forEach(([label, paid, value], i) => {
+  const y = y0 + i * step;
+  out += text(x0 - 12, y + 22, label, { anchor: "end", size: 12.5, weight: 700 });
+  out += rect(x0, y, Math.max(3, X(value)), barH, C.green, { rx: 4, opacity: 0.9 }) + rect(x0, y, Math.max(3, X(paid)), barH, C.blue, { rx: 4 });
+  const end = x0 + Math.max(X(value), 3) + 10;
+  out += text(end, y + 15, value >= 100 ? `About ₹${(value / 100).toFixed(1)} crore` : value > 90 ? "About ₹1 crore" : `About ₹${Math.round(value)} lakh`, { size: 12.5, weight: 700 });
+  out += text(end, y + 31, `₹${paid} lakh invested`, { size: 11, fill: C.muted });
+ });
+ out += rect(110, 288, 12, 12, C.blue, { rx: 3 }) + text(128, 298, "What you invested", { size: 12 }) + rect(270, 288, 12, 12, C.green, { rx: 3 }) + text(288, 298, "Growth from returns", { size: 12 });
+ return out;
+})(), "Returns are illustrative and not guaranteed. The bars are drawn to scale.");
+
 fs.mkdirSync(OUT, { recursive: true });
 Object.entries(D).forEach(([name, content]) => fs.writeFileSync(path.join(OUT, name), content));
 console.log(`Wrote ${Object.keys(D).length} diagrams to ${OUT}:`, Object.keys(D).join(", "));

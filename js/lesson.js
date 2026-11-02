@@ -73,6 +73,7 @@ const LESSON_EXTRAS = { en: LESSON_EXTRAS_EN, hi: LESSON_EXTRAS_HI };
 const RELATED_CALCS = {
  foundations: [["trade-breakeven", "Trade break-even", "ट्रेड ब्रेक-ईवन"], ["stock-average", "Stock average price", "शेयर औसत क़ीमत"], ["emergency-fund", "Emergency fund", "इमरजेंसी फ़ंड"]],
  "market-rules": [["capital-gains", "Capital gains tax", "कैपिटल गेन टैक्स"], ["trade-breakeven", "Trade break-even", "ट्रेड ब्रेक-ईवन"]],
+ "personal-finance": [["budget", "Budget planner", "बजट प्लानर"], ["emergency-fund", "Emergency fund", "इमरजेंसी फ़ंड"], ["net-worth", "Net worth", "नेट वर्थ"], ["debt-payoff", "Debt payoff", "क़र्ज़ चुकाना"], ["credit-card", "Credit card payoff", "क्रेडिट कार्ड भुगतान"], ["emi", "Loan EMI", "लोन EMI"], ["retirement", "Retirement", "रिटायरमेंट"]],
  investing: [["compound-interest", "Compound interest", "चक्रवृद्धि ब्याज"], ["goal", "Goal planner", "लक्ष्य योजना"], ["net-worth", "Net worth", "नेट वर्थ"], ["inflation", "Inflation", "महँगाई"]],
  "sip-mutual-funds": [["sip", "SIP calculator", "SIP कैलकुलेटर"], ["step-up-sip", "Step-up SIP", "स्टेप-अप SIP"], ["swp", "SWP", "SWP"], ["xirr", "XIRR", "XIRR"]],
  "fundamental-analysis": [["cagr", "CAGR", "CAGR"], ["roi", "Return on investment", "निवेश पर रिटर्न"]],

@@ -13,6 +13,12 @@ window.MP_PRACTICE = {
   ["orders", "Modify an open limit order: change its quantity and price, then convert it to a market order. Note how the executed price differs.", "किसी खुले लिमिट ऑर्डर को बदलें: उसकी मात्रा और भाव बदलें, फिर उसे मार्केट ऑर्डर में बदलें। देखें कि एक्ज़िक्यूटेड भाव कितना अलग रहा।"],
   ["chart", "Open an intraday (MIS) position on the real-price feed and check what happens at 3:20 pm IST, when brokers square off intraday trades.", "रियल-प्राइस फ़ीड पर इंट्राडे (MIS) पोज़िशन लें और देखें कि 3:20 pm IST पर क्या होता है, जब ब्रोकर इंट्राडे ट्रेड स्क्वेयर-ऑफ़ करते हैं।"]
  ],
+ "personal-finance": [
+  ["calc:net-worth", "List everything you own and owe in the net worth calculator. Write the figure down with today's date and compare it again next year.", "नेट वर्थ कैलकुलेटर में अपनी सारी संपत्ति और देनदारी डालें। आँकड़ा आज की तारीख़ के साथ लिखें और अगले साल फिर तुलना करें।"],
+  ["calc:budget", "Go through last month's bank and UPI statements and enter your real spending in the budget calculator. Find one expense you can cut, and increase your savings by that amount.", "पिछले महीने के बैंक और UPI स्टेटमेंट देखें और असली ख़र्च बजट कैलकुलेटर में डालें। एक ऐसा ख़र्च खोजें जिसे घटा सकें, और बचत उतनी बढ़ाएँ।"],
+  ["calc:emergency-fund", "Work out your emergency fund target and how many months it will take to build at what you can save.", "अपने इमरजेंसी फ़ंड का लक्ष्य निकालें और देखें कि जितना बचा सकते हैं उससे इसमें कितने महीने लगेंगे।"],
+  ["calc:goal", "Pick your most important goal, add its date and cost, and find the monthly amount it needs. Set up that SIP or recurring deposit as an automatic payment.", "अपना सबसे अहम लक्ष्य चुनें, उसकी तारीख़ और लागत डालें, और ज़रूरी मासिक राशि निकालें। उस SIP या रेकरिंग डिपॉज़िट को ऑटोमैटिक भुगतान पर लगाएँ।"]
+ ],
  investing: [
   ["screener", "Run the \"Low volatility leaders\" screen and pick three stocks from different sectors for a long-term watchlist.", "\"Low volatility leaders\" स्क्रीन चलाएँ और लंबी अवधि की वॉचलिस्ट के लिए अलग-अलग सेक्टर के तीन शेयर चुनें।"],
   ["chart", "Build a small diversified portfolio: invest about ₹1 lakh of virtual money across those three stocks with delivery orders.", "एक छोटा विविध पोर्टफ़ोलियो बनाएँ: डिलीवरी ऑर्डर से उन तीन शेयरों में लगभग ₹1 लाख वर्चुअल पैसा लगाएँ।"],

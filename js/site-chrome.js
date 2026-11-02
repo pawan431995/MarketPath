@@ -16,7 +16,7 @@
    disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top", articles: "Articles",
    rights: "MarketPathAcademy. Educational content only — not investment advice.",
    lessons: {
-    foundations: "Stock market foundations", "market-rules": "Market rules & investor protection", investing: "Investing & wealth building",
+    foundations: "Stock market foundations", "market-rules": "Market rules & investor protection", "personal-finance": "Personal finance", investing: "Investing & wealth building",
     "sip-mutual-funds": "SIP & mutual funds", "tax-basics": "Tax basics", "technical-analysis": "Technical analysis",
     "candlestick-patterns": "Candlestick & chart patterns", "fundamental-analysis": "Fundamental analysis", "futures-options": "Futures & options", "risk-management": "Risk management"
    },
@@ -29,7 +29,7 @@
    disclaimer: "अस्वीकरण", privacy: "गोपनीयता नीति", contact: "संपर्क", top: "ऊपर जाएँ", articles: "लेख",
    rights: "MarketPathAcademy. केवल शैक्षिक सामग्री — निवेश सलाह नहीं।",
    lessons: {
-    foundations: "शेयर बाज़ार की मूल बातें", "market-rules": "बाज़ार के नियम और निवेशक सुरक्षा", investing: "निवेश और धन निर्माण",
+    foundations: "शेयर बाज़ार की मूल बातें", "market-rules": "बाज़ार के नियम और निवेशक सुरक्षा", "personal-finance": "पर्सनल फ़ाइनेंस", investing: "निवेश और धन निर्माण",
     "sip-mutual-funds": "SIP और म्यूचुअल फंड", "tax-basics": "टैक्स की मूल बातें", "technical-analysis": "टेक्निकल एनालिसिस",
     "candlestick-patterns": "कैंडलस्टिक और चार्ट पैटर्न", "fundamental-analysis": "फंडामेंटल एनालिसिस", "futures-options": "फ्यूचर्स और ऑप्शंस", "risk-management": "जोखिम प्रबंधन"
    },
@@ -89,7 +89,7 @@
      <a class="brand footer-brand" href="${url("index.html")}"><img class="brand-full brand-on-dark" src="${url("images/logo-horizontal-dark.png")}" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="${url("images/logo-horizontal.png")}" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a>
      <p>${esc(t.tagline)}</p>
     </div>
-    <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
+    <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "personal-finance", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTrade)}"><h2>${esc(t.colTrade)}</h2>${["technical-analysis", "candlestick-patterns", "fundamental-analysis", "futures-options", "risk-management"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTools)}"><h2>${esc(t.colTools)}</h2>${link(url("pages/paper-trading.html"), t.paper)}${link(url("pages/paper-trading.html#screener"), t.tools.screener)}${link(url("pages/paper-trading.html#strategy"), t.tools.strategy)}${link(url("pages/paper-trading.html#replay"), t.tools.replay)}${link(url("pages/test.html"), t.tools.test)}${link(url("pages/calculators.html"), t.calcs)}${link(url("pages/calculators.html#sip"), t.tools.sip)}${link(url("pages/calculators.html#income-tax"), t.tools["income-tax"])}${link(url("pages/glossary.html"), t.glossary)}</nav>
     <nav class="ft-col" aria-label="${esc(t.colSite)}"><h2>${esc(t.colSite)}</h2>${link(url("pages/articles.html"), t.articles)}${link(url("pages/glossary.html"), t.glossary)}${link(url("index.html#about"), t.about)}${link(url("index.html#about"), t.disclaimer)}${link(url("pages/privacy.html"), t.privacy)}${link(url("pages/contact.html"), t.contact)}</nav>

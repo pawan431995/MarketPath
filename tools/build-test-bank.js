@@ -13,7 +13,7 @@ vm.createContext(ctx);
 const run = f => vm.runInContext(fs.readFileSync(path.join(js, f), "utf8"), ctx, { filename: f });
 // The lesson catalogue gives titles and the course order; the module files add their questions to MCQ.
 run("lesson-catalog.js");
-["mcq-core.js", "mcq-1.js", "mcq-2.js", "mcq-3.js", "mcq-4.js", "mcq-5.js", "mcq-6.js", "mcq-7.js"].forEach(run);
+["mcq-core.js", "mcq-1.js", "mcq-2.js", "mcq-3.js", "mcq-4.js", "mcq-5.js", "mcq-6.js", "mcq-7.js", "mcq-8.js"].forEach(run);
 // lessons-market-rules.js also edits lesson data the catalogue does not have; give it stand-ins.
 vm.runInContext("var LESSON_OVERRIDES = { en: {}, hi: {} }; var MODULE_META = {}; var MODULE_CONTENT = { en: {}, hi: {} }; var MODULE_EXTRAS = { en: {}, hi: {} };", ctx);
 try { run("lessons-market-rules.js"); } catch (e) { console.warn(`lessons-market-rules.js: ${e.message} (its quiz may be missing)`); }

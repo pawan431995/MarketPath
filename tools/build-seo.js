@@ -37,7 +37,7 @@ const load = files => files.forEach(f => vm.runInContext(read("js/" + f), ctx, {
 // Same order as pages/lesson.html (content only).
 load(["lessons.js", "lessons-modules.js", "lessons-foundations.js", "lessons-content-a.js", "lessons-content-b.js", "lessons-content-c.js", "lessons-content-d.js", "lessons-content-e.js",
  "lessons-strategies.js", "lessons-strategy-detail.js", "lessons-extra-en.js", "lessons-extra-hi.js", "lesson-charts.js", "patterns.js", "indicators.js", "patterns-extra.js",
- "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js",
+ "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js", "lessons-personal-finance.js",
  "lessons-updates.js", "lessons-market-rules.js",
  "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js", "articles.js"]);
 vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, LESSON_EXTRAS_EN, LESSON_EXTRAS_HI, LESSON_CHARTS, MODULE_CONTENT, MODULE_META, GLOSSARY_TERMS, ARTICLES };", ctx);
@@ -427,12 +427,12 @@ const calcList = () => ({ "@context": "https://schema.org", "@type": "ItemList",
 const PAGES = {
  "index.html": {
   title: `${BRAND}: Free Stock Market Course in English & Hindi`,
-  desc: "Learn the stock market for free, from basics to options, tax and trading psychology, in English and Hindi (शेयर बाज़ार हिंदी में सीखें). 23 courses with quizzes, paper trading, 49 calculators and a final test with a certificate.",
+  desc: "Learn the stock market for free, from basics to options, tax and trading psychology, in English and Hindi (शेयर बाज़ार हिंदी में सीखें). 24 courses with quizzes, paper trading, 49 calculators and a final test with a certificate.",
   ld: () => [Object.assign({ "@context": "https://schema.org" }, ORG), { "@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "#website", name: BRAND, url: SITE, inLanguage: ["en-IN", "hi-IN"], publisher: { "@id": SITE + "#org" } }]
  },
  "pages/learn.html": {
   title: `Free Stock Market Courses in English & Hindi | ${BRAND}`,
-  desc: "23 free stock market courses from basics to F&O, option Greeks, fundamental and technical analysis, tax and trading psychology, in English and Hindi, with quizzes and progress tracking.",
+  desc: "24 free courses on personal finance and the stock market, from budgeting and basics to F&O, option Greeks, fundamental and technical analysis, tax and trading psychology, in English and Hindi, with quizzes and progress tracking.",
   ld: () => [lessonList(), crumbs([[BRAND, SITE], ["Learn", SITE + "pages/learn.html"]])]
  },
  "pages/calculators.html": {
