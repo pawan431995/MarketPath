@@ -6,6 +6,7 @@ const PAGE_UI = {
   contactEyebrow: "GET IN TOUCH", contactTitle: "Contact MarketPathAcademy",
   contactIntro: "Questions, suggestions or found a mistake in a lesson? We read every message and use it to improve the site.",
   contactEmailTitle: "Email us", contactEmailText: "Write to us and include the page link if your message is about a specific lesson or calculator.", contactEmailBtn: "Email us ↗",
+  contactWaTitle: "Follow us on WhatsApp", contactWaText: "Get updates on new lessons, notes and tools on our WhatsApp channel. It is for education only, with no buy or sell tips.", contactWaBtn: "Join our WhatsApp channel ↗",
   contactNotTitle: "What we cannot help with", contactNot1: "Buy or sell recommendations, tips or portfolio advice: we are an educational site, not a SEBI-registered adviser.",
   contactNot2: "Problems with your broker account: contact your broker first, then SEBI SCORES if it is not resolved.", contactNot3: "Recovering money lost to a scam: report it at cybercrime.gov.in or call 1930 straight away.",
   contactLearn: "While you wait, the Market Rules & Investor Protection module explains how complaints work →",
@@ -15,7 +16,7 @@ const PAGE_UI = {
   privStore1: "Language and theme (light or dark).", privStore2: "Your learning progress: modules completed and quiz scores.",
   privStore3: "Paper-trading account, watchlist, orders and chart drawings (virtual money only).", privStore4: "Calculator inputs and the currency you choose.",
   privStore5: "A Finnhub API key, only if you enter one for live quotes. It is sent only to Finnhub to fetch quotes.",
-  privThirdTitle: "Third-party services", privThirdText: "Pages load fonts from Google Fonts and the charting library from unpkg.com, which can see your IP address as part of normal web requests. If live quotes are switched on, requests go to Finnhub. If Google AdSense is enabled, Google and its partners may use cookies to serve and measure ads, subject to your consent settings.",
+  privThirdTitle: "Third-party services", privThirdText: "Pages load fonts from Google Fonts and the charting library from unpkg.com, which can see your IP address as part of normal web requests. If live quotes are switched on, requests go to Finnhub. If Google AdSense is enabled, Google and its partners may use cookies to serve and measure ads, subject to your consent settings. Our WhatsApp channel link opens WhatsApp, whose own privacy policy applies if you join.",
   privChildTitle: "Children", privChildText: "The content is educational and suitable for all ages, but trading and investing accounts in India require the holder to be an adult.",
   privChangeTitle: "Changes and contact", privChangeText: "We will update this page if what we store changes. For questions, use the contact page."
  },
@@ -24,6 +25,7 @@ const PAGE_UI = {
   contactEyebrow: "संपर्क करें", contactTitle: "MarketPathAcademy से संपर्क करें",
   contactIntro: "कोई प्रश्न, सुझाव या किसी पाठ में गलती मिली? हम हर संदेश पढ़ते हैं और साइट बेहतर बनाने में उसका उपयोग करते हैं।",
   contactEmailTitle: "हमें ईमेल करें", contactEmailText: "अगर संदेश किसी ख़ास पाठ या कैलकुलेटर के बारे में है तो पेज का लिंक भी लिखें।", contactEmailBtn: "ईमेल करें ↗",
+  contactWaTitle: "WhatsApp पर फ़ॉलो करें", contactWaText: "हमारे WhatsApp चैनल पर नए पाठ, नोट्स और टूल की जानकारी पाएँ। यह केवल शिक्षा के लिए है, इसमें ख़रीद-बिक्री की टिप्स नहीं दी जातीं।", contactWaBtn: "हमारे WhatsApp चैनल से जुड़ें ↗",
   contactNotTitle: "हम किसमें मदद नहीं कर सकते", contactNot1: "ख़रीद-बिक्री की सलाह, टिप्स या पोर्टफ़ोलियो सलाह: हम शैक्षिक साइट हैं, SEBI-रजिस्टर्ड सलाहकार नहीं।",
   contactNot2: "ब्रोकर खाते की समस्याएँ: पहले अपने ब्रोकर से संपर्क करें, हल न हो तो SEBI SCORES पर जाएँ।", contactNot3: "धोखाधड़ी में खोया पैसा वापस पाना: तुरंत cybercrime.gov.in पर शिकायत करें या 1930 पर कॉल करें।",
   contactLearn: "तब तक, 'बाज़ार के नियम और निवेशक सुरक्षा' मॉड्यूल बताता है कि शिकायत कैसे करें →",
@@ -33,7 +35,7 @@ const PAGE_UI = {
   privStore1: "भाषा और थीम (लाइट या डार्क)।", privStore2: "आपकी सीखने की प्रगति: पूरे मॉड्यूल और क्विज़ स्कोर।",
   privStore3: "पेपर-ट्रेडिंग खाता, वॉचलिस्ट, ऑर्डर और चार्ट ड्रॉइंग (केवल वर्चुअल पैसा)।", privStore4: "कैलकुलेटर इनपुट और आपकी चुनी मुद्रा।",
   privStore5: "Finnhub API key, केवल तब जब आप लाइव कोट के लिए दर्ज करें। यह केवल कोट लाने के लिए Finnhub को भेजी जाती है।",
-  privThirdTitle: "तीसरे पक्ष की सेवाएँ", privThirdText: "पेज Google Fonts से फ़ॉन्ट और unpkg.com से चार्ट लाइब्रेरी लोड करते हैं, जो सामान्य वेब अनुरोधों के तहत आपका IP पता देख सकते हैं। लाइव कोट चालू हों तो अनुरोध Finnhub को जाते हैं। Google AdSense चालू हो तो Google और उसके साझेदार आपकी सहमति सेटिंग के अनुसार विज्ञापन दिखाने और मापने के लिए कुकी इस्तेमाल कर सकते हैं।",
+  privThirdTitle: "तीसरे पक्ष की सेवाएँ", privThirdText: "पेज Google Fonts से फ़ॉन्ट और unpkg.com से चार्ट लाइब्रेरी लोड करते हैं, जो सामान्य वेब अनुरोधों के तहत आपका IP पता देख सकते हैं। लाइव कोट चालू हों तो अनुरोध Finnhub को जाते हैं। Google AdSense चालू हो तो Google और उसके साझेदार आपकी सहमति सेटिंग के अनुसार विज्ञापन दिखाने और मापने के लिए कुकी इस्तेमाल कर सकते हैं। हमारे WhatsApp चैनल का लिंक WhatsApp खोलता है; जुड़ने पर उसकी अपनी गोपनीयता नीति लागू होती है।",
   privChildTitle: "बच्चे", privChildText: "सामग्री शैक्षिक है और हर उम्र के लिए उपयुक्त है, पर भारत में ट्रेडिंग और निवेश खाते के लिए खाताधारक का वयस्क होना ज़रूरी है।",
   privChangeTitle: "बदलाव और संपर्क", privChangeText: "जो सहेजा जाता है उसमें बदलाव होने पर हम यह पेज अपडेट करेंगे। प्रश्नों के लिए संपर्क पेज का उपयोग करें।"
  }

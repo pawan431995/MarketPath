@@ -1,21 +1,21 @@
 // Renders the glossary (glossary.html): search, topic filters, and the shared language setting.
 const GL_UI = {
  en: { navLearn: "Learn", navPatterns: "Patterns", navIndicators: "Indicators", navTools: "Calculators", navQuiz: "Quiz", navGlossary: "Glossary", navResources: "Resources",
-   eyebrow: "GLOSSARY", title: "Stock market glossary",
+   eyebrow: "GLOSSARY", title: "Finance and stock market glossary",
    intro: "Plain-language definitions of the terms you will meet in markets, research and trading. Search by word, or filter by topic.",
    searchPlaceholder: "Search terms...", all: "All", count: "terms", none: "No terms match your search.",
    disclaimer: "Definitions are for education. They are not investment advice. Check official sources such as SEBI and NSE for current rules.",
    footerText: "Learn the market, one concept at a time.", disclaimerLink: "Disclaimer", privacyLink: "Privacy policy", contactLink: "Contact",
-   cat: { basics: "Basics", trading: "Trading", fundamental: "Fundamentals", technical: "Technical", derivatives: "Derivatives", funds: "Mutual funds", india: "Indian market" } },
+   cat: { basics: "Basics", trading: "Trading", fundamental: "Fundamentals", technical: "Technical", derivatives: "Derivatives", funds: "Mutual funds", india: "Indian market", banking: "Banking and bonds", corporate: "Corporate finance", economy: "Economy" } },
  hi: { navLearn: "सीखें", navPatterns: "पैटर्न", navIndicators: "इंडिकेटर", navTools: "कैलकुलेटर", navQuiz: "क्विज़", navGlossary: "शब्दावली", navResources: "संसाधन",
-   eyebrow: "शब्दावली", title: "शेयर बाज़ार शब्दावली",
+   eyebrow: "शब्दावली", title: "वित्त और शेयर बाज़ार शब्दावली",
    intro: "बाज़ार, शोध और ट्रेडिंग में आने वाले शब्दों की सरल भाषा में परिभाषाएँ। शब्द से खोजें, या विषय से फ़िल्टर करें।",
    searchPlaceholder: "शब्द खोजें...", all: "सभी", count: "शब्द", none: "आपकी खोज से कोई शब्द मेल नहीं खाता।",
    disclaimer: "परिभाषाएँ शिक्षा के लिए हैं, निवेश सलाह नहीं। मौजूदा नियमों के लिए SEBI और NSE जैसे आधिकारिक स्रोत देखें।",
    footerText: "एक-एक अवधारणा करके बाज़ार सीखें।", disclaimerLink: "अस्वीकरण", privacyLink: "गोपनीयता नीति", contactLink: "संपर्क",
-   cat: { basics: "मूल बातें", trading: "ट्रेडिंग", fundamental: "फंडामेंटल", technical: "टेक्निकल", derivatives: "डेरिवेटिव", funds: "म्यूचुअल फंड", india: "भारतीय बाज़ार" } }
+   cat: { basics: "मूल बातें", trading: "ट्रेडिंग", fundamental: "फंडामेंटल", technical: "टेक्निकल", derivatives: "डेरिवेटिव", funds: "म्यूचुअल फंड", india: "भारतीय बाज़ार", banking: "बैंकिंग और बॉन्ड", corporate: "कॉर्पोरेट वित्त", economy: "अर्थव्यवस्था" } }
 };
-const GL_CATS = ["basics", "trading", "fundamental", "technical", "derivatives", "funds", "india"];
+const GL_CATS = ["basics", "trading", "fundamental", "technical", "derivatives", "funds", "india", "banking", "corporate", "economy"];
 
 let glLang = "en";
 let glCat = "all";

@@ -3,12 +3,12 @@
 // Needs shared.js (MP), lesson-catalog.js, progress.js and course-catalog.js (MPCourses).
 (function () {
  const UI = {
-  en: { eyebrow: "THE LEARNING LIBRARY", title: "All courses", intro: "Structured modules from your first share to options, taxes and trading psychology, in English and Hindi. Move in order, or jump straight to the topic you need.",
+  en: { studyLink: "MBA, BBA or BBM student? Read the topic-wise finance notes →", eyebrow: "THE LEARNING LIBRARY", title: "All courses", intro: "Structured modules from your first share to options, taxes and trading psychology, in English and Hindi. Move in order, or jump straight to the topic you need.",
    searchPlaceholder: "Search topics...", none: "No topics match your search. Try another keyword.", all: "All levels",
    ctaTitle: "Finished the course? Test yourself.", ctaText: "Take the final test: 100 to 150 questions from every module. Score 70% to earn your MarketPathAcademy certificate.", ctaGo: "Take the final test →",
    stats: (m, d) => [[m, "modules"], [d, "completed by you"], ["487", "practice questions"], ["EN · हिं", "two languages"]],
    count: (s, t) => `Showing ${s} of ${t} topics`, doc: "All courses" },
-  hi: { eyebrow: "सीखने की लाइब्रेरी", title: "सभी कोर्स", intro: "पहले शेयर से लेकर ऑप्शंस, टैक्स और ट्रेडिंग मनोविज्ञान तक व्यवस्थित मॉड्यूल, हिंदी और अंग्रेज़ी में। क्रम से सीखें या सीधे अपने विषय पर जाएँ।",
+  hi: { studyLink: "MBA, BBA या BBM के छात्र हैं? विषयवार वित्त नोट्स पढ़ें (अंग्रेज़ी में) →", eyebrow: "सीखने की लाइब्रेरी", title: "सभी कोर्स", intro: "पहले शेयर से लेकर ऑप्शंस, टैक्स और ट्रेडिंग मनोविज्ञान तक व्यवस्थित मॉड्यूल, हिंदी और अंग्रेज़ी में। क्रम से सीखें या सीधे अपने विषय पर जाएँ।",
    searchPlaceholder: "विषय खोजें...", none: "आपकी खोज से कोई विषय नहीं मिला। कोई दूसरा शब्द आज़माएँ।", all: "सभी स्तर",
    ctaTitle: "कोर्स पूरा कर लिया? ख़ुद को परखें।", ctaText: "फ़ाइनल टेस्ट दें: हर मॉड्यूल से 100 से 150 प्रश्न। 70% लाकर MarketPathAcademy सर्टिफ़िकेट पाएँ।", ctaGo: "फ़ाइनल टेस्ट दें →",
    stats: (m, d) => [[m, "मॉड्यूल"], [d, "आपने पूरे किए"], ["487", "अभ्यास प्रश्न"], ["EN · हिं", "दो भाषाएँ"]],

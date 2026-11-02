@@ -1057,6 +1057,18 @@ html[data-theme="light"] :is(.gl-source a,.gl-back a,.gl-term .lesson-block li a
 .article-list h2 a{color:inherit}.article-list h2 a:hover{color:var(--green)}
 .article-page .lesson-summary a{color:var(--green);font-weight:600}
 html[data-theme="light"] .article-page .lesson-summary a{color:#0b7d5e}
+.wa-link{display:inline-flex;align-items:center;margin-top:14px;padding:8px 14px;border:1px solid #25d366;border-radius:10px;font-size:13px;font-weight:600;line-height:1.4;color:#5be08f;text-decoration:none}
+.res-card-wide{grid-column:1/-1}
+.wa-link:hover{background:rgba(37,211,102,.12)}
+html[data-theme="light"] .wa-link{color:#0f6b36;border-color:#128c4a}
+/* Links inside running text: study guides, articles and glossary term pages */
+:is(.article-page,.gl-term) :is(.lesson-summary,.lesson-section,.lesson-block>p,details>p,.case-card>p:not(.gl-source)) a,.article-page>p:not(.gl-back,.fine-print) a:not(.wa-link){color:var(--green);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+:is(.article-page,.gl-term) :is(.lesson-summary,.lesson-section,.lesson-block>p,details>p,.case-card>p:not(.gl-source)) a:hover,.article-page>p:not(.gl-back,.fine-print) a:not(.wa-link):hover{text-decoration-thickness:2px}
+html[data-theme="light"] :is(.article-page,.gl-term) :is(.lesson-summary,.lesson-section,.lesson-block>p,details>p,.case-card>p:not(.gl-source)) a,html[data-theme="light"] .article-page>p:not(.gl-back,.fine-print) a:not(.wa-link){color:#0b7d5e}
+.article-page .case-card h3{margin:0 0 6px}
+.article-page .case-card h3 a{color:var(--green)}
+html[data-theme="light"] .article-page .case-card h3 a{color:#0b7d5e}
+.lesson-table thead th.text{text-align:left;white-space:normal}
 /* Paper terminal tab strips on narrow screens: fade the edge where more tabs are hidden (paper-trading.js sets data-more) */
 .pt-nav[data-more="r"],.pt-toolnav[data-more="r"]{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent)}
 .pt-nav[data-more="l"],.pt-toolnav[data-more="l"]{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 44px),transparent)}

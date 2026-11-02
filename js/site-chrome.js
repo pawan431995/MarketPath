@@ -13,7 +13,7 @@
    learn: "Learn", paper: "Paper trading", test: "Final test", calcs: "Calculators", glossary: "Glossary", about: "About", search: "Search", menu: "Open navigation",
    tagline: "Learn the market, one concept at a time. Lessons, practice and tools for beginners and experienced investors, in English and Hindi.",
    colStart: "Start learning", colTrade: "Trading & analysis", colTools: "Tools", colSite: "MarketPathAcademy",
-   disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top", articles: "Articles",
+   disclaimer: "Disclaimer", privacy: "Privacy policy", contact: "Contact", top: "Back to top", whatsapp: "Join our WhatsApp channel ↗", articles: "Articles", studyNotes: "Study notes (MBA, BBA, BBM)",
    rights: "MarketPathAcademy. Educational content only — not investment advice.",
    lessons: {
     foundations: "Stock market foundations", "market-rules": "Market rules & investor protection", "personal-finance": "Personal finance", investing: "Investing & wealth building",
@@ -26,7 +26,7 @@
    learn: "सीखें", paper: "पेपर ट्रेडिंग", test: "फ़ाइनल टेस्ट", calcs: "कैलकुलेटर", glossary: "शब्दावली", about: "हमारे बारे में", search: "खोजें", menu: "नेविगेशन खोलें",
    tagline: "एक-एक अवधारणा करके बाज़ार सीखें। शुरुआती और अनुभवी निवेशकों के लिए पाठ, अभ्यास और टूल, हिंदी और अंग्रेज़ी में।",
    colStart: "सीखना शुरू करें", colTrade: "ट्रेडिंग और विश्लेषण", colTools: "टूल", colSite: "MarketPathAcademy",
-   disclaimer: "अस्वीकरण", privacy: "गोपनीयता नीति", contact: "संपर्क", top: "ऊपर जाएँ", articles: "लेख",
+   disclaimer: "अस्वीकरण", privacy: "गोपनीयता नीति", contact: "संपर्क", top: "ऊपर जाएँ", whatsapp: "हमारे WhatsApp चैनल से जुड़ें ↗", articles: "लेख", studyNotes: "स्टडी नोट्स (MBA, BBA, BBM)",
    rights: "MarketPathAcademy. केवल शैक्षिक सामग्री — निवेश सलाह नहीं।",
    lessons: {
     foundations: "शेयर बाज़ार की मूल बातें", "market-rules": "बाज़ार के नियम और निवेशक सुरक्षा", "personal-finance": "पर्सनल फ़ाइनेंस", investing: "निवेश और धन निर्माण",
@@ -88,11 +88,12 @@
     <div class="ft-brand">
      <a class="brand footer-brand" href="${url("index.html")}"><img class="brand-full brand-on-dark" src="${url("images/logo-horizontal-dark.png")}" alt="" width="154" height="44"><img class="brand-full brand-on-light" src="${url("images/logo-horizontal.png")}" alt="" width="154" height="44"><span class="sr-only">MarketPathAcademy</span></a>
      <p>${esc(t.tagline)}</p>
+     <a class="wa-link" href="https://whatsapp.com/channel/0029Vb8VIq3K5cD8rjMATd3l" target="_blank" rel="noopener">${esc(t.whatsapp)}</a>
     </div>
     <nav class="ft-col" aria-label="${esc(t.colStart)}"><h2>${esc(t.colStart)}</h2>${["foundations", "market-rules", "personal-finance", "investing", "sip-mutual-funds", "tax-basics"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTrade)}"><h2>${esc(t.colTrade)}</h2>${["technical-analysis", "candlestick-patterns", "fundamental-analysis", "futures-options", "risk-management"].map(s => link(lessonUrl(s), t.lessons[s])).join("")}</nav>
     <nav class="ft-col" aria-label="${esc(t.colTools)}"><h2>${esc(t.colTools)}</h2>${link(url("pages/paper-trading.html"), t.paper)}${link(url("pages/paper-trading.html#screener"), t.tools.screener)}${link(url("pages/paper-trading.html#strategy"), t.tools.strategy)}${link(url("pages/paper-trading.html#replay"), t.tools.replay)}${link(url("pages/test.html"), t.tools.test)}${link(url("pages/calculators.html"), t.calcs)}${link(url("pages/calculators.html#sip"), t.tools.sip)}${link(url("pages/calculators.html#income-tax"), t.tools["income-tax"])}${link(url("pages/glossary.html"), t.glossary)}</nav>
-    <nav class="ft-col" aria-label="${esc(t.colSite)}"><h2>${esc(t.colSite)}</h2>${link(url("pages/articles.html"), t.articles)}${link(url("pages/glossary.html"), t.glossary)}${link(url("index.html#about"), t.about)}${link(url("index.html#about"), t.disclaimer)}${link(url("pages/privacy.html"), t.privacy)}${link(url("pages/contact.html"), t.contact)}</nav>
+    <nav class="ft-col" aria-label="${esc(t.colSite)}"><h2>${esc(t.colSite)}</h2>${link(url("pages/articles.html"), t.articles)}${link(url("pages/study-notes.html"), t.studyNotes)}${link(url("pages/glossary.html"), t.glossary)}${link(url("index.html#about"), t.about)}${link(url("index.html#about"), t.disclaimer)}${link(url("pages/privacy.html"), t.privacy)}${link(url("pages/contact.html"), t.contact)}</nav>
    </div>
    <div class="ft-bottom"><small>© <span id="year">${new Date().getFullYear()}</span> ${esc(t.rights)}</small></div>`;
  }

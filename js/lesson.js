@@ -329,6 +329,10 @@ function relatedBlock(s) {
  if (!list) return "";
  return `<section class="lesson-block"><h2>${esc(UI[lang].relatedCalcs)}</h2><div class="related-calcs">${list.map(([id, en, hi]) => `<a class="related-calc" href="${encodeURIComponent(id)}-calculator.html"><span aria-hidden="true">₹</span>${esc(lang === "hi" ? hi : en)} <span aria-hidden="true">↗</span></a>`).join("")}</div></section>`;
 }
+function guidesBlock() {
+ if (typeof LESSON_GUIDES === "undefined" || !LESSON_GUIDES.list.length) return "";
+ return `<section class="lesson-block"><h2>${esc(LESSON_GUIDES.title[lang])}</h2><div class="related-calcs">${LESSON_GUIDES.list.map(([href, title]) => `<a class="related-calc" href="${href}" lang="en">${esc(title)}</a>`).join("")}</div></section>`;
+}
 function renderDone() {
  const box = document.getElementById("doneBox");
  if (!box || !hasProgress) return;
@@ -428,6 +432,7 @@ function renderLesson() {
   ${quizBlock(content.quiz)}
   ${practiceBlock(slug)}
   ${relatedBlock(slug)}
+  ${guidesBlock()}
   ${hasProgress ? `<section class="done-box" id="doneBox" aria-live="polite"></section>` : ""}
   <p class="fine-print lesson-disclaimer">${esc(UI[lang].disclaimer)}</p>
   <nav class="lesson-nav" aria-label="Lesson navigation">

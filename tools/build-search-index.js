@@ -16,17 +16,17 @@ const load = files => files.forEach(f => vm.runInContext(fs.readFileSync(path.jo
 // Same order as pages/lesson.html (content only, no UI code).
 load(["lessons.js", "lessons-modules.js", "lessons-foundations.js", "lessons-content-a.js", "lessons-content-b.js", "lessons-content-c.js", "lessons-content-d.js", "lessons-content-e.js",
  "lessons-strategies.js", "lessons-strategy-detail.js", "lessons-extra-en.js", "lessons-extra-hi.js", "lesson-charts.js", "patterns.js", "indicators.js", "patterns-extra.js",
- "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js", "lessons-personal-finance.js", "lessons-updates.js", "lessons-market-rules.js",
- "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js", "articles.js"]);
-vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS, ARTICLES };", ctx);
-const { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS, ARTICLES } = ctx.__;
+ "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "glossary-more.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js", "lessons-personal-finance.js", "lessons-updates.js", "lessons-market-rules.js",
+ "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js", "articles.js", "guides.js", "guides-more.js"]);
+vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS, ARTICLES, GUIDES };", ctx);
+const { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, GLOSSARY_TERMS, PATTERNS, INDICATORS, ARTICLES, GUIDES } = ctx.__;
 const CALCS = ctx.CALCS;
 
 const clip = (s, n = 240) => { s = String(s || "").replace(/\s+/g, " ").trim(); return s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s; };
 const sectionText = sec => clip([sec.p, ...(sec.ul || []), sec.p2].filter(Boolean).join(" "));
 const LEVEL = { beginner: ["Beginner", "शुरुआती"], intermediate: ["Intermediate", "मध्यम"], advanced: ["Advanced", "उन्नत"] };
 const CAT_CALC = { personal: ["Personal finance", "व्यक्तिगत वित्त"], invest: ["Investing", "निवेश"], retire: ["Retirement", "रिटायरमेंट"], loans: ["Loans & debt", "लोन और कर्ज़"], property: ["Real estate", "रियल एस्टेट"], tax: ["Tax", "टैक्स"], business: ["Business", "बिज़नेस"] };
-const CAT_TERM = { basics: ["Basics", "मूल बातें"], trading: ["Trading", "ट्रेडिंग"], fundamental: ["Fundamentals", "फंडामेंटल"], technical: ["Technical", "टेक्निकल"], derivatives: ["Derivatives", "डेरिवेटिव"], funds: ["Mutual funds", "म्यूचुअल फंड"], india: ["Indian market", "भारतीय बाज़ार"] };
+const CAT_TERM = { basics: ["Basics", "मूल बातें"], trading: ["Trading", "ट्रेडिंग"], fundamental: ["Fundamentals", "फंडामेंटल"], technical: ["Technical", "टेक्निकल"], derivatives: ["Derivatives", "डेरिवेटिव"], funds: ["Mutual funds", "म्यूचुअल फंड"], india: ["Indian market", "भारतीय बाज़ार"], banking: ["Banking and bonds", "बैंकिंग और बॉन्ड"], corporate: ["Corporate finance", "कॉर्पोरेट वित्त"], economy: ["Economy", "अर्थव्यवस्था"] };
 
 const out = [
  ["page", "pages/paper-trading.html", "Paper trading simulator", "Practise buying and selling any NSE stock with a virtual ₹10 lakh account: charts, indicators, drawing tools, charges and tax.", "Tool", "पेपर ट्रेडिंग सिम्युलेटर", "वर्चुअल ₹10 लाख खाते से किसी भी NSE शेयर की ख़रीद-बिक्री का अभ्यास: चार्ट, इंडिकेटर, ड्रॉइंग टूल, शुल्क और टैक्स।", "टूल"],
@@ -36,7 +36,7 @@ const out = [
  ["page", "pages/paper-trading.html#strategy", "Strategy builder and backtesting", "Build buy and sell rules from indicators and test them on 2 years of real NSE daily data with charges, slippage, drawdown and win rate.", "Tool", "स्ट्रैटेजी बिल्डर और बैकटेस्टिंग", "इंडिकेटर से ख़रीद-बिक्री के नियम बनाएँ और 2 साल के असली NSE डेटा पर शुल्क, स्लिपेज, ड्रॉडाउन और विन रेट के साथ जाँचें।", "टूल", "backtest back test trading system rules"],
  ["page", "pages/paper-trading.html#replay", "Bar replay", "Practise trading real NSE history one bar at a time, with blind mode, stop-loss and target.", "Tool", "बार रीप्ले", "असली NSE इतिहास पर एक-एक बार करके ट्रेडिंग का अभ्यास करें।", "टूल", "replay practice history"],
  ["page", "pages/calculators.html", "All financial calculators", "SIP, EMI, income tax, retirement, FIRE, loans, property, tax and business calculators with charts and schedules.", "Tool", "सभी वित्तीय कैलकुलेटर", "SIP, EMI, इनकम टैक्स, रिटायरमेंट, FIRE, लोन, प्रॉपर्टी, टैक्स और बिज़नेस कैलकुलेटर, चार्ट और शेड्यूल के साथ।", "टूल"],
- ["page", "pages/glossary.html", "Glossary of market terms", "Plain-language definitions of 120+ terms in English and Hindi.", "Reference", "बाज़ार शब्दावली", "120+ शब्दों की आसान परिभाषाएँ, हिंदी और अंग्रेज़ी में।", "संदर्भ"]
+ ["page", "pages/glossary.html", "Glossary of market terms", `Plain-language definitions of ${Math.floor(GLOSSARY_TERMS.length / 10) * 10}+ terms in English and Hindi.`, "Reference", "बाज़ार शब्दावली", `${Math.floor(GLOSSARY_TERMS.length / 10) * 10}+ शब्दों की आसान परिभाषाएँ, हिंदी और अंग्रेज़ी में।`, "संदर्भ"]
 ];
 
 LESSON_ORDER.forEach(slug => {
@@ -57,8 +57,10 @@ GLOSSARY_TERMS.forEach(t => {
  out.push(["term", `pages/${ctx.glossaryHref(t.term.en)}`, t.term.en, clip(t.def.en), c[0], t.term.hi, clip(t.def.hi), c[1]]);
 });
 
-// Articles (English only); the Hindi fields repeat the English so Hindi searches still find them.
+// Articles and study guides (English only); the Hindi fields repeat the English so Hindi searches still find them.
 ARTICLES.forEach(a => out.push(["page", `pages/article-${a.slug}.html`, a.title, clip(a.summary), "Article", a.title, clip(a.summary), "लेख", a.desc]));
+out.push(["page", "pages/study-notes.html", "Finance notes for MBA, BBA and BBM students", "Topic-wise notes on markets, accounting, corporate finance, derivatives, banking and economics, with formulas and worked examples.", "Study notes", "MBA, BBA और BBM के लिए वित्त नोट्स", "बाज़ार, लेखांकन, कॉर्पोरेट वित्त, डेरिवेटिव, बैंकिंग और अर्थशास्त्र पर विषयवार नोट्स (अंग्रेज़ी में)।", "स्टडी नोट्स", "college university student syllabus notes"]);
+GUIDES.forEach(g => out.push(["page", `pages/guide-${g.slug}.html`, g.title, clip(g.summary), "Study notes", g.title, clip(g.summary), "स्टडी नोट्स", g.keys.join(" ") + " " + g.desc]));
 
 CALCS.forEach(c => {
  const cat = CAT_CALC[c.cat] || ["", ""];

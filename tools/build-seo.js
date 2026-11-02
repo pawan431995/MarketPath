@@ -37,11 +37,11 @@ const load = files => files.forEach(f => vm.runInContext(read("js/" + f), ctx, {
 // Same order as pages/lesson.html (content only).
 load(["lessons.js", "lessons-modules.js", "lessons-foundations.js", "lessons-content-a.js", "lessons-content-b.js", "lessons-content-c.js", "lessons-content-d.js", "lessons-content-e.js",
  "lessons-strategies.js", "lessons-strategy-detail.js", "lessons-extra-en.js", "lessons-extra-hi.js", "lesson-charts.js", "patterns.js", "indicators.js", "patterns-extra.js",
- "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js", "lessons-personal-finance.js",
+ "glossary-data.js", "glossary-finance.js", "glossary-rules.js", "glossary-more.js", "module-extras.js", "lessons-tax.js", "lessons-finance.js", "lessons-finance-more.js", "lessons-finance-more-hi.js", "lessons-personal-finance.js",
  "lessons-updates.js", "lessons-market-rules.js",
- "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js", "articles.js"]);
-vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, LESSON_EXTRAS_EN, LESSON_EXTRAS_HI, LESSON_CHARTS, MODULE_CONTENT, MODULE_META, GLOSSARY_TERMS, ARTICLES };", ctx);
-const { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, LESSON_EXTRAS_EN, LESSON_EXTRAS_HI, LESSON_CHARTS, MODULE_CONTENT, MODULE_META, GLOSSARY_TERMS, ARTICLES } = ctx.__;
+ "calc-math.js", "calc-defs-personal.js", "calc-defs-investing.js", "calc-defs-retirement.js", "calc-defs-loans.js", "calc-defs-property.js", "calc-defs-tax.js", "calc-defs-business.js", "articles.js", "guides.js", "guides-more.js"]);
+vm.runInContext("this.__ = { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, LESSON_EXTRAS_EN, LESSON_EXTRAS_HI, LESSON_CHARTS, MODULE_CONTENT, MODULE_META, GLOSSARY_TERMS, ARTICLES, GUIDES, GUIDE_GROUPS };", ctx);
+const { LESSONS, LESSON_ORDER, LESSON_OVERRIDES, LESSON_EXTRAS_EN, LESSON_EXTRAS_HI, LESSON_CHARTS, MODULE_CONTENT, MODULE_META, GLOSSARY_TERMS, ARTICLES, GUIDES, GUIDE_GROUPS } = ctx.__;
 const glossaryHref = ctx.glossaryHref; // from glossary-data.js, shared with the site's scripts
 const EXTRAS = { en: LESSON_EXTRAS_EN, hi: LESSON_EXTRAS_HI };
 const CALCS = ctx.CALCS;
@@ -107,7 +107,7 @@ function withHead(html, m) {
 // ---------- structured data ----------
 const ORG = { "@type": "EducationalOrganization", "@id": SITE + "#org", name: BRAND, url: SITE, logo: SITE + "images/icon-512.png",
  description: "Free stock market education in English and Hindi: courses, quizzes, calculators, paper trading and a final test with a certificate.",
- email: "marketpathacademy@gmail.com", contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "marketpathacademy@gmail.com", availableLanguage: ["English", "Hindi"] } };
+ sameAs: ["https://whatsapp.com/channel/0029Vb8VIq3K5cD8rjMATd3l"], email: "marketpathacademy@gmail.com", contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "marketpathacademy@gmail.com", availableLanguage: ["English", "Hindi"] } };
 const provider = { "@type": "Organization", name: BRAND, url: SITE };
 const crumbs = items => ({ "@context": "https://schema.org", "@type": "BreadcrumbList",
  itemListElement: items.map(([name, item], i) => ({ "@type": "ListItem", position: i + 1, name, item })) });
@@ -117,13 +117,17 @@ const free = { "@type": "Offer", price: 0, priceCurrency: "INR", category: "Free
 const L = (lang, slug) => (LESSONS[lang] && LESSONS[lang][slug]) || LESSONS.en[slug];
 const sectionsOf = (lang, slug) => (LESSON_OVERRIDES[lang] && LESSON_OVERRIDES[lang][slug] && LESSON_OVERRIDES[lang][slug].sections) || L(lang, slug).sections || [];
 const faqOf = (lang, slug) => ((MODULE_CONTENT[lang] && MODULE_CONTENT[lang][slug]) || MODULE_CONTENT.en[slug] || { faq: [] }).faq || [];
-function tableHtml(t) {
+function tableHtml(t, cell = esc) {
+ // Articles and guides pass a linker: there, a column is left-aligned text unless all its cells are numbers.
+ const textCol = j => cell !== esc && t.rows.some(r => r[j] && !/^[-−+(₹]?\s*[₹\d]/.test(r[j]));
  const rows = t.rows.map(r => {
   const total = r[0].startsWith("!");
-  return `<tr${total ? ' class="total"' : ""}><th scope="row">${esc(total ? r[0].slice(1) : r[0])}</th>${r.slice(1).map(c => `<td${c.length > 24 ? ' class="text"' : ""}>${esc(c)}</td>`).join("")}</tr>`;
+  return `<tr${total ? ' class="total"' : ""}><th scope="row">${cell(total ? r[0].slice(1) : r[0])}</th>${r.slice(1).map((c, j) => `<td${c.length > 24 || textCol(j + 1) ? ' class="text"' : ""}>${cell(c)}</td>`).join("")}</tr>`;
  }).join("");
- return `<div class="lesson-table-wrap" tabindex="0"><table class="lesson-table"><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;
+ return `<div class="lesson-table-wrap" tabindex="0"><table class="lesson-table"><thead><tr>${t.head.map((h, j) => `<th scope="col"${j && textCol(j) ? ' class="text"' : ""}>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
+const GUIDE_TITLE = { en: "Go deeper: study notes", hi: "और गहराई से: स्टडी नोट्स (अंग्रेज़ी में)" };
+const guidesOfLesson = slug => GUIDES.filter(g => (g.lessons || []).includes(slug)).slice(0, 5);
 const termsOf = slug => ((MODULE_META[slug] || {}).terms || []).map(n => GLOSSARY_TERMS.find(t => t.term.en === n)).filter(Boolean);
 function lessonArticle(slug, lang) {
  const u = UI[lang], en = LESSONS.en[slug], l = L(lang, slug), ex = (EXTRAS[lang] && EXTRAS[lang][slug]) || EXTRAS.en[slug] || {};
@@ -141,6 +145,7 @@ ${sections.map(s => `   <section class="lesson-section"><h2>${esc(s.h)}</h2>${s.
    ${block(u.useCases, list(ex.useCases))}
    ${block(u.takeaways, list(ex.takeaways))}
    ${block(u.termsTitle, termsOf(slug).length ? `<dl class="term-list">${termsOf(slug).map(t => `<dt><a href="${glossaryHref(t.term.en)}">${esc(t.term[lang] || t.term.en)}</a></dt><dd>${esc(t.def[lang] || t.def.en)}</dd>`).join("")}</dl>` : "")}
+   ${block(GUIDE_TITLE[lang], guidesOfLesson(slug).length ? `<div class="related-calcs">${guidesOfLesson(slug).map(g => `<a class="related-calc" href="guide-${g.slug}.html" lang="en">${esc(g.title.split(":")[0])}</a>`).join("")}</div>` : "")}
    ${block(u.faqTitle, faq.map(f => `<details class="practice"><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join(""))}
    <p class="fine-print lesson-disclaimer">${esc(u.disclaimer)}</p>
    <nav class="lesson-nav" aria-label="Lesson navigation">${prev ? `<a href="${lessonFile(prev, lang)}"><small>← ${esc(u.prev)}</small>${esc(L(lang, prev).title)}</a>` : "<span></span>"}${next ? `<a class="next" href="${lessonFile(next, lang)}"><small>${esc(u.next)} →</small>${esc(L(lang, next).title)}</a>` : "<span></span>"}</nav>
@@ -173,7 +178,7 @@ const GENERATED = src => `<!-- Generated by tools/build-seo.js from ${src}. Edit
 // js/lesson-data/<slug>.js holds what js/lesson.js needs for one lesson: the titles of all lessons (menus) and
 // this lesson's content, extras, questions, quiz, diagrams, tools, key terms and practice tasks, in both
 // languages. The content scripts are loaded in the same order as pages/lesson.html lists them.
-const CONTENT_SCRIPTS = /(\s*<script src="\.\.\/js\/(?:lessons[a-z-]*|lesson-charts|lesson-practice|patterns[a-z-]*|indicators|glossary-(?:data|finance|rules)|module-extras|mcq-[a-z0-9]+)\.js"><\/script>)+/;
+const CONTENT_SCRIPTS = /(\s*<script src="\.\.\/js\/(?:lessons[a-z-]*|lesson-charts|lesson-practice|patterns[a-z-]*|indicators|glossary-(?:data|finance|rules|more)|module-extras|mcq-[a-z0-9]+)\.js"><\/script>)+/;
 function buildLessonData() {
  const srcs = [...read("pages/lesson.html").match(CONTENT_SCRIPTS)[0].matchAll(/src="\.\.\/js\/([^"]+)"/g)].map(m => m[1]);
  const c = { console, Math, Date, Number, String, Object, Array, JSON, Infinity, isNaN, Intl, encodeURIComponent };
@@ -207,6 +212,7 @@ function buildLessonData() {
    `const PATTERNS = ${json(D.PATTERNS.filter(p => tools.includes(p.id)))};`,
    `const INDICATORS = ${json(D.INDICATORS.filter(x => tools.includes(x.id)))};`,
    `const GLOSSARY_TERMS = ${json(D.GLOSSARY_TERMS.filter(t => (meta.terms || []).includes(t.term.en)))};`,
+   `const LESSON_GUIDES = ${json({ title: GUIDE_TITLE, list: guidesOfLesson(slug).map(g => [`guide-${g.slug}.html`, g.title.split(":")[0]]) })};`,
    `window.MP_PRACTICE = ${json(pickSlug(c.MP_PRACTICE, slug))};`,
    "// The quiz questions are already in MODULE_CONTENT.",
    "function applyMcq() {}",
@@ -289,7 +295,9 @@ function buildCalcs() {
 // ---------- glossary term pages ----------
 // pages/glossary-<slug>.html: the definition in English and Hindi, passages from the lessons that use the term,
 // the lessons that teach it, and related terms. glossary.html also gets the full list in its HTML.
-const GL_CAT = { basics: "Basics", trading: "Trading", fundamental: "Fundamentals", technical: "Technical analysis", derivatives: "Derivatives", funds: "Mutual funds", india: "Indian market" };
+const GL_CAT = { basics: "Basics", trading: "Trading", fundamental: "Fundamentals", technical: "Technical analysis", derivatives: "Derivatives", funds: "Mutual funds", india: "Indian market", banking: "Banking and bonds", corporate: "Corporate finance", economy: "Economy" };
+const guideFile = g => `guide-${g.slug}.html`;
+const guidesFor = t => GUIDES.filter(g => (g.terms || []).includes(t.term.en));
 const termUrl = t => SITE + "pages/" + glossaryHref(t.term.en);
 const lessonsTeaching = t => LESSON_ORDER.filter(s => ((MODULE_META[s] || {}).terms || []).includes(t.term.en));
 // Words to look for in the lessons: the term without its bracket, the bracket itself, and comma-separated parts.
@@ -318,19 +326,21 @@ function termExcerpts(t) {
  return out;
 }
 function termRelated(t) {
+ const chosen = (t.see || []).map(n => GLOSSARY_TERMS.find(x => x.term.en === n)).filter(Boolean);
  const same = GLOSSARY_TERMS.filter(x => x.cat === t.cat && x !== t).sort((a, b) => a.term.en.localeCompare(b.term.en));
  const i = same.findIndex(x => x.term.en.localeCompare(t.term.en) > 0);
- return same.slice(Math.max(0, i)).concat(same.slice(0, Math.max(0, i))).slice(0, 8);
+ return chosen.concat(same.slice(Math.max(0, i)).concat(same.slice(0, Math.max(0, i))).filter(x => !chosen.includes(x))).slice(0, 8);
 }
 function termMain(t) {
- const excerpts = termExcerpts(t), teach = lessonsTeaching(t), related = termRelated(t);
+ const excerpts = termExcerpts(t), teach = lessonsTeaching(t), related = termRelated(t), guides = guidesFor(t), link = linker(glossaryHref(t.term.en));
  return `<main id="main" class="lesson-wrap static-page gl-term">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="glossary.html">Glossary</a> <span>/</span> <span>${esc(t.term.en)}</span></nav>
     <div class="eyebrow">Glossary · ${esc(GL_CAT[t.cat] || "")}</div>
     <h1 class="lesson-title">${esc(t.term.en)} <span class="gl-term-hi" lang="hi">${esc(t.term.hi)}</span></h1>
-    <p class="lesson-summary">${esc(t.def.en)}</p>
+    <p class="lesson-summary">${link(t.def.en)}</p>
     <section class="lesson-block" lang="hi"><h2>हिंदी में: ${esc(t.term.hi)}</h2><p>${esc(t.def.hi)}</p></section>
-    ${excerpts.length ? `<section class="lesson-block"><h2>How it is used in the lessons</h2>${excerpts.map(x => `<div class="case-card example"><p>${esc(x.text)}</p><p class="gl-source">From <a href="${lessonFile(x.slug, "en")}">${esc(LESSONS.en[x.slug].title)}</a></p></div>`).join("")}</section>` : ""}
+    ${excerpts.length ? `<section class="lesson-block"><h2>How it is used in the lessons</h2>${excerpts.map(x => `<div class="case-card example"><p>${link(x.text)}</p><p class="gl-source">From <a href="${lessonFile(x.slug, "en")}">${esc(LESSONS.en[x.slug].title)}</a></p></div>`).join("")}</section>` : ""}
+    ${guides.length ? `<section class="lesson-block"><h2>Read the full topic guide</h2><ul>${guides.map(g => `<li><a href="${guideFile(g)}">${esc(g.title)}</a></li>`).join("")}</ul></section>` : ""}
     ${teach.length ? `<section class="lesson-block"><h2>Learn it step by step</h2><ul>${teach.map(s => `<li><a href="${lessonFile(s, "en")}">${esc(LESSONS.en[s].title)}</a> · <a href="${lessonFile(s, "hi")}" lang="hi">${esc(L("hi", s).title)}</a></li>`).join("")}</ul></section>` : ""}
     ${related.length ? `<section class="lesson-block"><h2>Related terms</h2><div class="related-calcs">${related.map(x => `<a class="related-calc" href="${glossaryHref(x.term.en)}">${esc(x.term.en)}</a>`).join("")}</div></section>` : ""}
     <p class="gl-back"><a href="glossary.html">← All ${GLOSSARY_TERMS.length} glossary terms</a></p>
@@ -365,7 +375,7 @@ function buildGlossary() {
 // A generated page in the glossary page's frame (header, menus, footer, search), with its own <main> and only
 // js/simple-page.js for the menu and language choice.
 function simplePage(meta, main, source) {
- const mainRe = /<main id="main"[\s\S]*?<\/main>/, scriptsRe = /(\s*<script src="\.\.\/js\/glossary-(?:data|finance|rules|page)\.js"><\/script>)+/;
+ const mainRe = /<main id="main"[\s\S]*?<\/main>/, scriptsRe = /(\s*<script src="\.\.\/js\/glossary-(?:data|finance|rules|more|page)\.js"><\/script>)+/;
  const frame = stripHead(read("pages/glossary.html"));
  if (!mainRe.test(frame) || !scriptsRe.test(frame)) throw new Error("Unexpected pages/glossary.html structure");
  return withHead(frame, meta)
@@ -375,21 +385,55 @@ function simplePage(meta, main, source) {
   .replace(scriptsRe, '\n  <script src="../js/simple-page.js"></script>');
 }
 
+// ---------- automatic links ----------
+// Words in guide, article and glossary text link to the guide that covers them, or else to the glossary term. Each
+// target is linked once per page. One-word terms link only if listed here, because words such as "order", "support"
+// and "option" have everyday meanings; abbreviations must match exactly.
+const LINK_WORDS = new Set(["dividend", "inflation", "liquidity", "volatility", "diversification", "compounding", "depreciation", "amortisation", "goodwill", "reserves", "debenture", "bond", "demerger", "capex", "beta", "alpha", "arbitrage", "hedging", "leverage", "inventory", "receivables", "payables", "merger", "acquisition", "recession", "deflation", "disinflation", "stagflation", "annuity", "subsidiary", "dilution", "collateral", "guarantor", "capitulation", "overdraft", "shareholder", "commodity", "monopoly", "oligopoly", "breakout", "futures"]);
+const isAbbr = k => /^[A-Z][A-Z0-9/&+.-]*[A-Z0-9]s?$/.test(k);
+const LINK_TARGETS = new Map();
+const addTarget = (phrase, href) => { const k = phrase.toLowerCase(); if (!LINK_TARGETS.has(k)) LINK_TARGETS.set(k, { href, exact: isAbbr(phrase) ? phrase : null }); };
+GUIDES.forEach(g => g.keys.forEach(k => addTarget(k, guideFile(g))));
+GLOSSARY_TERMS.forEach(t => termKeywords(t).forEach(k => {
+ if (k === "ATM") return; // here "ATM" means at the money, not the cash machine
+ if (isAbbr(k) || /\s|-/.test(k) || LINK_WORDS.has(k.toLowerCase())) addTarget(k, glossaryHref(t.term.en));
+}));
+const LINK_RE = new RegExp("(?<![A-Za-z0-9&/-])(" + [...LINK_TARGETS.keys()].sort((a, b) => b.length - a.length).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")(?:es|s)?(?![A-Za-z0-9-])", "gi");
+// Returns a function that turns plain text into safe HTML with links, remembering what this page already links to.
+function linker(self) {
+ const seen = new Set([self]);
+ return text => {
+  let out = "", last = 0;
+  for (const m of String(text).matchAll(LINK_RE)) {
+   const target = LINK_TARGETS.get(m[1].toLowerCase());
+   if (target.exact && m[1] !== target.exact) continue;
+   if (seen.has(target.href)) continue;
+   seen.add(target.href);
+   out += esc(text.slice(last, m.index)) + `<a href="${target.href}">${esc(m[0])}</a>`;
+   last = m.index + m[0].length;
+  }
+  return out + esc(text.slice(last));
+ };
+}
+// One section of an article or guide. Text goes through link(), which adds links and escapes it.
+const sectionHtml = (s, link) => `    <section class="lesson-section"><h2>${esc(s.h)}</h2>${s.p ? `<p>${link(s.p)}</p>` : ""}${s.ul ? `<ul>${s.ul.map(li => `<li>${link(li)}</li>`).join("")}</ul>` : ""}${s.table ? tableHtml(s.table, link) : ""}${s.box ? `<div class="case-card example"><p>${link(s.box)}</p></div>` : ""}${s.p2 ? `<p>${link(s.p2)}</p>` : ""}</section>`;
+
 // ---------- articles ----------
 // js/articles.js -> pages/articles.html (the list) and pages/article-<slug>.html.
 const articleFile = a => `article-${a.slug}.html`;
 const articleUrl = a => SITE + "pages/" + articleFile(a);
 const longDate = d => new Date(d + "T00:00:00Z").toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-const readMinutes = a => Math.max(2, Math.round(a.sections.map(s => [s.p, ...(s.ul || []), s.p2, ...((s.table && s.table.rows) || []).flat()].join(" ")).join(" ").split(/\s+/).length / 200));
+const readMinutes = a => Math.max(2, Math.round(a.sections.map(s => [s.p, ...(s.ul || []), s.box, s.p2, ...((s.table && s.table.rows) || []).flat()].join(" ")).join(" ").split(/\s+/).length / 200));
 function articleMain(a) {
+ const link = linker(articleFile(a));
  const calcs = (a.calcs || []).map(id => CALCS.find(c => c.id === id)).filter(Boolean);
  return `<main id="main" class="lesson-wrap static-page article-page">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="articles.html">Articles</a> <span>/</span> <span>${esc(a.title)}</span></nav>
     <article>
     <header class="lesson-head"><div class="eyebrow">Article</div><h1 class="lesson-title">${esc(a.title)}</h1><p class="lesson-summary">${esc(a.summary)}</p>
      <div class="lesson-meta"><span class="level-badge">${readMinutes(a)} min read</span><span class="level-badge">Updated <time datetime="${a.updated}">${longDate(a.updated)}</time></span></div></header>
-${a.sections.map(s => `    <section class="lesson-section"><h2>${esc(s.h)}</h2>${s.p ? `<p>${esc(s.p)}</p>` : ""}${s.ul ? `<ul>${s.ul.map(li => `<li>${esc(li)}</li>`).join("")}</ul>` : ""}${s.table ? tableHtml(s.table) : ""}${s.p2 ? `<p>${esc(s.p2)}</p>` : ""}</section>`).join("\n")}
-    ${a.faq && a.faq.length ? `<section class="lesson-block"><h2>Common questions</h2>${a.faq.map(f => `<details class="practice"><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("")}</section>` : ""}
+${a.sections.map(s => sectionHtml(s, link)).join("\n")}
+    ${a.faq && a.faq.length ? `<section class="lesson-block"><h2>Common questions</h2>${a.faq.map(f => `<details class="practice"><summary>${esc(f.q)}</summary><p>${link(f.a)}</p></details>`).join("")}</section>` : ""}
     ${a.lessons && a.lessons.length ? `<section class="lesson-block"><h2>Learn more in our free lessons</h2><ul>${a.lessons.filter(s => LESSONS.en[s]).map(s => `<li><a href="${lessonFile(s, "en")}">${esc(LESSONS.en[s].title)}</a> · <a href="${lessonFile(s, "hi")}" lang="hi">${esc(L("hi", s).title)}</a></li>`).join("")}</ul></section>` : ""}
     ${calcs.length ? `<section class="lesson-block"><h2>Try the numbers yourself</h2><div class="related-calcs">${calcs.map(c => `<a class="related-calc" href="${calcFile(c.id)}"><span aria-hidden="true">₹</span>${esc(c.title)} <span aria-hidden="true">↗</span></a>`).join("")}</div></section>` : ""}
     </article>
@@ -421,6 +465,76 @@ function buildArticles() {
  return list;
 }
 
+// ---------- study guides ----------
+// js/guides.js and js/guides-more.js -> pages/study-notes.html (the hub) and pages/guide-<slug>.html.
+const guideUrl = g => SITE + "pages/" + guideFile(g);
+const HUB_URL = SITE + "pages/study-notes.html";
+function checkGuides() {
+ const has = n => GLOSSARY_TERMS.some(t => t.term.en === n);
+ const bad = [];
+ GUIDES.forEach(g => {
+  (g.terms || []).filter(n => !has(n)).forEach(n => bad.push(`${g.slug}: term ${n}`));
+  (g.related || []).filter(s => !GUIDES.some(x => x.slug === s)).forEach(s => bad.push(`${g.slug}: guide ${s}`));
+  (g.lessons || []).filter(s => !LESSONS.en[s]).forEach(s => bad.push(`${g.slug}: lesson ${s}`));
+  (g.calcs || []).filter(id => !CALCS.some(c => c.id === id)).forEach(id => bad.push(`${g.slug}: calculator ${id}`));
+  if (!GUIDE_GROUPS[g.group]) bad.push(`${g.slug}: group ${g.group}`);
+ });
+ GLOSSARY_TERMS.forEach(t => (t.see || []).filter(n => !has(n)).forEach(n => bad.push(`${t.term.en}: see ${n}`)));
+ const slugs = GLOSSARY_TERMS.map(t => glossaryHref(t.term.en));
+ slugs.filter((s, i) => slugs.indexOf(s) !== i).forEach(s => bad.push("duplicate term page " + s));
+ if (GUIDES.length !== new Set(GUIDES.map(g => g.slug)).size) bad.push("duplicate guide slug");
+ if (bad.length) throw new Error("Guide and glossary references:\n" + bad.join("\n"));
+}
+function guideMain(g) {
+ const link = linker(guideFile(g));
+ const calcs = (g.calcs || []).map(id => CALCS.find(c => c.id === id)).filter(Boolean);
+ const related = (g.related || []).map(s => GUIDES.find(x => x.slug === s));
+ const terms = (g.terms || []).map(n => GLOSSARY_TERMS.find(t => t.term.en === n));
+ return `<main id="main" class="lesson-wrap static-page article-page">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="study-notes.html">Study notes</a> <span>/</span> <span>${esc(g.title)}</span></nav>
+    <article>
+    <header class="lesson-head"><div class="eyebrow">Study notes · ${esc(GUIDE_GROUPS[g.group])}</div><h1 class="lesson-title">${esc(g.title)}</h1><p class="lesson-summary">${link(g.summary)}</p>
+     <div class="lesson-meta"><span class="level-badge">${readMinutes(g)} min read</span><span class="level-badge">For MBA, BBA and BBM</span><span class="level-badge">Updated <time datetime="${g.updated}">${longDate(g.updated)}</time></span></div></header>
+${g.sections.map(s => sectionHtml(s, link)).join("\n")}
+    ${g.faq && g.faq.length ? `<section class="lesson-block"><h2>Exam and interview questions</h2>${g.faq.map(f => `<details class="practice"><summary>${esc(f.q)}</summary><p>${link(f.a)}</p></details>`).join("")}</section>` : ""}
+    ${related.length ? `<section class="lesson-block"><h2>Related topics</h2><div class="related-calcs">${related.map(x => `<a class="related-calc" href="${guideFile(x)}">${esc(x.title.split(":")[0])}</a>`).join("")}</div></section>` : ""}
+    ${terms.length ? `<section class="lesson-block"><h2>Key terms in the glossary</h2><div class="related-calcs">${terms.map(t => `<a class="related-calc" href="${glossaryHref(t.term.en)}">${esc(t.term.en)}</a>`).join("")}</div></section>` : ""}
+    ${g.lessons && g.lessons.length ? `<section class="lesson-block"><h2>Learn more in our free courses</h2><ul>${g.lessons.map(s => `<li><a href="${lessonFile(s, "en")}">${esc(LESSONS.en[s].title)}</a> · <a href="${lessonFile(s, "hi")}" lang="hi">${esc(L("hi", s).title)}</a></li>`).join("")}</ul></section>` : ""}
+    ${calcs.length ? `<section class="lesson-block"><h2>Try the numbers yourself</h2><div class="related-calcs">${calcs.map(c => `<a class="related-calc" href="${calcFile(c.id)}"><span aria-hidden="true">₹</span>${esc(c.title)} <span aria-hidden="true">↗</span></a>`).join("")}</div></section>` : ""}
+    </article>
+    <p class="gl-back"><a href="study-notes.html">← All study notes</a></p>
+    <p class="fine-print lesson-disclaimer">Educational content only, not investment advice. Worked examples use illustrative numbers. Rules, rates and syllabuses change: check current official sources and your course material before relying on them.</p>
+  </main>`;
+}
+function guideMeta(g) {
+ const url = guideUrl(g), ld = [
+  { "@context": "https://schema.org", "@type": "Article", headline: g.title, description: g.desc, url, mainEntityOfPage: url, inLanguage: "en-IN", image: OG_IMAGE,
+   datePublished: g.date, dateModified: g.updated, author: { "@type": "Organization", name: BRAND, url: SITE },
+   publisher: { "@type": "Organization", name: BRAND, url: SITE, logo: { "@type": "ImageObject", url: SITE + "images/icon-512.png" } },
+   audience: { "@type": "EducationalAudience", educationalRole: "student" } },
+  crumbs([[BRAND, SITE], ["Study notes", HUB_URL], [g.title, url]])
+ ];
+ if (g.faq && g.faq.length) ld.push({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: g.faq.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
+ return { title: `${g.title} | ${BRAND}`, desc: g.desc, url, type: "article", ld };
+}
+function buildGuides() {
+ checkGuides();
+ GUIDES.forEach(g => write("pages/" + guideFile(g), simplePage(guideMeta(g), guideMain(g), "js/guides.js and js/guides-more.js")));
+ const main = `<main id="main" class="lesson-wrap static-page article-page">
+    <div class="eyebrow">Study notes</div>
+    <h1 class="lesson-title">Finance Notes for MBA, BBA and BBM Students</h1>
+    <p class="lesson-summary">Free topic-wise notes on financial markets, accounting, corporate finance, derivatives, banking and economics. Each one has definitions, formulas, worked examples and exam-style questions, and links to related topics, so you can follow one idea to the next.</p>
+    <p>New to markets? Start with <a href="${guideFile(GUIDES.find(g => g.slug === "stock-market"))}">what the stock market is</a>. Need a word explained? Use the <a href="glossary.html">glossary of ${GLOSSARY_TERMS.length} terms</a>. For structured learning in English and Hindi, take the <a href="learn.html">free courses</a>, then test yourself with the <a href="test.html">final test</a>.</p>
+    <p><a class="wa-link" href="https://whatsapp.com/channel/0029Vb8VIq3K5cD8rjMATd3l" target="_blank" rel="noopener">Join our WhatsApp channel for new notes and lessons ↗</a></p>
+${Object.entries(GUIDE_GROUPS).map(([key, name]) => `    <section class="lesson-block"><h2>${esc(name)}</h2><div class="article-list">${GUIDES.filter(g => g.group === key).map(g => `<article class="case-card example"><h3><a href="${guideFile(g)}">${esc(g.title)}</a></h3><p>${esc(g.summary)}</p><p class="gl-source">${readMinutes(g)} min read</p></article>`).join("")}</div></section>`).join("\n")}
+    <p class="fine-print lesson-disclaimer">Educational content only, not investment advice. These notes support your studies, and do not replace your university's syllabus or prescribed books.</p>
+  </main>`;
+ write("pages/study-notes.html", simplePage({ title: `Finance Notes for MBA, BBA and BBM Students | ${BRAND}`, url: HUB_URL,
+  desc: "Free finance notes for MBA, BBA and BBM students: stock market, balance sheet, ratio analysis, capital budgeting, futures, options, FD, bonds and RBI policy, with examples.",
+  ld: [{ "@context": "https://schema.org", "@type": "ItemList", name: "Finance study notes", itemListElement: GUIDES.map((g, i) => ({ "@type": "ListItem", position: i + 1, url: guideUrl(g) })) }, crumbs([[BRAND, SITE], ["Study notes", HUB_URL]])] }, main, "js/guides.js and js/guides-more.js"));
+ return GUIDES;
+}
+
 // ---------- other pages ----------
 const lessonList = () => ({ "@context": "https://schema.org", "@type": "ItemList", name: "Stock market courses", itemListElement: LESSON_ORDER.map((s, i) => ({ "@type": "ListItem", position: i + 1, url: lessonUrl(s, "en") })) });
 const calcList = () => ({ "@context": "https://schema.org", "@type": "ItemList", name: "Financial calculators", itemListElement: CALCS.map((c, i) => ({ "@type": "ListItem", position: i + 1, url: calcUrl(c.id) })) });
@@ -441,8 +555,8 @@ const PAGES = {
   ld: () => [calcList(), crumbs([[BRAND, SITE], ["Calculators", SITE + "pages/calculators.html"]])]
  },
  "pages/glossary.html": {
-  title: `Stock Market Glossary: 120+ Terms in English & Hindi | ${BRAND}`,
-  desc: "Stock market terms explained simply: shares, orders, fundamentals, technical analysis, derivatives, mutual funds and Indian market terms, in English and Hindi (शेयर बाज़ार शब्दावली).",
+  title: `Finance & Stock Market Glossary: ${Math.floor(GLOSSARY_TERMS.length / 10) * 10}+ Terms in English & Hindi | ${BRAND}`,
+  desc: "Finance and stock market terms explained simply: shares, FD, RD, bonds, derivatives, mutual funds, accounting, corporate finance and economy, in English and Hindi (शब्दावली).",
   ld: () => [{ "@context": "https://schema.org", "@type": "DefinedTermSet", name: `${BRAND} stock market glossary`, url: SITE + "pages/glossary.html", inLanguage: ["en-IN", "hi-IN"],
    hasDefinedTerm: GLOSSARY_TERMS.map(t => ({ "@type": "DefinedTerm", name: t.term.en, url: termUrl(t) })) }, crumbs([[BRAND, SITE], ["Glossary", SITE + "pages/glossary.html"]])]
  },
@@ -465,7 +579,7 @@ function buildPages() {
 }
 
 // ---------- sitemap and robots ----------
-function buildSitemap(lessonFiles, calcFiles, termFiles, articles) {
+function buildSitemap(lessonFiles, calcFiles, termFiles, articles, guides) {
  const url = (loc, alts) => `  <url><loc>${loc}</loc><lastmod>${TODAY}</lastmod>${(alts || []).map(([hl, u]) => `<xhtml:link rel="alternate" hreflang="${hl}" href="${u}"/>`).join("")}</url>`;
  const lines = Object.keys(PAGES).map(f => url(pageUrl(f)));
  LESSON_ORDER.forEach(slug => ["en", "hi"].forEach(lang => lines.push(url(lessonUrl(slug, lang), [["en", lessonUrl(slug, "en")], ["hi", lessonUrl(slug, "hi")], ["x-default", lessonUrl(slug, "en")]]))));
@@ -473,6 +587,8 @@ function buildSitemap(lessonFiles, calcFiles, termFiles, articles) {
  termFiles.forEach(f => lines.push(url(SITE + "pages/" + f)));
  lines.push(url(SITE + "pages/articles.html"));
  articles.forEach(a => lines.push(url(articleUrl(a)).replace(`<lastmod>${TODAY}`, `<lastmod>${a.updated}`)));
+ lines.push(url(HUB_URL));
+ guides.forEach(g => lines.push(url(guideUrl(g)).replace(`<lastmod>${TODAY}`, `<lastmod>${g.updated}`)));
  write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<!-- Generated by tools/build-seo.js. Site address: ${SITE} -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${lines.join("\n")}\n</urlset>\n`);
  write("robots.txt", `# Generated by tools/build-seo.js.\nUser-agent: *\nAllow: /\nDisallow: /tools/\nDisallow: /docs/\n\nSitemap: ${SITE}sitemap.xml\n`);
  return lines.length;
@@ -484,5 +600,6 @@ const calcFiles = buildCalcs();
 buildPages();
 const termFiles = buildGlossary();
 const articles = buildArticles();
-const n = buildSitemap(lessonFiles, calcFiles, termFiles, articles);
-console.log(`SEO build for ${SITE}: ${lessonFiles.length} lesson pages (data files: largest ${Math.round(lessonData.largest / 1024)} KB), ${calcFiles.length} calculator pages, ${termFiles.length} glossary pages, ${articles.length} articles, ${Object.keys(PAGES).length} other pages, ${n} sitemap URLs.`);
+const guides = buildGuides();
+const n = buildSitemap(lessonFiles, calcFiles, termFiles, articles, guides);
+console.log(`SEO build for ${SITE}: ${lessonFiles.length} lesson pages (data files: largest ${Math.round(lessonData.largest / 1024)} KB), ${calcFiles.length} calculator pages, ${termFiles.length} glossary pages, ${articles.length} articles, ${guides.length} study guides, ${Object.keys(PAGES).length} other pages, ${n} sitemap URLs.`);
