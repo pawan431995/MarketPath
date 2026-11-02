@@ -1,7 +1,44 @@
-// Text for the contact and privacy pages, in English and Hindi. Elements carry data-ui="key".
+// Text for the about, contact and privacy pages, in English and Hindi. Elements carry data-ui="key".
 // Review the privacy text if the setup changes (ads, analytics, hosting). Contact email: marketpathacademy@gmail.com (in contact.html).
 const PAGE_UI = {
  en: {
+  docAbout: "About us",
+  aboutEyebrow: "ABOUT US",
+  aboutTitle: "About MarketPathAcademy",
+  aboutIntro: "MarketPathAcademy is a free website for learning the stock market and personal finance, in English and Hindi. You do not need an account, and you can start from any topic.",
+  aboutMissionTitle: "Why this site exists",
+  aboutMissionText: "We believe money education should be free, simple and honest. Beginners often meet jargon, hot tips and promises of quick profit. Here, the aim is to explain how things work, show the risks as clearly as the rewards, and let you practise without risking real money.",
+  aboutOfferTitle: "What you will find here",
+  aboutOffer1: "24 structured courses, from your first share to options, tax and trading psychology.",
+  aboutOffer2: "Quizzes and a final test with a certificate.",
+  aboutOffer3: "A paper trading simulator that uses virtual money.",
+  aboutOffer4: "49 financial calculators, including SIP, EMI, FD and income tax.",
+  aboutOffer5: "A glossary of 380+ terms in English and Hindi.",
+  aboutOffer6: "Finance study notes for MBA, BBA and BBM students.",
+  aboutMeTitle: "About me",
+  aboutMeText: "I'm Pawan Kumar, and I started and run MarketPathAcademy. I hold a Master of Computer Applications (MCA), completed in 2018, and I work in the IT industry. I have been investing in equities, stocks and mutual funds since 2019.",
+  aboutFacts: "At a glance",
+  aboutFactName: "Name",
+  aboutFactNameV: "Pawan Kumar",
+  aboutFactDegree: "Qualification",
+  aboutFactDegreeV: "MCA (2018)",
+  aboutFactWork: "Work",
+  aboutFactWorkV: "IT industry",
+  aboutFactInvest: "Investing since",
+  aboutFactInvestV: "2019 (equities, stocks and mutual funds)",
+  aboutLimitTitle: "What this site is not",
+  aboutLimit1: "I am not a SEBI-registered investment adviser or research analyst, and this site does not give personal investment advice.",
+  aboutLimit2: "We do not give buy or sell tips, and we do not promise returns.",
+  aboutLimit3: "My investing experience is personal. It does not mean the same results are possible for you. Investing carries risk, including loss of capital.",
+  aboutLimit4: "For advice on your own situation, please consult a SEBI-registered adviser or another qualified professional.",
+  aboutCareTitle: "How we handle content",
+  aboutCareText: "Worked examples use illustrative numbers. Tax rules, interest rates and regulations change, so please check official sources such as SEBI, RBI and the Income Tax Department before acting. The site may show ads to help cover its costs. If you find a mistake, tell us and we will correct it.",
+  aboutContactTitle: "Get in touch",
+  aboutContactText: "Questions, suggestions and corrections are welcome.",
+  aboutPhoneLabel: "Mobile:",
+  aboutPhoneNote: "Please use this number for questions about the site. We cannot give stock tips or investment advice by phone.",
+  aboutContactBtn: "Contact us",
+  aboutWaBtn: "Join our WhatsApp channel ↗",
   docContact: "Contact", docPrivacy: "Privacy policy",
   contactEyebrow: "GET IN TOUCH", contactTitle: "Contact MarketPathAcademy",
   contactIntro: "Questions, suggestions or found a mistake in a lesson? We read every message and use it to improve the site.",
@@ -21,6 +58,43 @@ const PAGE_UI = {
   privChangeTitle: "Changes and contact", privChangeText: "We will update this page if what we store changes. For questions, use the contact page."
  },
  hi: {
+  docAbout: "हमारे बारे में",
+  aboutEyebrow: "हमारे बारे में",
+  aboutTitle: "MarketPathAcademy के बारे में",
+  aboutIntro: "MarketPathAcademy शेयर बाज़ार और व्यक्तिगत वित्त सीखने की एक मुफ़्त वेबसाइट है, अंग्रेज़ी और हिंदी में। खाता बनाने की ज़रूरत नहीं है, और आप किसी भी विषय से शुरू कर सकते हैं।",
+  aboutMissionTitle: "यह साइट क्यों है",
+  aboutMissionText: "हमारा मानना है कि पैसे की शिक्षा मुफ़्त, सरल और ईमानदार होनी चाहिए। शुरुआती लोगों को अक्सर कठिन शब्द, टिप्स और जल्दी मुनाफ़े के वादे मिलते हैं। यहाँ उद्देश्य है यह समझाना कि चीज़ें कैसे काम करती हैं, जोखिम को लाभ जितना ही साफ़ दिखाना, और असली पैसा जोखिम में डाले बिना अभ्यास का मौका देना।",
+  aboutOfferTitle: "यहाँ आपको क्या मिलेगा",
+  aboutOffer1: "24 व्यवस्थित कोर्स, पहले शेयर से लेकर ऑप्शंस, टैक्स और ट्रेडिंग मनोविज्ञान तक।",
+  aboutOffer2: "क्विज़ और सर्टिफ़िकेट के साथ फ़ाइनल टेस्ट।",
+  aboutOffer3: "वर्चुअल पैसे वाला पेपर ट्रेडिंग सिम्युलेटर।",
+  aboutOffer4: "49 वित्तीय कैलकुलेटर, जिनमें SIP, EMI, FD और आयकर शामिल हैं।",
+  aboutOffer5: "अंग्रेज़ी और हिंदी में 380+ शब्दों की शब्दावली।",
+  aboutOffer6: "MBA, BBA और BBM छात्रों के लिए वित्त स्टडी नोट्स (अंग्रेज़ी में)।",
+  aboutMeTitle: "मेरे बारे में",
+  aboutMeText: "मेरा नाम पवन कुमार है। MarketPathAcademy की शुरुआत और इसका संचालन मेरे द्वारा किया जाता है। मेरी शिक्षा मास्टर ऑफ़ कंप्यूटर एप्लिकेशन्स (MCA) है, जो 2018 में पूरी हुई, और मेरा काम IT उद्योग में है। 2019 से मेरा निवेश इक्विटी, शेयरों और म्यूचुअल फ़ंड में है।",
+  aboutFacts: "एक नज़र में",
+  aboutFactName: "नाम",
+  aboutFactNameV: "पवन कुमार",
+  aboutFactDegree: "योग्यता",
+  aboutFactDegreeV: "MCA (2018)",
+  aboutFactWork: "कार्य",
+  aboutFactWorkV: "IT उद्योग",
+  aboutFactInvest: "निवेश कब से",
+  aboutFactInvestV: "2019 से (इक्विटी, शेयर और म्यूचुअल फ़ंड)",
+  aboutLimitTitle: "यह साइट क्या नहीं है",
+  aboutLimit1: "मैं SEBI-रजिस्टर्ड निवेश सलाहकार या रिसर्च एनालिस्ट नहीं हूँ, और यह साइट व्यक्तिगत निवेश सलाह नहीं देती।",
+  aboutLimit2: "हम ख़रीद-बिक्री की टिप्स नहीं देते और रिटर्न का वादा नहीं करते।",
+  aboutLimit3: "मेरा निवेश अनुभव व्यक्तिगत है। इसका मतलब यह नहीं कि आपको भी वैसे ही नतीजे मिलेंगे। निवेश में जोखिम होता है, जिसमें पूँजी का नुकसान भी शामिल है।",
+  aboutLimit4: "अपनी स्थिति के अनुसार सलाह के लिए कृपया SEBI-रजिस्टर्ड सलाहकार या किसी अन्य योग्य पेशेवर से संपर्क करें।",
+  aboutCareTitle: "सामग्री के बारे में",
+  aboutCareText: "उदाहरणों में दिए गए आँकड़े केवल समझाने के लिए हैं। टैक्स नियम, ब्याज दरें और विनियम बदलते रहते हैं, इसलिए कोई कदम उठाने से पहले SEBI, RBI और आयकर विभाग जैसे आधिकारिक स्रोत देखें। खर्च निकालने के लिए साइट पर विज्ञापन दिख सकते हैं। कोई गलती मिले तो हमें बताएँ, हम उसे ठीक करेंगे।",
+  aboutContactTitle: "संपर्क करें",
+  aboutContactText: "प्रश्नों, सुझावों और सुधारों का स्वागत है।",
+  aboutPhoneLabel: "मोबाइल:",
+  aboutPhoneNote: "कृपया इस नंबर का उपयोग साइट से जुड़े प्रश्नों के लिए करें। हम फ़ोन पर शेयर टिप्स या निवेश सलाह नहीं दे सकते।",
+  aboutContactBtn: "संपर्क करें",
+  aboutWaBtn: "हमारे WhatsApp चैनल से जुड़ें ↗",
   docContact: "संपर्क", docPrivacy: "गोपनीयता नीति",
   contactEyebrow: "संपर्क करें", contactTitle: "MarketPathAcademy से संपर्क करें",
   contactIntro: "कोई प्रश्न, सुझाव या किसी पाठ में गलती मिली? हम हर संदेश पढ़ते हैं और साइट बेहतर बनाने में उसका उपयोग करते हैं।",
@@ -45,8 +119,8 @@ const PAGE_UI = {
  const apply = lang => {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-ui]").forEach(el => { const v = PAGE_UI[lang][el.dataset.ui]; if (typeof v === "string") el.textContent = v; });
-  const page = document.body.dataset.page; // "contact" or "privacy"
-  if (page) document.title = lang === "en" ? (window.MPChrome && MPChrome.docTitle) || document.title : `${PAGE_UI[lang][page === "contact" ? "docContact" : "docPrivacy"]} — MarketPathAcademy`;
+  const page = document.body.dataset.page; // "about", "contact" or "privacy"
+  if (page) document.title = lang === "en" ? (window.MPChrome && MPChrome.docTitle) || document.title : `${PAGE_UI[lang][{ about: "docAbout", contact: "docContact", privacy: "docPrivacy" }[page]]} — MarketPathAcademy`;
  };
  let lang = "en";
  try { lang = localStorage.getItem("mp-lang") === "hi" ? "hi" : "en"; } catch (e) { /* storage unavailable */ }

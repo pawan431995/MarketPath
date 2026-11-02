@@ -57,6 +57,7 @@ GLOSSARY_TERMS.forEach(t => {
  out.push(["term", `pages/${ctx.glossaryHref(t.term.en)}`, t.term.en, clip(t.def.en), c[0], t.term.hi, clip(t.def.hi), c[1]]);
 });
 
+out.push(["page", "pages/about.html", "About MarketPathAcademy", "Who runs the site, why it exists, what it offers, and what it is not.", "About", "MarketPathAcademy के बारे में", "साइट कौन चलाता है, यह क्यों है, इसमें क्या मिलता है और यह क्या नहीं है।", "परिचय", "about us founder pawan kumar"]);
 // Articles and study guides (English only); the Hindi fields repeat the English so Hindi searches still find them.
 ARTICLES.forEach(a => out.push(["page", `pages/article-${a.slug}.html`, a.title, clip(a.summary), "Article", a.title, clip(a.summary), "लेख", a.desc]));
 out.push(["page", "pages/study-notes.html", "Finance notes for MBA, BBA and BBM students", "Topic-wise notes on markets, accounting, corporate finance, derivatives, banking and economics, with formulas and worked examples.", "Study notes", "MBA, BBA और BBM के लिए वित्त नोट्स", "बाज़ार, लेखांकन, कॉर्पोरेट वित्त, डेरिवेटिव, बैंकिंग और अर्थशास्त्र पर विषयवार नोट्स (अंग्रेज़ी में)।", "स्टडी नोट्स", "college university student syllabus notes"]);

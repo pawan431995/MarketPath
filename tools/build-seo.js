@@ -107,7 +107,7 @@ function withHead(html, m) {
 // ---------- structured data ----------
 const ORG = { "@type": "EducationalOrganization", "@id": SITE + "#org", name: BRAND, url: SITE, logo: SITE + "images/icon-512.png",
  description: "Free stock market education in English and Hindi: courses, quizzes, calculators, paper trading and a final test with a certificate.",
- sameAs: ["https://whatsapp.com/channel/0029Vb8VIq3K5cD8rjMATd3l"], email: "marketpathacademy@gmail.com", contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "marketpathacademy@gmail.com", availableLanguage: ["English", "Hindi"] } };
+ founder: { "@type": "Person", name: "Pawan Kumar", url: SITE + "pages/about.html" }, sameAs: ["https://whatsapp.com/channel/0029Vb8VIq3K5cD8rjMATd3l"], email: "marketpathacademy@gmail.com", contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "marketpathacademy@gmail.com", availableLanguage: ["English", "Hindi"] } };
 const provider = { "@type": "Organization", name: BRAND, url: SITE };
 const crumbs = items => ({ "@context": "https://schema.org", "@type": "BreadcrumbList",
  itemListElement: items.map(([name, item], i) => ({ "@type": "ListItem", position: i + 1, name, item })) });
@@ -571,6 +571,10 @@ const PAGES = {
   ld: () => [{ "@context": "https://schema.org", "@type": "WebApplication", name: "Paper trading simulator", url: SITE + "pages/paper-trading.html", applicationCategory: "FinanceApplication", operatingSystem: "Any", isAccessibleForFree: true, offers: free, provider },
    crumbs([[BRAND, SITE], ["Paper trading", SITE + "pages/paper-trading.html"]])]
  },
+ "pages/about.html": { title: `About Us | ${BRAND}`, desc: "About MarketPathAcademy, a free stock market and personal finance learning site in English and Hindi, and its founder Pawan Kumar (MCA, investing since 2019).",
+  ld: () => [{ "@context": "https://schema.org", "@type": "AboutPage", name: "About MarketPathAcademy", url: SITE + "pages/about.html", inLanguage: ["en-IN", "hi-IN"], about: { "@id": SITE + "#org" },
+   mainEntity: { "@type": "Person", name: "Pawan Kumar", url: SITE + "pages/about.html", hasCredential: { "@type": "EducationalOccupationalCredential", name: "Master of Computer Applications (MCA)", credentialCategory: "degree" }, knowsAbout: ["Stock market", "Mutual funds", "Personal finance"] } },
+   crumbs([[BRAND, SITE], ["About us", SITE + "pages/about.html"]])] },
  "pages/contact.html": { title: `Contact | ${BRAND}`, desc: "Contact MarketPathAcademy with questions, suggestions or corrections about the courses, calculators and tools." },
  "pages/privacy.html": { title: `Privacy Policy | ${BRAND}`, desc: "MarketPathAcademy privacy policy: no account needed; preferences, learning progress, paper-trading data and calculator inputs stay in your own browser." }
 };
