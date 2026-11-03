@@ -14,6 +14,7 @@ html[data-theme="light"] .site-header{background:rgba(255,255,255,.95);border-bo
 html[data-theme="light"] .main-nav a,html[data-theme="light"] .footer-links a,html[data-theme="light"] .brand-light{color:#3d4f66}
 html[data-theme="light"] .main-nav a:hover,html[data-theme="light"] .footer-links a:hover{color:#0b7d5e}
 html[data-theme="light"] .main-nav{background:#ffffff}
+html[data-theme="light"] .menu-toggle{color:#13233a}
 html[data-theme="light"] .theme-toggle{background:#ffffff;border-color:#c5d0de;color:#13233a}
 html[data-theme="light"] :is(input,select,textarea){background:#ffffff;color:#13233a;border-color:#c5d0de}
 html[data-theme="light"] :is(.language-picker select,.chart-controls select){background:#ffffff;color:#13233a;border-color:#c5d0de}
