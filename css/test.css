@@ -164,6 +164,7 @@ html[data-theme="light"] .xt-result.no .xt-ring{--c:#d24452}
 html[data-theme="light"] :is(.xt-progress,.xt-mbar){background:#e1e7f0}
 html[data-theme="light"] .xt-banner{background:#fff4e5;border-color:#f3cf9c;color:#8a4a10}
 html[data-theme="light"] .xt-field input{background:#ffffff;border-color:#c5d0de;color:#13233a}
+html[data-theme="light"] :is(.xt-field,.xt-loading,.xt-muted){color:#4a5d75}
 html[data-theme="light"] .xt-markbtn.on{border-color:#f3cf9c;color:#8a4a10}
 html[data-theme="light"] .xt-modal{background:rgba(15,27,45,.35)}
 
